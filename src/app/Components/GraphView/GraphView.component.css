@@ -1,0 +1,9 @@
+:host {
+  display: block;
+}
+.graphview_main{
+  width: 100%;
+  height: 10%;
+  display: flex;
+  background-color: aqua;
+}
