@@ -15,6 +15,7 @@ import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
   styleUrl: './SelectMain.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
+
 export class SelectMainComponent { 
   date = null;
   value = ''

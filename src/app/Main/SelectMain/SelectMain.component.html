@@ -2,9 +2,8 @@
 
 <section>
     <section class="select_select_main">
-        <input nz-input placeholder="Ingresa tu Serie" [(ngModel)]="value" type="number" style="height: 2.5rem;width: 30%;"/>
+        <input nz-input placeholder="Ingresa tu Serie/Mac" [(ngModel)]="value" type="number" style="height: 2.5rem;width: 30%;"/>
         <nz-range-picker [(ngModel)]="date" (ngModelChange)="onChange($event)" style="height: 2.5rem;"></nz-range-picker>        
-        <!-- <button style="height: 2.5rem;">Buscar</button> -->
         <button nz-button nzType="default" style="height: 2.5rem;">Buscar</button>
     </section>
     <section class="view_select_main"></section>

@@ -17,9 +17,9 @@ section{
   justify-content: center;
   align-items: center;
   background-color: blue;
-  /* padding: 0 0.5rem; */
-  padding-left: 0.5rem;
-  padding-right: 0.5rem;
+  padding: 0 0.5rem;
+  /* padding-left: 0.5rem;
+  padding-right: 0.5rem; */
 }
 .view_select_main{
   width: 100%;
