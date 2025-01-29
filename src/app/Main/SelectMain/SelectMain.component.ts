@@ -4,9 +4,9 @@ import { GraphViewComponent } from "../../Components/GraphView/GraphView.compone
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { FormsModule } from '@angular/forms';
-
-
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
+
+
 @Component({
   selector: 'app-select-main',
   standalone: true,
@@ -19,7 +19,7 @@ import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
 export class SelectMainComponent { 
   date = null;
   value = ''
-
+  view_op_1_graph = ''
   onChange(result: Date[]): void {
     console.log('onChange: ', result);
   }    

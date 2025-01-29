@@ -7,7 +7,7 @@ section{
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  background-color: aqua;
+  background-color: aliceblue;
 }
 .select_select_main{
   width: 100%;
@@ -15,19 +15,35 @@ section{
   display: flex;
   flex-direction: row;
   justify-content: center;
-  align-items: center;
-  background-color: blue;
+  align-items: center;  
   padding: 0 0.5rem;
   /* padding-left: 0.5rem;
   padding-right: 0.5rem; */
 }
 .view_select_main{
   width: 100%;
-  height: 10%;
+  height: 1.75rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: right;
+  padding: 0 0.5rem;  
   background-color: brown;
 }
 .grap_select_main{
   width: 100%;
-  height: 80%;
+  height: 90%;
   background-color: brown;
+}
+.view_select_main_opt{
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 4px;
+  background: var(--gray-0, #F8F9FA);  
+  border: 1px solid var(--gray-4, #CED4DA);
+  padding: 0.313rem;
+  box-sizing: border-box;
+  padding: 0.313rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
