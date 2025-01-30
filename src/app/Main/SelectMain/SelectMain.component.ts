@@ -19,10 +19,14 @@ import { NzSelectModule } from 'ng-zorro-antd/select';
 })
 
 export class SelectMainComponent { 
-  date = null;
+  date : null | Date[] = null;
   value = ''
   view_op_1_graph = ''
   onChange(result: Date[]): void {
-    console.log('onChange: ', result);
+    this.date = result    
   }    
+  searchCooler():void{
+    console.log(this.date)
+    console.log(this.value)
+  }
 }
