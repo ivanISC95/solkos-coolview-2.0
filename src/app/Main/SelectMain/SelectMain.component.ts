@@ -5,12 +5,14 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { FormsModule } from '@angular/forms';
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzSelectModule } from 'ng-zorro-antd/select';
 
 
 @Component({
   selector: 'app-select-main',
   standalone: true,
-  imports: [SelectComponent, GraphViewComponent,FormsModule,NzDatePickerModule,NzButtonModule,NzInputModule],
+  imports: [NzSelectModule,NzIconModule,SelectComponent, GraphViewComponent,FormsModule,NzDatePickerModule,NzButtonModule,NzInputModule],
   templateUrl: './SelectMain.component.html',
   styleUrl: './SelectMain.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

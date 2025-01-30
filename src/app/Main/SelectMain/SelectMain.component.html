@@ -15,14 +15,23 @@
     <section class="grap_select_main">
         <section class="grap_select_main_content">
             <section class="grap_select_main_content_options">
-                <div style="width: 20%;height: 100%; background-color: red;">
+                <div style="width: 40%;height: 100%;">
                     <h1 style="color: #000;font-size: 0.75rem;font-style: normal;font-weight: 400;">Dato visualizado:</h1>
-                    <h1 style="color: #000;font-size: 0.75rem;font-style: normal;font-weight: 400;">Multiselect</h1>
+                    <nz-select nzAllowClear nzShowSearch nzPlaceHolder="" nzMode="multiple" [nzCustomTemplate]="multipleTemplate" style="width: 100%; height: 1.875rem !important;">
+                        <nz-option nzLabel="Windows" nzValue="windows" ></nz-option>
+                        <nz-option nzLabel="Apple" nzValue="apple"></nz-option>
+                        <nz-option nzLabel="Android" nzValue="android"></nz-option>
+                      </nz-select>
+                      <ng-template #multipleTemplate let-selected>
+                        <div class="ant-select-selection-item-content">
+                          <!-- <nz-icon [nzType]="selected.nzValue" /> -->
+                          {{ selected.nzLabel }}
+                        </div>
+                      </ng-template>
                 </div>
                 <div style="width: 1.75rem;height: 1.75rem;border-radius: 0.25rem;border: 1px solid var(--gray-4, #CED4DA);padding: 0.313rem;box-sizing: border-box;background-color: var(--gray-0, #F8F9FA);display: flex;justify-content: center;align-items: center;cursor: pointer;"> <img src="../../../assets/Settings/settingsIcon.svg" alt="settings" loading="lazy" /> </div>
             </section>
             <section class="grap_select_main_content_graph"></section>
-        </section>
-        <section class="grap_select_main_content">2</section>
+        </section>        
     </section>
 </section>
