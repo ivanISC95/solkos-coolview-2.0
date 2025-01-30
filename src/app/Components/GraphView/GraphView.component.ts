@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Output } from '@angular/core';
 
 @Component({
   selector: 'app-graph-view',
@@ -8,4 +8,10 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   styleUrl: './GraphView.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class GraphViewComponent { }
+export class GraphViewComponent { 
+  @Output() mensajeEvento = new EventEmitter<number>();
+  
+  shareViewOption(value:number){
+    this.mensajeEvento.emit(value)
+  }
+}

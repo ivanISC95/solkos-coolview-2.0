@@ -22,11 +22,17 @@ export class SelectMainComponent {
   date : null | Date[] = null;
   value = ''
   view_op_1_graph = ''
+  mensajeRecibido : null | number = 1;
+
   onChange(result: Date[]): void {
     this.date = result    
   }    
   searchCooler():void{
     console.log(this.date)
     console.log(this.value)
-  }
+  }  
+  recibirMensaje(mensaje: number) {
+    this.mensajeRecibido = mensaje;
+    console.log(this.mensajeRecibido)
+  }  
 }
