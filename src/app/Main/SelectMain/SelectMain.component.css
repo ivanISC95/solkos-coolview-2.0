@@ -27,7 +27,6 @@ section{
   flex-direction: row;
   justify-content: right;
   padding: 0 0.5rem;  
-  background-color: brown;
 }
 .grap_select_main{
   width: 100%;
