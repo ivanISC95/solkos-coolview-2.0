@@ -12,6 +12,22 @@
     </section> -->
     <app-graph-view (mensajeEvento)="recibirMensaje($event)"></app-graph-view>
     <section class="grap_select_main">        
-        <app-graph-main></app-graph-main>
+        @if (view_grap_opt == 1) {
+            <app-graph-main></app-graph-main>
+        }
+        @else if(view_grap_opt == 2){
+            <app-graph-main></app-graph-main>
+            <app-graph-main></app-graph-main>
+        }        
+        @else if(view_grap_opt == 3){
+            <app-graph-main></app-graph-main>
+            <app-graph-main></app-graph-main>
+        }        
+        @else{
+            <app-graph-main></app-graph-main>
+            <app-graph-main></app-graph-main>
+            <app-graph-main></app-graph-main>
+            <app-graph-main></app-graph-main>
+        }        
     </section>
 </section>
