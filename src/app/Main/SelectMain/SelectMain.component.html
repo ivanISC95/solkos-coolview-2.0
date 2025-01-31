@@ -11,7 +11,7 @@
         <div class="view_select_main_opt"><img src="assets/GraphView/opt4.svg" alt="graph_view_option_4"></div>
     </section> -->
     <app-graph-view (mensajeEvento)="recibirMensaje($event)"></app-graph-view>
-    <section class="grap_select_main">        
+    <section class="grap_select_main" [style.flex-direction]="view_grap_opt == 3 ? 'row' : view_grap_opt == 4 ? 'row': 'column'" [style.flex-wrap]="view_grap_opt == 4 ? 'wrap' : ''" >        
         @if (view_grap_opt == 1) {
             <app-graph-main></app-graph-main>
         }
@@ -20,14 +20,14 @@
             <app-graph-main></app-graph-main>
         }        
         @else if(view_grap_opt == 3){
-            <app-graph-main></app-graph-main>
-            <app-graph-main></app-graph-main>
+            <app-graph-main [style.width]="view_grap_opt == 3 ? '50%' : '100%'"></app-graph-main>
+            <app-graph-main [style.width]="view_grap_opt == 3 ? '50%' : '100%'"></app-graph-main>
         }        
         @else{
-            <app-graph-main></app-graph-main>
-            <app-graph-main></app-graph-main>
-            <app-graph-main></app-graph-main>
-            <app-graph-main></app-graph-main>
+            <app-graph-main [style.width]="view_grap_opt == 4 ? '49.5%' : '100%' " [style.min-height]="view_grap_opt == 4 ? '45%' : '100%' " ></app-graph-main>
+            <app-graph-main [style.width]="view_grap_opt == 4 ? '49.5%' : '100%' " [style.min-height]="view_grap_opt == 4 ? '45%' : '100%' " ></app-graph-main>
+            <app-graph-main [style.width]="view_grap_opt == 4 ? '49.5%' : '100%' " [style.min-height]="view_grap_opt == 4 ? '45%' : '100%' " ></app-graph-main>
+            <app-graph-main [style.width]="view_grap_opt == 4 ? '49.5%' : '100%' " [style.min-height]="view_grap_opt == 4 ? '45%' : '100%' " ></app-graph-main>
         }        
     </section>
 </section>
