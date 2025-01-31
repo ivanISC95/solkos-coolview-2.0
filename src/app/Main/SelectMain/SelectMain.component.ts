@@ -7,12 +7,13 @@ import { FormsModule } from '@angular/forms';
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzSelectModule } from 'ng-zorro-antd/select';
+import { GraphMainComponent } from "../../Components/GraphMain/GraphMain.component";
 
 
 @Component({
   selector: 'app-select-main',
   standalone: true,
-  imports: [NzSelectModule,NzIconModule,SelectComponent, GraphViewComponent,FormsModule,NzDatePickerModule,NzButtonModule,NzInputModule],
+  imports: [NzSelectModule, NzIconModule, GraphViewComponent, FormsModule, NzDatePickerModule, NzButtonModule, NzInputModule, GraphMainComponent],
   templateUrl: './SelectMain.component.html',
   styleUrl: './SelectMain.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -20,9 +21,8 @@ import { NzSelectModule } from 'ng-zorro-antd/select';
 
 export class SelectMainComponent { 
   date : null | Date[] = null;
-  value = ''
-  view_op_1_graph = ''
-  mensajeRecibido : null | number = 1;
+  value = ''  
+  view_grap_opt : null | number = 1;
 
   onChange(result: Date[]): void {
     this.date = result    
@@ -32,7 +32,10 @@ export class SelectMainComponent {
     console.log(this.value)
   }  
   recibirMensaje(mensaje: number) {
-    this.mensajeRecibido = mensaje;
-    console.log(this.mensajeRecibido)
+    this.view_grap_opt = mensaje;
+    console.log(this.view_grap_opt)
   }  
+  constructor(){
+    console.log(this.view_grap_opt)
+  }
 }
