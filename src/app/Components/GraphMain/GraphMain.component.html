@@ -22,12 +22,49 @@
   <section class="grap_select_main_content_graph"></section>
 </section>
 @if (drawer_status == true) {
-<nz-drawer [nzClosable]="drawer_status" [nzVisible]="true" nzPlacement="right" nzTitle="Basic Drawer"
-  (nzOnClose)="close()">
+<nz-drawer [nzClosable]="drawer_status" [nzVisible]="true" nzPlacement="right" nzTitle="Configuración del grafico"  (nzOnClose)="close()">
   <ng-container *nzDrawerContent>
-    <p>Some contents...</p>
-    <p>Some contents...</p>
-    <p>Some contents...</p>
+    <section style="width: 100%;height: 100%;display: flex; flex-direction: column;gap: 0.5rem;">
+      <section style="width: 100%;height: 4.125rem;display: flex;flex-direction: row;justify-content: space-between;">
+        <nz-flex nzVertical style="width: 25rem;">
+          <h5 nz-typography>Dato visualizado</h5>
+          <nz-select nzAllowClear nzShowSearch nzPlaceHolder="" nzMode="multiple" [nzCustomTemplate]="multipleTemplate"
+            style="width: 100%; height: 1.875rem !important;">
+            <nz-option nzLabel="Windows" nzValue="windows"></nz-option>
+            <nz-option nzLabel="Apple" nzValue="apple"></nz-option>
+            <nz-option nzLabel="Android" nzValue="android"></nz-option>
+          </nz-select>
+          <ng-template #multipleTemplate let-selected>
+            <div class="ant-select-selection-item-content">
+              <!-- <nz-icon [nzType]="selected.nzValue" /> -->
+              {{ selected.nzLabel }}
+            </div>
+          </ng-template>
+        </nz-flex>
+        <nz-flex nzVertical style="width: 15rem;">
+          <h5 nz-typography>Rango de fechas</h5>
+          <nz-range-picker [(ngModel)]="date" (ngModelChange)="onChange($event)" style="height: 2.5rem;"></nz-range-picker>
+        </nz-flex>
+      </section>
+      <hr style="width: 100%;background-color: var(--Neutral-Outline-Variant, #CACACA);border: 1px solid transparent;">
+      <section style="width: 100%;height: 6.25rem;">
+        <nz-flex nzVertical style="width: 15rem;" nzGap="0.5rem">
+          <label nz-checkbox [(ngModel)]="checked">Elementos en la gráfica</label>
+          <label nz-checkbox [(ngModel)]="checked">Zona segura (inteligente)</label>
+          <label nz-checkbox [(ngModel)]="checked">Desconexiones</label>
+        </nz-flex>
+      </section>
+      <hr style="width: 100%;background-color: var(--Neutral-Outline-Variant, #CACACA);border: 1px solid transparent;">
+      <section style="width: 100%;height: 7.25rem">
+        <nz-flex nzVertical style="width: 15rem;" nzGap="0.5rem">
+          <label nz-checkbox [(ngModel)]="checked">Zona de eventos</label>
+          <label nz-checkbox [(ngModel)]="checked">Alertas</label>
+          <label nz-checkbox [(ngModel)]="checked">Fallas</label>
+          <label nz-checkbox [(ngModel)]="checked">Informativos</label>
+          <label nz-checkbox [(ngModel)]="checked">Desconexiones</label>
+        </nz-flex>
+      </section>
+    </section>
   </ng-container>
 </nz-drawer>
 }

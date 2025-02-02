@@ -30,3 +30,19 @@
   height: 90%;
   background-color: red;
 }
+::ng-deep .ant-drawer-header {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+  gap: 8px !important;
+}
+
+::ng-deep .ant-drawer-header-title {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+}
+
+::ng-deep .ant-drawer-close {
+  align-self: flex-start !important;
+}
