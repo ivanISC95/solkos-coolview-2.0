@@ -17,35 +17,45 @@ import { ApiService } from '../../services/api.service';
   styleUrl: './SelectMain.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SelectMainComponent { 
+export class SelectMainComponent {
   date: null | Date[] = null;
-  value = '';  
+  dateFormatted: string[] = [];
+  value = '';
   view_grap_opt: null | number = 1;
   isLoading = false; // Estado de carga
 
-  constructor(private apiService: ApiService) {}
-
-  onChange(result: Date[]): void {
-    this.date = result;    
+  constructor(private apiService: ApiService) {
+    const today = new Date();
+    const pastMonth = new Date();
+    pastMonth.setMonth(today.getMonth() - 1); // Resta 1 mes
+    this.date = [pastMonth, today];
   }
 
-  
+  onChange(result: Date[]): void {
+    this.date = result;
+  }
+
+
 
   async searchCooler(): Promise<void> {
-    console.log(this.date);
+    if (this.date) {
+      this.dateFormatted = this.date.map(d => d.toISOString().split('T')[0]);
+    }
+    console.log(this.dateFormatted);
+    console.log(this.date)
     console.log(this.value);
-    this.apiService.fetchData("https://coolview-api-v2-545989770214.us-central1.run.app/coolview-api/v2/telemetryOs/?id=E22181202280&start_date=2024-12-01&end_date=2024-12-30")
-      .subscribe({
-        next: (data) => {
-          console.log("Datos recibidos:", data);
-        },
-        error: (error) => {
-          console.error("Error en la petición:", error);
-        },
-        complete: () => {
-          this.isLoading = false;
-        }
-      });
+    // this.apiService.fetchData("https://coolview-api-v2-545989770214.us-central1.run.app/coolview-api/v2/telemetryOs/?id=E22181202280&start_date=2024-12-01&end_date=2024-12-30")
+    //   .subscribe({
+    //     next: (data) => {
+    //       console.log("Datos recibidos:", data);
+    //     },
+    //     error: (error) => {
+    //       console.error("Error en la petición:", error);
+    //     },
+    //     complete: () => {
+    //       this.isLoading = false;
+    //     }
+    //   });
   }
 
   recibirMensaje(mensaje: number) {
