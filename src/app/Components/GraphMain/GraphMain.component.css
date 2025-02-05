@@ -29,7 +29,7 @@
 .grap_select_main_content_graph{
   width: 100%;
   height: 90%;
-  background-color: blue;
+  /* background-color: blue; */
 }
 ::ng-deep .ant-drawer-header {
   display: flex !important;
