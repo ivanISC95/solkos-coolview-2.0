@@ -8,6 +8,7 @@ import { NzSelectModule } from 'ng-zorro-antd/select';
 import { GraphMainComponent } from "../../Components/GraphMain/GraphMain.component";
 import { GraphViewComponent } from "../../Components/GraphView/GraphView.component";
 import { ApiService } from '../../services/api.service';
+import { DatasResponse } from '../../DatasResponse';
 
 @Component({
   selector: 'app-select-main',
@@ -18,6 +19,7 @@ import { ApiService } from '../../services/api.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SelectMainComponent {
+  data_Cooler : DatasResponse | null = null
   date: null | Date[] = null;
   dateFormatted: string[] = [];
   value = '';
@@ -38,15 +40,18 @@ export class SelectMainComponent {
 
 
   async searchCooler(): Promise<void> {
+    this.isLoading = true;
     if (this.date) {
       this.dateFormatted = this.date.map(d => d.toISOString().split('T')[0]);
     }
-    console.log(this.dateFormatted);
-    console.log(this.date)
-    console.log(this.value);
-    this.apiService.fetchData("https://coolview-api-v2-545989770214.us-central1.run.app/coolview-api/v2/telemetryOs/?id=E22181202280&start_date=2024-12-01&end_date=2024-12-30")
+    // Fechas para fetch
+    // console.log(this.dateFormatted);     
+    // Serial / MAC
+    // console.log(this.value);
+    this.apiService.fetchData("https://coolview-api-v2-545989770214.us-central1.run.app/coolview-api/v2/telemetryOs/?id=F94201001544&start_date=2025-01-04&end_date=2025-02-04&is_mac=false")
       .subscribe({
         next: (data) => {
+          this.data_Cooler = data
           console.log("Datos recibidos:", data);
         },
         error: (error) => {
