@@ -7,31 +7,34 @@ import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
 import { FormsModule } from '@angular/forms';
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
 import { DatasResponse } from '../../DatasResponse';
+import { getTelemetryNamesTranslated } from '../../Functions/GraphFunctions';
 
 @Component({
   selector: 'app-graph-main',
   standalone: true,
-  imports: [NzSelectModule,CommonModule,NzDrawerModule,NzFlexDirective,NzCheckboxModule,FormsModule,NzDatePickerModule],
+  imports: [NzSelectModule, CommonModule, NzDrawerModule, NzFlexDirective, NzCheckboxModule, FormsModule, NzDatePickerModule],
   templateUrl: './GraphMain.component.html',
   styleUrl: './GraphMain.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class GraphMainComponent implements OnInit{  
-  @Input() data : DatasResponse | null = null
+export class GraphMainComponent implements OnInit {
+  @Input() data: DatasResponse | null = null
   readonly el = viewChild.required<ElementRef>('chart');
-  drawer_status : boolean = false; 
+  drawer_status: boolean = false;
   checked = true;
-  date : null | Date[] = null;
+  date: null | Date[] = null;
+  telemetryOptions: string[] = [];
 
   ngOnInit() {
     this.basicChart();
-    console.log(this.data)
+    this.telemetryOptions = getTelemetryNamesTranslated(this.data)
   }
+    
   @HostListener('window:resize', ['$event'])
-  onResize(event:any) {
+  onResize(event: any) {
     this.resizeChart();
   }
-  basicChart(){
+  basicChart() {
     const element = this.el().nativeElement
     const data = [
       {
@@ -42,10 +45,10 @@ export class GraphMainComponent implements OnInit{
     ];
     const layout = {
       title: 'Simple Plotly Chart',
-      autosize: true, 
-      showlegend : true,
+      autosize: true,
+      showlegend: true,
       plot_bgcolor: '#f8f9fa',
-      paper_bgcolor: '#f8f9fa', 
+      paper_bgcolor: '#f8f9fa',
       hovermode: 'x',
       legend: {
         x: 0.95, // Mueve la leyenda más hacia la izquierda
@@ -71,28 +74,28 @@ export class GraphMainComponent implements OnInit{
         }
       },
       margin: {
-        t: 10, 
+        t: 10,
         b: 30,
         l: 30,
         r: 30
       }
     };
     const config = {
-      responsive: true, 
-      displayModeBar : true,
+      responsive: true,
+      displayModeBar: true,
       modeBarButtonsToRemove: ['pan2d', 'select2d', 'lasso2d', 'autoScale2d'], displaylogo: false
     };
-  
+
     Plotly.newPlot(element, data, layout, config);
   }
   resizeChart() {
     const element = this.el().nativeElement;
     Plotly.Plots.resize(element);
   }
-  close() {    
+  close() {
     this.drawer_status = false
   }
   onChange(result: Date[]): void {
-    this.date = result    
-  }  
- }
+    this.date = result
+  }
+}
