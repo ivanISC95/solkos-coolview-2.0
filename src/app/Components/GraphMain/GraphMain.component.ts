@@ -6,6 +6,7 @@ import { NzFlexDirective } from 'ng-zorro-antd/flex';
 import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
 import { FormsModule } from '@angular/forms';
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
+import { DatasResponse } from '../../DatasResponse';
 
 @Component({
   selector: 'app-graph-main',
@@ -16,6 +17,7 @@ import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GraphMainComponent implements OnInit{  
+  @Input() data : DatasResponse | null = null
   readonly el = viewChild.required<ElementRef>('chart');
   drawer_status : boolean = false; 
   checked = true;
@@ -23,6 +25,7 @@ export class GraphMainComponent implements OnInit{
 
   ngOnInit() {
     this.basicChart();
+    console.log(this.data)
   }
   @HostListener('window:resize', ['$event'])
   onResize(event:any) {
