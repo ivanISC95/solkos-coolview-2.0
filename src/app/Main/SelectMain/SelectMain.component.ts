@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { FormsModule } from '@angular/forms';
@@ -26,7 +26,7 @@ export class SelectMainComponent {
   view_grap_opt: null | number = 1;
   isLoading = false; // Estado de carga
 
-  constructor(private apiService: ApiService) {
+  constructor(private apiService: ApiService,private cdr: ChangeDetectorRef) {
     const today = new Date();
     const pastMonth = new Date();
     pastMonth.setMonth(today.getMonth() - 1); // Resta 1 mes
@@ -41,6 +41,7 @@ export class SelectMainComponent {
 
   async searchCooler(): Promise<void> {
     this.isLoading = true;
+    this.cdr.markForCheck(); 
     if (this.date) {
       this.dateFormatted = this.date.map(d => d.toISOString().split('T')[0]);
     }
@@ -48,7 +49,7 @@ export class SelectMainComponent {
     // console.log(this.dateFormatted);     
     // Serial / MAC
     // console.log(this.value);
-    this.apiService.fetchData("https://coolview-api-v2-545989770214.us-central1.run.app/coolview-api/v2/telemetryOs/?id=F94201001544&start_date=2025-01-04&end_date=2025-02-04&is_mac=false")
+    this.apiService.fetchData("https://coolview-api-v2-545989770214.us-central1.run.app/coolview-api/v2/telemetryOs/?id=E22181202280&start_date=2025-01-04&end_date=2025-02-04&is_mac=false")
       .subscribe({
         next: (data) => {
           this.data_Cooler = data
@@ -59,6 +60,7 @@ export class SelectMainComponent {
         },
         complete: () => {
           this.isLoading = false;
+          this.cdr.markForCheck(); 
         }
       });
   }
