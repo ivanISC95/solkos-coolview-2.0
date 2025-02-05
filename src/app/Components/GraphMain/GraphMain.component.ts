@@ -6,8 +6,8 @@ import { NzFlexDirective } from 'ng-zorro-antd/flex';
 import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
 import { FormsModule } from '@angular/forms';
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
-import { DatasResponse } from '../../DatasResponse';
-import { getTelemetryNamesTranslated } from '../../Functions/GraphFunctions';
+import { DatasResponse, Telemetry } from '../../DatasResponse';
+import { getTelemetryNamesTranslated, TELEMETRI_DATA, transformTelemetry } from '../../Functions/GraphFunctions';
 
 @Component({
   selector: 'app-graph-main',
@@ -24,10 +24,21 @@ export class GraphMainComponent implements OnInit {
   checked = true;
   date: null | Date[] = null;
   telemetryOptions: string[] = [];
+  data_graph : any[]= []
 
+  formatData (data:DatasResponse | null) {
+    if(!data) return []
+    return{
+      "name" : data.telemetry.map((telemetry:Telemetry)=>telemetry.name),
+      "type" : data.telemetry.map((telemetry:Telemetry)=>telemetry.name)[0] == "door_state" ? "bar" :'lines'
+    }
+  }
   ngOnInit() {
     this.basicChart();
-    this.telemetryOptions = getTelemetryNamesTranslated(this.data)
+    this.telemetryOptions = getTelemetryNamesTranslated(this.data)   
+    // this.data_graph = transformTelemetry(this.data!.telemetry)
+    this.data_graph.push(transformTelemetry(this.data!.telemetry))
+    console.log(transformTelemetry(this.data!.telemetry))
   }
     
   @HostListener('window:resize', ['$event'])
@@ -36,13 +47,7 @@ export class GraphMainComponent implements OnInit {
   }
   basicChart() {
     const element = this.el().nativeElement
-    const data = [
-      {
-        x: [1, 2, 3, 4, 5],
-        y: [1, 2, 4, 8, 16],
-        type: 'scatter',
-      },
-    ];
+    const data = [TELEMETRI_DATA];
     const layout = {
       title: 'Simple Plotly Chart',
       autosize: true,
@@ -50,6 +55,11 @@ export class GraphMainComponent implements OnInit {
       plot_bgcolor: '#f8f9fa',
       paper_bgcolor: '#f8f9fa',
       hovermode: 'x',
+      font: {
+        family: 'DM Mono',
+        size: 12,
+        color: '#868E96',
+      },
       legend: {
         x: 0.95, // Mueve la leyenda más hacia la izquierda
         xanchor: 'right',
@@ -62,7 +72,14 @@ export class GraphMainComponent implements OnInit {
         },
         traceorder: 'normal',
       },
+      xaxis: {
+        tickformat: '%d-%b',
+        showgrid: false,
+        type : 'date'
+        // range: rangos.length > 0 ? [rangos[0], rangos[1]] : undefined
+      },
       yaxis: {
+        autorange: true,
         tickformat: '~s',
         // ticksuffix: LayoutInforTelemetry(value)[1],
         zeroline: false,
@@ -71,7 +88,7 @@ export class GraphMainComponent implements OnInit {
           family: 'DM Mono',
           size: 12,
           color: '#868E96'
-        }
+        },        
       },
       margin: {
         t: 10,
