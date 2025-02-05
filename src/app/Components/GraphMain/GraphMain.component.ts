@@ -39,10 +39,45 @@ export class GraphMainComponent implements OnInit{
     ];
     const layout = {
       title: 'Simple Plotly Chart',
-      autosize: true, // Asegura que el gráfico se ajuste al tamaño del contenedor
+      autosize: true, 
+      showlegend : true,
+      plot_bgcolor: '#f8f9fa',
+      paper_bgcolor: '#f8f9fa', 
+      hovermode: 'x',
+      legend: {
+        x: 0.95, // Mueve la leyenda más hacia la izquierda
+        xanchor: 'right',
+        yanchor: 'bottom',
+        y: 0.95,
+        orientation: 'h',
+        font: {
+          family: 'DM Sans, monospace',
+          color: '#495057',
+        },
+        traceorder: 'normal',
+      },
+      yaxis: {
+        tickformat: '~s',
+        // ticksuffix: LayoutInforTelemetry(value)[1],
+        zeroline: false,
+        showgrid: true,
+        tickfont: {
+          family: 'DM Mono',
+          size: 12,
+          color: '#868E96'
+        }
+      },
+      margin: {
+        t: 10, 
+        b: 30,
+        l: 30,
+        r: 30
+      }
     };
     const config = {
-      responsive: true, // Hace que el gráfico sea sensible al tamaño de su contenedor
+      responsive: true, 
+      displayModeBar : true,
+      modeBarButtonsToRemove: ['pan2d', 'select2d', 'lasso2d', 'autoScale2d'], displaylogo: false
     };
   
     Plotly.newPlot(element, data, layout, config);
