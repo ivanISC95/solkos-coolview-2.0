@@ -26,14 +26,7 @@ export class GraphMainComponent implements OnInit {
   date: null | Date[] = null;
   telemetryOptions: string[] = []; // Multiselect options
   selectedTelemetry: string[] = []; // MultiSelect value
-
-  formatData(data: DatasResponse | null) {
-    if (!data) return []
-    return {
-      "name": data.telemetry.map((telemetry: Telemetry) => telemetry.name),
-      "type": data.telemetry.map((telemetry: Telemetry) => telemetry.name)[0] == "door_state" ? "bar" : 'lines'
-    }
-  }
+  
   ngOnInit() {
     this.basicChart();
     this.telemetryOptions = getTelemetryNamesTranslated(this.data)
