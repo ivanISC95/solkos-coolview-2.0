@@ -16,6 +16,13 @@ const getTelemetryNamesTranslated = (data: any): string[] => {
   
     return getTelemetryNames(data).map(name => nameMap[name] || name);
 }
+const nameMap: { [key: string]: string } = {
+  "internal_temperature": "Temperatura",
+  "door_state": "Aperturas",
+  "compressor_state": "Compresor",
+  "voltage_consumption": "Voltaje"
+};
+
 const colorMap: Record<string, string> = {
   "door_state": "#909296",
   "compressor_state": "#9C36B5",
@@ -46,6 +53,28 @@ function transformTelemetry(data: Telemetry[] | null) {
     hovertemplate: "%{y:.1f}℃ %{customdata}"
   }));
 }
+function transformTelemetry2(data: Telemetry[] | null, selectedNames: string[]): any[] {
+  if (!data) return [];
+
+  return data
+    .filter(({ name }) => selectedNames.includes(nameMap[name])) // Filtra solo los que están en selectedNames
+    .map(({ name, type, data }) => ({
+      name: `${name}.`,
+      type: typeMap[type] || "bar",
+      mode: type === "line" ? "lines" : "",
+      line: {
+        color: colorMap[name] || "#000000",
+        width: 1
+      },
+      marker: {
+        color: colorMap[name] || "#000000"
+      },
+      x: data.map(point => point.x),
+      y: data.map(point => point.y),
+      hovertemplate: "%{y:.1f}℃ %{customdata}"
+    }));
+}
+
 const TELEMETRI_DATA = {
   "name": "Temperatura.",
   "type": "line",
@@ -2067,4 +2096,4 @@ const TELEMETRI_DATA = {
   "hovertemplate": "%{y:.1f}℃ %{customdata}"
 }
 
-export{getTelemetryNamesTranslated,transformTelemetry,TELEMETRI_DATA}
+export{getTelemetryNamesTranslated,transformTelemetry,transformTelemetry2,TELEMETRI_DATA}

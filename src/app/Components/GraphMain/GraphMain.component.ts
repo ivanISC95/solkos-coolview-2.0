@@ -7,7 +7,7 @@ import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
 import { FormsModule } from '@angular/forms';
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
 import { DatasResponse, Telemetry } from '../../DatasResponse';
-import { getTelemetryNamesTranslated, TELEMETRI_DATA, transformTelemetry } from '../../Functions/GraphFunctions';
+import { getTelemetryNamesTranslated, TELEMETRI_DATA, transformTelemetry, transformTelemetry2 } from '../../Functions/GraphFunctions';
 
 @Component({
   selector: 'app-graph-main',
@@ -26,20 +26,22 @@ export class GraphMainComponent implements OnInit {
   date: null | Date[] = null;
   telemetryOptions: string[] = []; // Multiselect options
   selectedTelemetry: string[] = []; // MultiSelect value
+  data_graph : any[] = []
   
   ngOnInit() {
-    this.basicChart();
     this.telemetryOptions = getTelemetryNamesTranslated(this.data)
     this.telemetryOptions.includes(this.selectOptionDefault) ? this.selectedTelemetry = [this.selectOptionDefault] : this.selectedTelemetry = []    
+    this.data_graph = transformTelemetry2(this.data!.telemetry, [this.selectOptionDefault]);
+    this.basicChart(this.data_graph);
   }
 
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
     this.resizeChart();
   }
-  basicChart() {
+  basicChart(data_graph:any) {
     const element = this.el().nativeElement
-    const data = [TELEMETRI_DATA];
+    const data = data_graph;
     const layout = {
       title: 'Simple Plotly Chart',
       autosize: true,
@@ -109,8 +111,8 @@ export class GraphMainComponent implements OnInit {
   }
   
 
-  logSelection() {
-    // aqui meter logica de la data
-    console.log("Opciones seleccionadas:", this.selectedTelemetry);
+  logSelection() {    
+    this.data_graph = transformTelemetry2(this.data!.telemetry,this.selectedTelemetry);
+    this.basicChart(this.data_graph);
   }
 }
