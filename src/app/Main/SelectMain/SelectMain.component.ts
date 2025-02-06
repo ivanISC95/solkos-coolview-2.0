@@ -53,7 +53,6 @@ export class SelectMainComponent {
       .subscribe({
         next: (data) => {
           this.data_Cooler = data
-          console.log("Datos recibidos:", data);
         },
         error: (error) => {
           console.error("Error en la petición:", error);
@@ -67,6 +66,5 @@ export class SelectMainComponent {
 
   recibirMensaje(mensaje: number) {
     this.view_grap_opt = mensaje;
-    console.log(this.view_grap_opt);
   }
 }

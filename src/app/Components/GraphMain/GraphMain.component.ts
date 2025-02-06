@@ -19,28 +19,27 @@ import { getTelemetryNamesTranslated, TELEMETRI_DATA, transformTelemetry } from 
 })
 export class GraphMainComponent implements OnInit {
   @Input() data: DatasResponse | null = null
+  @Input() selectOptionDefault : string = '' // Default option to Multiselect
   readonly el = viewChild.required<ElementRef>('chart');
   drawer_status: boolean = false;
   checked = true;
   date: null | Date[] = null;
-  telemetryOptions: string[] = [];
-  data_graph : any[]= []
+  telemetryOptions: string[] = []; // Multiselect options
+  selectedTelemetry: string[] = []; // MultiSelect value
 
-  formatData (data:DatasResponse | null) {
-    if(!data) return []
-    return{
-      "name" : data.telemetry.map((telemetry:Telemetry)=>telemetry.name),
-      "type" : data.telemetry.map((telemetry:Telemetry)=>telemetry.name)[0] == "door_state" ? "bar" :'lines'
+  formatData(data: DatasResponse | null) {
+    if (!data) return []
+    return {
+      "name": data.telemetry.map((telemetry: Telemetry) => telemetry.name),
+      "type": data.telemetry.map((telemetry: Telemetry) => telemetry.name)[0] == "door_state" ? "bar" : 'lines'
     }
   }
   ngOnInit() {
     this.basicChart();
-    this.telemetryOptions = getTelemetryNamesTranslated(this.data)   
-    // this.data_graph = transformTelemetry(this.data!.telemetry)
-    this.data_graph.push(transformTelemetry(this.data!.telemetry))
-    console.log(transformTelemetry(this.data!.telemetry))
+    this.telemetryOptions = getTelemetryNamesTranslated(this.data)
+    this.telemetryOptions.includes(this.selectOptionDefault) ? this.selectedTelemetry = [this.selectOptionDefault] : this.selectedTelemetry = []    
   }
-    
+
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
     this.resizeChart();
@@ -75,7 +74,7 @@ export class GraphMainComponent implements OnInit {
       xaxis: {
         tickformat: '%d-%b',
         showgrid: false,
-        type : 'date'
+        type: 'date'
         // range: rangos.length > 0 ? [rangos[0], rangos[1]] : undefined
       },
       yaxis: {
@@ -88,7 +87,7 @@ export class GraphMainComponent implements OnInit {
           family: 'DM Mono',
           size: 12,
           color: '#868E96'
-        },        
+        },
       },
       margin: {
         t: 10,
@@ -114,5 +113,11 @@ export class GraphMainComponent implements OnInit {
   }
   onChange(result: Date[]): void {
     this.date = result
+  }
+  
+
+  logSelection() {
+    // aqui meter logica de la data
+    console.log("Opciones seleccionadas:", this.selectedTelemetry);
   }
 }
