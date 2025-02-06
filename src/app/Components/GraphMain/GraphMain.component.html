@@ -31,11 +31,11 @@
   (nzOnClose)="close()">
   <ng-container *nzDrawerContent>
     <section style="width: 100%;height: 100%;display: flex; flex-direction: column;gap: 0.5rem;">
-      <section style="width: 100%;height: 4.125rem;display: flex;flex-direction: row;justify-content: space-between;">
+      <section style="width: 100%;height: auto;display: flex;flex-direction: column;justify-content: space-between;gap: 0.5rem;">
         <nz-flex nzVertical style="width: 25rem;">
           <h5 nz-typography>Dato visualizado</h5>
           <nz-select nzAllowClear nzShowSearch nzPlaceHolder="" nzMode="multiple" [nzCustomTemplate]="multipleTemplate"
-            style="width: 100%; height: 1.875rem !important;" [(ngModel)]="selectedTelemetry"
+            style="width: 87%; height: 1.875rem !important;" [(ngModel)]="selectedTelemetry"
             (ngModelChange)="logSelection()">
             <!-- <nz-option nzLabel="Windows" nzValue="windows"></nz-option>
               <nz-option nzLabel="Apple" nzValue="apple"></nz-option>
@@ -50,10 +50,10 @@
             </div>
           </ng-template>
         </nz-flex>
-        <nz-flex nzVertical style="width: 15rem;">
+        <nz-flex nzVertical style="width: 25rem;">
           <h5 nz-typography>Rango de fechas</h5>
           <nz-range-picker [(ngModel)]="date" (ngModelChange)="onChange($event)"
-            style="height: 2.5rem;"></nz-range-picker>
+            style="height: 2.5rem;width: 87%;"></nz-range-picker>
         </nz-flex>
       </section>
       <hr style="width: 100%;background-color: var(--Neutral-Outline-Variant, #CACACA);border: 1px solid transparent;">

@@ -6,8 +6,8 @@ import { NzFlexDirective } from 'ng-zorro-antd/flex';
 import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
 import { FormsModule } from '@angular/forms';
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
-import { DatasResponse, Telemetry } from '../../DatasResponse';
-import { getTelemetryNamesTranslated, TELEMETRI_DATA, transformTelemetry, transformTelemetry2 } from '../../Functions/GraphFunctions';
+import { DatasResponse } from '../../DatasResponse';
+import { getTelemetryNamesTranslated, transformTelemetry2 } from '../../Functions/GraphFunctions';
 
 @Component({
   selector: 'app-graph-main',
@@ -42,8 +42,7 @@ export class GraphMainComponent implements OnInit {
   basicChart(data_graph:any) {
     const element = this.el().nativeElement
     const data = data_graph;
-    const layout = {
-      title: 'Simple Plotly Chart',
+    const layout = {      
       autosize: true,
       showlegend: true,
       plot_bgcolor: '#f8f9fa',

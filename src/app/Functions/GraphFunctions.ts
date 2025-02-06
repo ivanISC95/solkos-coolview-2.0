@@ -35,31 +35,17 @@ const typeMap: Record<string, string> = {
   "line": "line"
 };
 
-function transformTelemetry(data: Telemetry[] | null) {
-  if(data == null) return []
-  return data.map(({ name, type, data }) => ({
-    name: `${name}.`,
-    type: typeMap[type] || "bar",
-    mode: type === "line" ? "lines" : "",
-    line: {
-      color: colorMap[name] || "#000000",
-      width: 1
-    },
-    marker: {
-      color: colorMap[name] || "#000000"
-    },
-    x: data.map(point => point.x),
-    y: data.map(point => point.y),
-    hovertemplate: "%{y:.1f}℃ %{customdata}"
-  }));
-}
+
 function transformTelemetry2(data: Telemetry[] | null, selectedNames: string[]): any[] {
   if (!data) return [];
-
+  const customData = data.map((point:any) => point.x).map((dateStr: string) => {
+    const date = new Date(dateStr); // Convertir la cadena a Date
+    return date.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit', hour12: true }); // Formato de hora (12h)
+  });
   return data
     .filter(({ name }) => selectedNames.includes(nameMap[name])) // Filtra solo los que están en selectedNames
     .map(({ name, type, data }) => ({
-      name: `${name}.`,
+      name: `${nameMap[name]}.`,
       type: typeMap[type] || "bar",
       mode: type === "line" ? "lines" : "",
       line: {
@@ -71,6 +57,7 @@ function transformTelemetry2(data: Telemetry[] | null, selectedNames: string[]):
       },
       x: data.map(point => point.x),
       y: data.map(point => point.y),
+      customdata: customData,
       hovertemplate: "%{y:.1f}℃ %{customdata}"
     }));
 }
@@ -2096,4 +2083,4 @@ const TELEMETRI_DATA = {
   "hovertemplate": "%{y:.1f}℃ %{customdata}"
 }
 
-export{getTelemetryNamesTranslated,transformTelemetry,transformTelemetry2,TELEMETRI_DATA}
+export{getTelemetryNamesTranslated,transformTelemetry2,TELEMETRI_DATA}
