@@ -33,7 +33,9 @@
             <div style="width: 100%;height: 100%;display: flex;align-items: center;justify-content: center;">Coolview</div>
         }
         @else if (isLoading == true) { 
-            <div style="width: 100%;height: 99%;display: flex;align-items: center;justify-content: center;">Cargando....</div>
+            <div style="width: 100%;height: 99%;display: flex;align-items: center;justify-content: center;">
+                <ng-lottie [options]="options" (animationCreated)="animationCreated($event)" style="width: 20%; height: 20%;" />
+            </div>
         }        
     </section>
 </section>

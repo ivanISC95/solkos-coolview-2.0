@@ -9,11 +9,13 @@ import { GraphMainComponent } from "../../Components/GraphMain/GraphMain.compone
 import { GraphViewComponent } from "../../Components/GraphView/GraphView.component";
 import { ApiService } from '../../services/api.service';
 import { DatasResponse } from '../../DatasResponse';
+import { AnimationItem } from 'lottie-web';
+import { LottieComponent, AnimationOptions } from 'ngx-lottie';
 
 @Component({
   selector: 'app-select-main',
   standalone: true,
-  imports: [NzSelectModule, NzIconModule, GraphViewComponent, FormsModule, NzDatePickerModule, NzButtonModule, NzInputModule, GraphMainComponent],
+  imports: [NzSelectModule, NzIconModule, GraphViewComponent, FormsModule, NzDatePickerModule, NzButtonModule, NzInputModule, GraphMainComponent,LottieComponent],
   templateUrl: './SelectMain.component.html',
   styleUrl: './SelectMain.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -36,8 +38,12 @@ export class SelectMainComponent {
   onChange(result: Date[]): void {
     this.date = result;
   }
-
-
+  options: AnimationOptions = {
+    path: '/assets/Loader/loader.json',
+  };
+  animationCreated(animationItem: AnimationItem): void {
+    console.log(animationItem);
+  }
 
   async searchCooler(): Promise<void> {
     this.isLoading = true;
