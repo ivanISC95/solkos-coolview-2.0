@@ -42,7 +42,7 @@ export class SelectMainComponent {
     path: '/assets/Loader/loader.json',
   };
   animationCreated(animationItem: AnimationItem): void {
-    console.log(animationItem);
+    // console.log(animationItem);
   }
 
   async searchCooler(): Promise<void> {

@@ -23,7 +23,7 @@ export class GraphMainComponent implements OnInit {
   @Input() selectOptionDefault : string = '' // Default option to Multiselect
   readonly el = viewChild.required<ElementRef>('chart');
   drawer_status: boolean = false;
-  checked = true;
+  checked : boolean = false;
   date: null | Date[] = null;
   telemetryOptions: string[] = []; // Multiselect options
   selectedTelemetry: string[] = []; // MultiSelect value
@@ -34,12 +34,7 @@ export class GraphMainComponent implements OnInit {
     this.telemetryOptions.includes(this.selectOptionDefault) ? this.selectedTelemetry = [this.selectOptionDefault] : this.selectedTelemetry = []    
     this.data_graph = transformTelemetry2(this.data!.telemetry, [this.selectOptionDefault]);
     this.basicChart(this.data_graph);
-  }
-
-  @HostListener('window:resize', ['$event'])
-  onResize(event: any) {
-    this.resizeChart();
-  }
+  }  
   basicChart(data_graph:any) {
     const element = this.el().nativeElement
     const data = data_graph;     
@@ -56,9 +51,13 @@ export class GraphMainComponent implements OnInit {
     this.date = result
   }
   
-
   logSelection() {    
     this.data_graph = transformTelemetry2(this.data!.telemetry,this.selectedTelemetry);
     this.basicChart(this.data_graph);
+  }
+  // Logica botones drawer
+  onCheckedChange(value: boolean) {
+    console.log("Nuevo valor de checked:", value);
+    console.log(this.data_graph)    
   }
 }

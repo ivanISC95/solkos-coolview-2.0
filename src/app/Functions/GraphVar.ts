@@ -53,4 +53,48 @@ const graph_layout = () => {
         }
     };
 }
-export { graph_config, graph_layout }
+const SAFE_ZONE = [
+    {
+      "type": "rect",
+      "x0": 0,
+      "x1": 1,
+      "y0": 5.2857144219534735,
+      "y1": 9.833333587646484,
+      "xref": "paper",
+      "yref": "y",
+      "fillcolor": "rgba(134, 239, 172, 0.15)",
+      "line": {
+        "width": 0
+      },
+      "layer": "below"
+    },
+    {
+      "type": "line",
+      "x0": 0,
+      "x1": 1,
+      "y0": 9.833333587646484,
+      "y1": 9.833333587646484,
+      "xref": "paper",
+      "yref": "y",
+      "line": {
+        "color": "#22C55E",
+        "width": 0.5,
+        "dash": "dot"
+      }
+    },
+    {
+      "type": "line",
+      "x0": 0,
+      "x1": 1,
+      "y0": 5.2857144219534735,
+      "y1": 5.2857144219534735,
+      "xref": "paper",
+      "yref": "y",
+      "line": {
+        "color": "#22C55E",
+        "width": 0.5,
+        "dash": "dot"
+      }
+    }
+  ]
+export { graph_config, graph_layout ,SAFE_ZONE}
