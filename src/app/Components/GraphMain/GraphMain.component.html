@@ -60,7 +60,7 @@
       <section style="width: 100%;height: 6.25rem;">
         <nz-flex nzVertical style="width: 15rem;" nzGap="0.5rem">
           <label nz-checkbox [(ngModel)]="checked" (ngModelChange)="onCheckedChange($event)">Elementos en la gráfica</label>
-          <label nz-checkbox [(ngModel)]="checked">Zona segura (inteligente)</label>
+          <label nz-checkbox [(ngModel)]="checked" (ngModelChange)="onCheckedChange($event,'safeZone')">Zona segura (inteligente)</label>
           <label nz-checkbox [(ngModel)]="checked">Desconexiones</label>
         </nz-flex>
       </section>

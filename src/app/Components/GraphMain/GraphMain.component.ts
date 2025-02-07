@@ -56,9 +56,7 @@ export class GraphMainComponent implements OnInit {
     this.basicChart(this.data_graph);
   }
   // Logica botones drawer
-  onCheckedChange(value: boolean) {
-    console.log("Nuevo valor de checked:", value);
-    console.log(this.data_graph) 
-    this.basicChart(this.data_graph,SAFE_ZONE);       
+  onCheckedChange(value: boolean,buttonID?:string) {    
+    buttonID == 'safeZone' && value == true ? this.basicChart(this.data_graph,SAFE_ZONE) : this.basicChart(this.data_graph)    
   }
 }
