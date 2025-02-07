@@ -1,8 +1,8 @@
 // export interface DatasResponse { }
 export interface DatasResponse {
     telemetry: Telemetry[];
-    safeZone:  SafeZone[];
-    fails:     Fail[];
+    safeZone: SafeZone[];
+    fails: Fail[];
 }
 
 export interface Fail {
@@ -17,7 +17,7 @@ export enum TypeFail {
 
 export interface SafeZone {
     temperature?: Temperature;
-    voltage?:     Temperature;
+    voltage?: Temperature;
 }
 
 export interface Temperature {
@@ -35,3 +35,20 @@ export interface Datum {
     x: Date;
     y: number;
 }
+
+export interface PlotlyShape {
+    type: "rect" | "line";
+    x0: number;
+    x1: number;
+    y0: number;
+    y1: number;
+    xref: "paper";
+    yref: "y";
+    fillcolor?: string;
+    line: {
+        width: number;
+        color?: string;
+        dash?: "dot";
+    };
+    layer?: "below";
+};

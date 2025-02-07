@@ -7,7 +7,7 @@ import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
 import { FormsModule } from '@angular/forms';
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
 import { DatasResponse } from '../../DatasResponse';
-import { getTelemetryNamesTranslated, transformTelemetry2 } from '../../Functions/GraphFunctions';
+import { getTelemetryNamesTranslated, transformSafeZone, transformTelemetry2 } from '../../Functions/GraphFunctions';
 import { graph_config, graph_layout, SAFE_ZONE } from '../../Functions/GraphVar';
 
 @Component({
@@ -57,6 +57,6 @@ export class GraphMainComponent implements OnInit {
   }
   // Logica botones drawer
   onCheckedChange(value: boolean,buttonID?:string) {    
-    buttonID == 'safeZone' && value == true ? this.basicChart(this.data_graph,SAFE_ZONE) : this.basicChart(this.data_graph)    
+    buttonID == 'safeZone' && value == true ? this.basicChart(this.data_graph,transformSafeZone(this.data!.safeZone ?? [])) : this.basicChart(this.data_graph)    
   }
 }

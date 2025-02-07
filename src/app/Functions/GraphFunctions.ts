@@ -1,4 +1,4 @@
-import { DatasResponse, Telemetry } from "../DatasResponse";
+import { DatasResponse, PlotlyShape, SafeZone, Telemetry } from "../DatasResponse";
 
 const getTelemetryNames = (data: DatasResponse | null) => {
     if (!data || !Array.isArray(data.telemetry) || data == null) {
@@ -61,6 +61,46 @@ const transformTelemetry2 = (data: Telemetry[] | null, selectedNames: string[]):
       hovertemplate: "%{y:.1f}℃ %{customdata}"
     }));
 }
+const transformSafeZone = (safeZone: SafeZone[]): PlotlyShape[] => {
+  const temperature = safeZone.find((item) => item.temperature)?.temperature;
+  if (!temperature) return [];
 
+  const { x: y0, y: y1 } = temperature;
 
-export{getTelemetryNamesTranslated,transformTelemetry2}
+  return [
+    {
+      type: "rect",
+      x0: 0,
+      x1: 1,
+      y0,
+      y1,
+      xref: "paper",
+      yref: "y",
+      fillcolor: "rgba(134, 239, 172, 0.15)",
+      line: { width: 0 },
+      layer: "below",
+    },
+    {
+      type: "line",
+      x0: 0,
+      x1: 1,
+      y0: y1,
+      y1: y1,
+      xref: "paper",
+      yref: "y",
+      line: { color: "#22C55E", width: 0.5, dash: "dot" },
+    },
+    {
+      type: "line",
+      x0: 0,
+      x1: 1,
+      y0: y0,
+      y1: y0,
+      xref: "paper",
+      yref: "y",
+      line: { color: "#22C55E", width: 0.5, dash: "dot" },
+    },
+  ];
+};
+
+export{getTelemetryNamesTranslated,transformTelemetry2,transformSafeZone}
