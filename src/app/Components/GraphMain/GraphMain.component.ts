@@ -8,7 +8,7 @@ import { FormsModule } from '@angular/forms';
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
 import { DatasResponse } from '../../DatasResponse';
 import { getTelemetryNamesTranslated, transformTelemetry2 } from '../../Functions/GraphFunctions';
-import { graph_config, graph_layout } from '../../Functions/GraphVar';
+import { graph_config, graph_layout, SAFE_ZONE } from '../../Functions/GraphVar';
 
 @Component({
   selector: 'app-graph-main',
@@ -35,10 +35,10 @@ export class GraphMainComponent implements OnInit {
     this.data_graph = transformTelemetry2(this.data!.telemetry, [this.selectOptionDefault]);
     this.basicChart(this.data_graph);
   }  
-  basicChart(data_graph:any) {
+  basicChart(data_graph:any,safe_zone?:any) {
     const element = this.el().nativeElement
     const data = data_graph;     
-    Plotly.newPlot(element, data, graph_layout(), graph_config);
+    Plotly.newPlot(element, data, graph_layout(safe_zone), graph_config);
   }
   resizeChart() {
     const element = this.el().nativeElement;
@@ -58,6 +58,7 @@ export class GraphMainComponent implements OnInit {
   // Logica botones drawer
   onCheckedChange(value: boolean) {
     console.log("Nuevo valor de checked:", value);
-    console.log(this.data_graph)    
+    console.log(this.data_graph) 
+    this.basicChart(this.data_graph,SAFE_ZONE);       
   }
 }

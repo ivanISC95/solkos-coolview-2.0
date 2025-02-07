@@ -3,7 +3,7 @@ const graph_config = {
     displayModeBar: true,
     modeBarButtonsToRemove: ['pan2d', 'select2d', 'lasso2d', 'autoScale2d'], displaylogo: false
 };
-const graph_layout = () => {
+const graph_layout = (safe_zone?:any) => {
     return {
         autosize: true,
         showlegend: true,
@@ -50,7 +50,8 @@ const graph_layout = () => {
             b: 30,
             l: 30,
             r: 30
-        }
+        },
+        shapes : safe_zone
     };
 }
 const SAFE_ZONE = [
