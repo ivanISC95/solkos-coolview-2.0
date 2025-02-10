@@ -7,7 +7,7 @@ import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
 import { FormsModule } from '@angular/forms';
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
 import { DatasResponse, DrawerOptions } from '../../DatasResponse';
-import { getTelemetryNamesTranslated, transformSafeZone, transformTelemetry2 } from '../../Functions/GraphFunctions';
+import { getTelemetryNamesTranslated, transformSafeZone, transformTelemetry2, transformTelemetryZoneEvents } from '../../Functions/GraphFunctions';
 import { graph_config, graph_layout } from '../../Functions/GraphVar';
 
 @Component({
@@ -35,9 +35,11 @@ export class GraphMainComponent implements OnInit {
     this.telemetryOptions = getTelemetryNamesTranslated(this.data)
     this.telemetryOptions.includes(this.selectOptionDefault) ? this.selectedTelemetry = [this.selectOptionDefault] : this.selectedTelemetry = []    
     this.data_graph = transformTelemetry2(this.data!.telemetry, [this.selectOptionDefault],[this.selectOptionDefault]);
-    this.basicChart(this.data_graph);
+    // this.basicChart(this.data_graph);
+    this.basicChart([...this.data_graph,...transformTelemetryZoneEvents(this.data)]);
     this.datas_min_max = this.data_graph.flatMap((value)=>value.y)
-    console.log(this.datas_min_max)
+    console.log(transformTelemetryZoneEvents(this.data))
+    console.log(this.data_graph)
   }  
   basicChart(data_graph:any,safe_zone?:any) {
     const element = this.el().nativeElement

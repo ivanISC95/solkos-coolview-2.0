@@ -1,4 +1,4 @@
-import { DatasResponse, Datum, PlotlyShape, SafeZone, Telemetry } from "../DatasResponse";
+import { DatasResponse, Datum, Fail, PlotlyShape, SafeZone, Telemetry } from "../DatasResponse";
 
 const getTelemetryNames = (data: DatasResponse | null) => {
     if (!data || !Array.isArray(data.telemetry) || data == null) {
@@ -132,5 +132,27 @@ const transformSafeZone = (safeZone: SafeZone[]): PlotlyShape[] => {
     },
   ];
 };
-
-export{getTelemetryNamesTranslated,transformTelemetry2,transformSafeZone}
+const transformTelemetryZoneEvents = (data:DatasResponse | null) => {
+  const typeMapping = {
+    "DISCONNECTION_ALERT": "Desconexión",
+    "RECONNECTION_ALERT": "Conexión"
+  };
+  
+  return data!.fails.map((fail:Fail) => ({
+    name: typeMapping[fail.type_fail] || "Desconocido",
+    type: "scatter",
+    mode: "markers",
+    x: [fail.timestamp],
+    y: [1.3666667143503823],
+    customdata: ["Estatus : undefined,Folio : undefined, Comentarios : undefined"],
+    hovertemplate: typeMapping[fail.type_fail] || "Desconocido",
+    showlegend: false,
+    marker: {
+      size: 15,
+      symbol: "square",
+      color: "red"
+      // color: "rgba(0, 0, 0, 0)"
+    }
+  }));
+}
+export{getTelemetryNamesTranslated,transformTelemetry2,transformSafeZone,transformTelemetryZoneEvents}
