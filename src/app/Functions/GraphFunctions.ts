@@ -35,8 +35,34 @@ const typeMap: Record<string, string> = {
   "column": "bar",
   "line": "line"
 };
-
-const transformTelemetry2 = (data: Telemetry[] | null, selectedNames: string[]): any[] => {
+const LayoutInforTelemetry = (value:string[]) =>{  
+  if(value.length > 1){
+    return ['','']
+  }      
+  if(value.includes('Temperatura')){
+    return ['Temperatura','℃']
+  }  
+  if(value.includes('Temperatura Condensador')){
+    return ['Temperatura Condensador','℃']
+  }
+  if(value.includes('Temperatura Evaporador')){
+    return ['Temperatura Evaporador','℃']
+  }
+  if(value.includes('Voltaje')){
+    return ['Voltaje','V']
+  }
+  if(value.includes('Aperturas')){
+    return ['Aperturas','']
+  }
+  if(value.includes('Compresor')){
+    return ['Compresor','%']
+  }
+  if(value.includes('Consumo de Energía')){
+    return ['Consumo de Energía','KW/h']
+  }
+  return ['','']
+}
+const transformTelemetry2 = (data: Telemetry[] | null, selectedNames: string[],value:string[]): any[] => {
   if (!data) return [];
   const customData = data.flatMap(serie => 
     serie.data.map(point => {
@@ -61,7 +87,8 @@ const transformTelemetry2 = (data: Telemetry[] | null, selectedNames: string[]):
       x: data.map(point => point.x),
       y: data.map(point => point.y),
       customdata: customData,
-      hovertemplate: "%{y:.1f}℃ %{customdata}"
+      // hovertemplate: "%{y:.1f}℃ %{customdata}"
+      hovertemplate: `%{y:.1f}${LayoutInforTelemetry(value)[1]} %{customdata}`
     }));
 }
 const transformSafeZone = (safeZone: SafeZone[]): PlotlyShape[] => {

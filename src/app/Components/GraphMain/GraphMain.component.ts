@@ -32,7 +32,7 @@ export class GraphMainComponent implements OnInit {
   ngOnInit() {
     this.telemetryOptions = getTelemetryNamesTranslated(this.data)
     this.telemetryOptions.includes(this.selectOptionDefault) ? this.selectedTelemetry = [this.selectOptionDefault] : this.selectedTelemetry = []    
-    this.data_graph = transformTelemetry2(this.data!.telemetry, [this.selectOptionDefault]);
+    this.data_graph = transformTelemetry2(this.data!.telemetry, [this.selectOptionDefault],[this.selectOptionDefault]);
     this.basicChart(this.data_graph);
   }  
   basicChart(data_graph:any,safe_zone?:any) {
@@ -52,7 +52,7 @@ export class GraphMainComponent implements OnInit {
   }
   
   logSelection() {    
-    this.data_graph = transformTelemetry2(this.data!.telemetry,this.selectedTelemetry);
+    this.data_graph = transformTelemetry2(this.data!.telemetry,this.selectedTelemetry,this.selectedTelemetry);
     this.basicChart(this.data_graph);
   }
   // Logica botones drawer
