@@ -38,7 +38,7 @@ export class GraphMainComponent implements OnInit {
   basicChart(data_graph:any,safe_zone?:any) {
     const element = this.el().nativeElement
     const data = data_graph;     
-    Plotly.newPlot(element, data, graph_layout(safe_zone), graph_config);
+    Plotly.newPlot(element, data, graph_layout(safe_zone,this.selectedTelemetry), graph_config);
   }
   resizeChart() {
     const element = this.el().nativeElement;

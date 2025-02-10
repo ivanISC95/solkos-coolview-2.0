@@ -1,9 +1,36 @@
+const LayoutInforTelemetry = (value:string[]) =>{  
+  if(value.length > 1){
+    return ['','']
+  }      
+  if(value.includes('Temperatura')){
+    return ['Temperatura','℃']
+  }  
+  if(value.includes('Temperatura Condensador')){
+    return ['Temperatura Condensador','℃']
+  }
+  if(value.includes('Temperatura Evaporador')){
+    return ['Temperatura Evaporador','℃']
+  }
+  if(value.includes('Voltaje')){
+    return ['Voltaje','V']
+  }
+  if(value.includes('Aperturas')){
+    return ['Aperturas','']
+  }
+  if(value.includes('Compresor')){
+    return ['Compresor','%']
+  }
+  if(value.includes('Consumo de Energía')){
+    return ['Consumo de Energía','KW/h']
+  }
+  return ['','']
+}
 const graph_config = {
     responsive: true,
     displayModeBar: true,
     modeBarButtonsToRemove: ['pan2d', 'select2d', 'lasso2d', 'autoScale2d'], displaylogo: false
 };
-const graph_layout = (safe_zone?:any) => {
+const graph_layout = (safe_zone?:any,value?:string[]) => {
     return {
         autosize: true,
         showlegend: true,
@@ -30,13 +57,14 @@ const graph_layout = (safe_zone?:any) => {
         xaxis: {
             tickformat: '%d-%b',
             showgrid: false,
-            type: 'date'
+            // type: 'date'
             // range: rangos.length > 0 ? [rangos[0], rangos[1]] : undefined
         },
         yaxis: {
             autorange: true,
             tickformat: '~s',
             // ticksuffix: LayoutInforTelemetry(value)[1],
+            ticksuffix: LayoutInforTelemetry(value ?? [])[1] ,
             zeroline: false,
             showgrid: true,
             tickfont: {
