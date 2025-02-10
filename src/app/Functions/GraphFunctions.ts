@@ -1,4 +1,4 @@
-import { DatasResponse, PlotlyShape, SafeZone, Telemetry } from "../DatasResponse";
+import { DatasResponse, Datum, PlotlyShape, SafeZone, Telemetry } from "../DatasResponse";
 
 const getTelemetryNames = (data: DatasResponse | null) => {
     if (!data || !Array.isArray(data.telemetry) || data == null) {
@@ -38,10 +38,13 @@ const typeMap: Record<string, string> = {
 
 const transformTelemetry2 = (data: Telemetry[] | null, selectedNames: string[]): any[] => {
   if (!data) return [];
-  const customData = data.map((point:any) => point.x).map((dateStr: string) => {
-    const date = new Date(dateStr); // Convertir la cadena a Date
-    return date.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit', hour12: true }); // Formato de hora (12h)
-  });
+  const customData = data.flatMap(serie => 
+    serie.data.map(point => {
+      const date = new Date(point.x);
+      return date.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit', hour12: true });
+    })
+  );
+    
   return data
     .filter(({ name }) => selectedNames.includes(nameMap[name])) // Filtra solo los que están en selectedNames
     .map(({ name, type, data }) => ({
