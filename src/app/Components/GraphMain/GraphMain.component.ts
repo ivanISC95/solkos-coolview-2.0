@@ -6,9 +6,9 @@ import { NzFlexDirective } from 'ng-zorro-antd/flex';
 import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
 import { FormsModule } from '@angular/forms';
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
-import { DatasResponse } from '../../DatasResponse';
+import { DatasResponse, DrawerOptions } from '../../DatasResponse';
 import { getTelemetryNamesTranslated, transformSafeZone, transformTelemetry2 } from '../../Functions/GraphFunctions';
-import { graph_config, graph_layout, SAFE_ZONE } from '../../Functions/GraphVar';
+import { graph_config, graph_layout } from '../../Functions/GraphVar';
 
 @Component({
   selector: 'app-graph-main',
@@ -25,15 +25,19 @@ export class GraphMainComponent implements OnInit {
   drawer_status: boolean = false;
   checked : boolean = false;
   date: null | Date[] = null;
+  drawer_options : DrawerOptions = { checked_safe_zone : false ,checked_disconection : true } // variables drawer
   telemetryOptions: string[] = []; // Multiselect options
   selectedTelemetry: string[] = []; // MultiSelect value
-  data_graph : any[] = []
+  data_graph : any[] = [] // Datas from graph
+  datas_min_max : number[] = [] // Y datas for min and max
   
   ngOnInit() {
     this.telemetryOptions = getTelemetryNamesTranslated(this.data)
     this.telemetryOptions.includes(this.selectOptionDefault) ? this.selectedTelemetry = [this.selectOptionDefault] : this.selectedTelemetry = []    
     this.data_graph = transformTelemetry2(this.data!.telemetry, [this.selectOptionDefault],[this.selectOptionDefault]);
     this.basicChart(this.data_graph);
+    this.datas_min_max = this.data_graph.flatMap((value)=>value.y)
+    console.log(this.datas_min_max)
   }  
   basicChart(data_graph:any,safe_zone?:any) {
     const element = this.el().nativeElement
@@ -51,12 +55,15 @@ export class GraphMainComponent implements OnInit {
     this.date = result
   }
   
-  logSelection() {    
+  logSelection() {   
     this.data_graph = transformTelemetry2(this.data!.telemetry,this.selectedTelemetry,this.selectedTelemetry);
     this.basicChart(this.data_graph);
+    console.log(this.data_graph) 
   }
   // Logica botones drawer
   onCheckedChange(value: boolean,buttonID?:string) {    
-    buttonID == 'safeZone' && value == true ? this.basicChart(this.data_graph,transformSafeZone(this.data!.safeZone ?? [])) : this.basicChart(this.data_graph)    
+    buttonID == 'safeZone' && value == true ? this.basicChart(this.data_graph,transformSafeZone(this.data!.safeZone ?? [])) : this.basicChart(this.data_graph)
+    // logica para desconexiones datas_min_max tiene los registros,sacar min y max para calcular los ejes y
+    console.log(this.datas_min_max)
   }
 }

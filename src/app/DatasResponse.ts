@@ -52,3 +52,8 @@ export interface PlotlyShape {
     };
     layer?: "below";
 };
+
+export interface DrawerOptions {
+    checked_safe_zone : boolean;
+    checked_disconection : boolean;
+}
