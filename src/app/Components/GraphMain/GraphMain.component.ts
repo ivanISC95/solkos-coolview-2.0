@@ -38,7 +38,7 @@ export class GraphMainComponent implements OnInit {
     this.data_graph = transformTelemetry2(this.data!.telemetry, [this.selectOptionDefault],[this.selectOptionDefault]);
     // this.basicChart(this.data_graph);
     this.datas_min_max = this.data_graph.flatMap((value)=>value.y)         
-    this.basicChart([...this.data_graph,...transformTelemetryZoneEvents(this.data)],null,this.datas_min_max);
+    this.basicChart([...this.data_graph,...transformTelemetryZoneEvents(this.data,this.datas_min_max)],null,this.datas_min_max);
   }  
   basicChart(data_graph:any,safe_zone?:any,min_max?:number[]) {    
     const element = this.el().nativeElement
@@ -63,8 +63,7 @@ export class GraphMainComponent implements OnInit {
   }
   // Logica botones drawer
   onCheckedChange(value: boolean,buttonID?:string) {    
-    buttonID == 'safeZone' && value == true ? this.basicChart([...this.data_graph,...transformTelemetryZoneEvents(this.data)],transformSafeZone(this.data!.safeZone ?? []),this.datas_min_max) : this.basicChart([...this.data_graph,...transformTelemetryZoneEvents(this.data)])
-    // logica para desconexiones datas_min_max tiene los registros,sacar min y max para calcular los ejes y
-    console.log(this.datas_min_max)
+    buttonID == 'safeZone' && value == true ? this.basicChart([...this.data_graph,...transformTelemetryZoneEvents(this.data,this.datas_min_max)],transformSafeZone(this.data!.safeZone ?? []),this.datas_min_max) : this.basicChart([...this.data_graph,...transformTelemetryZoneEvents(this.data,this.datas_min_max)])
+    // logica para desconexiones datas_min_max tiene los registros,sacar min y max para calcular los ejes y    
   }
 }

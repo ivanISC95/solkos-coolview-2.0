@@ -132,9 +132,9 @@ const transformSafeZone = (safeZone: SafeZone[]): PlotlyShape[] => {
     },
   ];
 };
-const transformTelemetryZoneEvents = (data: DatasResponse | null) => {
+const transformTelemetryZoneEvents = (data: DatasResponse | null,rangosTelemetry:number[]) => {
   if (!data || !data.fails) return [];
-
+  const minValue = Math.min(...rangosTelemetry)
   const typeMapping: Record<string, string> = {
     "DISCONNECTION_ALERT": "Desconexión",
     "RECONNECTION_ALERT": "Conexión",
@@ -148,7 +148,7 @@ const transformTelemetryZoneEvents = (data: DatasResponse | null) => {
       type: "scatter",
       mode: "markers",
       x: [fail.start ?? fail.timestamp],
-      y: [1.3666667143503823],
+      y: [minValue < 0 ? minValue+-0.5 : minValue-1],
       customdata: ["Estatus : undefined,Folio : undefined, Comentarios : undefined"],
       hovertemplate: typeMapping[fail.type_fail] || "Desconocido",
       showlegend: false,
@@ -213,7 +213,7 @@ function transformFailsToAnnotations2(data: DatasResponse | null,valueInputFecha
     const baseAnnotation = {
       source: iconMapping[fail.type_fail] || "",
       x: fail.timestamp ?? fail.start, // Tomamos `timestamp` o `start`
-      y: minValue < 0 ? minValue+-0.5 : minValue-1,
+      y: minValue < 0 ? minValue+0.5 : minValue+2.6,
       xref: "x",
       yref: "y",
       sizex: pixelsToSizeX(6, windowWidth, xRange),
