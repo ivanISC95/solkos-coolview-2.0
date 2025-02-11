@@ -30,7 +30,7 @@ const graph_config = {
     displayModeBar: true,
     modeBarButtonsToRemove: ['pan2d', 'select2d', 'lasso2d', 'autoScale2d'], displaylogo: false
 };
-const graph_layout = (safe_zone?:any,value?:string[]) => {
+const graph_layout = (safe_zone?:any,value?:string[],images?: any[]) => {
     return {
         autosize: true,
         showlegend: true,
@@ -79,51 +79,9 @@ const graph_layout = (safe_zone?:any,value?:string[]) => {
             l: 30,
             r: 30
         },
-        shapes : safe_zone
+        shapes : safe_zone,
+        images : images ?? []
     };
 }
-const SAFE_ZONE = [
-    {
-      "type": "rect",
-      "x0": 0,
-      "x1": 1,
-      "y0": 4.377916188394388,
-      "y1": 6.0788009558777505,
-      "xref": "paper",
-      "yref": "y",
-      "fillcolor": "rgba(134, 239, 172, 0.15)",
-      "line": {
-        "width": 0
-      },
-      "layer": "below"
-    },
-    {
-      "type": "line",
-      "x0": 0,
-      "x1": 1,
-      "y0": 6.0788009558777505,
-      "y1": 6.0788009558777505,
-      "xref": "paper",
-      "yref": "y",
-      "line": {
-        "color": "#22C55E",
-        "width": 0.5,
-        "dash": "dot"
-      }
-    },
-    {
-      "type": "line",
-      "x0": 0,
-      "x1": 1,
-      "y0": 4.377916188394388,
-      "y1": 4.377916188394388,
-      "xref": "paper",
-      "yref": "y",
-      "line": {
-        "color": "#22C55E",
-        "width": 0.5,
-        "dash": "dot"
-      }
-    }
-  ]
-export { graph_config, graph_layout ,SAFE_ZONE}
+
+export { graph_config, graph_layout }

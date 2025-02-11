@@ -178,22 +178,47 @@ const transformTelemetryZoneEvents = (data: DatasResponse | null) => {
 };
 
 // IMG into Events zone
-function transformFailsToAnnotations(data:DatasResponse | null) {
-  const iconMapping = {
-    "DISCONNECTION_ALERT": "/src/icons/Informativos/Desconexion.svg",
-    "RECONNECTION_ALERT": "/src/icons/Informativos/Reconexion.svg"
+function transformFailsToAnnotations2(data: DatasResponse | null) {
+  if (!data || !data.fails) return [];
+
+  const iconMapping: Record<string, string> = {
+    // Info
+    "DISCONNECTION_ALERT": "/assets/Informativos/Desconexion.svg",
+    "RECONNECTION_ALERT": "/assets/Informativos/Reconexion.svg",
+    // Alerts
+    "COMPRESSOR_RUN_TIME_EXCEDED_ALERT": "/assets/Alerts/AltaDemandaCompresor.svg",
+    // Fails
+    "TEMPERATURE_FAIL": "/assets/Fails/AltaTemperatura.svg",
   };
 
-  return data!.fails.map(fail => ({
-    source: iconMapping[fail.type_fail] || "",
-    x: fail.timestamp,
-    y: 4.966666714350382,
-    xref: "x",
-    yref: "y",
-    sizex: 23350818.571875,
-    sizey: 7.5,
-    opacity: 1,
-    layer: ""
-  }));
+  const annotations = data.fails.flatMap(fail => {
+    const baseAnnotation = {
+      source: iconMapping[fail.type_fail] || "",
+      x: fail.timestamp ?? fail.start, // Tomamos `timestamp` o `start`
+      y: 4.966666714350382,
+      xref: "x",
+      yref: "y",
+      sizex: 23350818.571875,
+      sizey: 7.5,
+      opacity: 1,
+      layer: ""
+    };
+
+    // Si es una desconexión y tiene "end", agregamos la anotación de reconexión
+    if (fail.type_fail === "DISCONNECTION_ALERT" && fail.end) {
+      const reconnectionAnnotation = {
+        ...baseAnnotation,
+        source: iconMapping["RECONNECTION_ALERT"], // Imagen de reconexión
+        x: fail.end // Usamos `end` como la fecha de reconexión
+      };
+
+      return [baseAnnotation, reconnectionAnnotation]; // Retornamos ambos eventos
+    }
+
+    return [baseAnnotation]; // Retornamos solo el evento normal
+  });
+
+  return annotations;
 }
-export{getTelemetryNamesTranslated,transformTelemetry2,transformSafeZone,transformTelemetryZoneEvents}
+
+export{getTelemetryNamesTranslated,transformTelemetry2,transformSafeZone,transformTelemetryZoneEvents,transformFailsToAnnotations2}
