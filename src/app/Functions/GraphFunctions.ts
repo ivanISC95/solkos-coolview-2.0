@@ -155,4 +155,23 @@ const transformTelemetryZoneEvents = (data:DatasResponse | null) => {
     }
   }));
 }
+// IMG into Events zone
+function transformFailsToAnnotations(data:DatasResponse | null) {
+  const iconMapping = {
+    "DISCONNECTION_ALERT": "/src/icons/Informativos/Desconexion.svg",
+    "RECONNECTION_ALERT": "/src/icons/Informativos/Reconexion.svg"
+  };
+
+  return data!.fails.map(fail => ({
+    source: iconMapping[fail.type_fail] || "",
+    x: fail.timestamp,
+    y: 4.966666714350382,
+    xref: "x",
+    yref: "y",
+    sizex: 23350818.571875,
+    sizey: 7.5,
+    opacity: 1,
+    layer: ""
+  }));
+}
 export{getTelemetryNamesTranslated,transformTelemetry2,transformSafeZone,transformTelemetryZoneEvents}
