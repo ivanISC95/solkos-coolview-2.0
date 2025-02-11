@@ -224,8 +224,8 @@ function transformFailsToAnnotations2(data: DatasResponse | null,valueInputFecha
       y: minValue < 0 ? minValue+0.5 : minValue+2.6,
       xref: "x",
       yref: "y",
-      sizex: pixelsToSizeX(6, windowWidth, xRange),
-      sizey: pixelsToSizeY(6, yRange),
+      sizex: pixelsToSizeX(18, windowWidth, xRange),
+      sizey: pixelsToSizeY(18, yRange),
       opacity: 1,
       layer: ""
     };
