@@ -21,6 +21,7 @@ import { graph_config, graph_layout } from '../../Functions/GraphVar';
 export class GraphMainComponent implements OnInit {
   @Input() data: DatasResponse | null = null
   @Input() selectOptionDefault : string = '' // Default option to Multiselect
+  @Input() date_select_main : Date[] | null = null
   readonly el = viewChild.required<ElementRef>('chart');
   drawer_status: boolean = false;
   checked : boolean = false;
@@ -37,12 +38,12 @@ export class GraphMainComponent implements OnInit {
     this.data_graph = transformTelemetry2(this.data!.telemetry, [this.selectOptionDefault],[this.selectOptionDefault]);
     // this.basicChart(this.data_graph);
     this.basicChart([...this.data_graph,...transformTelemetryZoneEvents(this.data)]);
-    this.datas_min_max = this.data_graph.flatMap((value)=>value.y)   
+    this.datas_min_max = this.data_graph.flatMap((value)=>value.y)     
   }  
   basicChart(data_graph:any,safe_zone?:any) {
     const element = this.el().nativeElement
     const data = data_graph;     
-    Plotly.newPlot(element, data, graph_layout(safe_zone,this.selectedTelemetry,transformFailsToAnnotations2(this.data)), graph_config);
+    Plotly.newPlot(element, data, graph_layout(safe_zone,this.selectedTelemetry,transformFailsToAnnotations2(this.data,this.date_select_main,this.datas_min_max)), graph_config);
   }
   resizeChart() {
     const element = this.el().nativeElement;

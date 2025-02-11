@@ -13,7 +13,7 @@
     <app-graph-view (mensajeEvento)="recibirMensaje($event)"></app-graph-view>
     <section class="grap_select_main" [style.flex-direction]="view_grap_opt == 3 ? 'row' : view_grap_opt == 4 ? 'row': 'column'" [style.flex-wrap]="view_grap_opt == 4 ? 'wrap' : ''" >        
         @if (view_grap_opt == 1 && data_Cooler != null) {            
-            <app-graph-main [data]="data_Cooler" [selectOptionDefault] = "'Temperatura'" ></app-graph-main>
+            <app-graph-main [data]="data_Cooler" [selectOptionDefault] = "'Temperatura'" [date_select_main]="date" ></app-graph-main>
         }
         @else if(view_grap_opt == 2){
             <app-graph-main [data]="data_Cooler" [selectOptionDefault] = "'Temperatura'" ></app-graph-main>

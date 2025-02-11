@@ -178,9 +178,25 @@ const transformTelemetryZoneEvents = (data: DatasResponse | null) => {
 };
 
 // IMG into Events zone
-function transformFailsToAnnotations2(data: DatasResponse | null) {
+// Image size X
+const pixelsToSizeX = (px: number, windowWidth: number, rangeX: [number, number]) => {
+  const [xMin, xMax] = rangeX;
+  const graphWidth = xMax - xMin;
+  return (px / windowWidth) * graphWidth;
+};
+// Image size Y
+const pixelsToSizeY = (px: number, rangeY: [number, number]) => {
+  const [yMin, yMax] = rangeY;
+  const graphHeight = yMax - yMin;
+  return (px / 600) * graphHeight; // 600 es un ejemplo de altura en px del gráfico
+};
+// function to create images inthe graph
+function transformFailsToAnnotations2(data: DatasResponse | null,valueInputFechas:any,rangosTelemetry:number[]) {  
+  const windowWidth = window.innerWidth;
+  const xRange: [number, number] = valueInputFechas 
+  const yRange: [number, number] = [0, Math.max(...rangosTelemetry) > 250 ? 500 : 250];
+  const minValue = Math.min(...rangosTelemetry)
   if (!data || !data.fails) return [];
-
   const iconMapping: Record<string, string> = {
     // Info
     "DISCONNECTION_ALERT": "/assets/Informativos/Desconexion.svg",
@@ -195,11 +211,11 @@ function transformFailsToAnnotations2(data: DatasResponse | null) {
     const baseAnnotation = {
       source: iconMapping[fail.type_fail] || "",
       x: fail.timestamp ?? fail.start, // Tomamos `timestamp` o `start`
-      y: 4.966666714350382,
+      y: minValue < 0 ? minValue+0.5 : minValue+2.6,
       xref: "x",
       yref: "y",
-      sizex: 23350818.571875,
-      sizey: 7.5,
+      sizex: pixelsToSizeX(6, windowWidth, xRange),
+      sizey: pixelsToSizeY(6, yRange),
       opacity: 1,
       layer: ""
     };
