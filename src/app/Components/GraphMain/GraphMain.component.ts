@@ -63,7 +63,7 @@ export class GraphMainComponent implements OnInit {
   }
   // Logica botones drawer
   onCheckedChange(value: boolean,buttonID?:string) {    
-    buttonID == 'safeZone' && value == true ? this.basicChart(this.data_graph,transformSafeZone(this.data!.safeZone ?? [])) : this.basicChart(this.data_graph)
+    buttonID == 'safeZone' && value == true ? this.basicChart([...this.data_graph,...transformTelemetryZoneEvents(this.data)],transformSafeZone(this.data!.safeZone ?? [])) : this.basicChart([...this.data_graph,...transformTelemetryZoneEvents(this.data)])
     // logica para desconexiones datas_min_max tiene los registros,sacar min y max para calcular los ejes y
     console.log(this.datas_min_max)
   }
