@@ -40,7 +40,7 @@ export class GraphMainComponent implements OnInit {
     this.datas_min_max = this.data_graph.flatMap((value)=>value.y)         
     this.basicChart([...this.data_graph,...transformTelemetryZoneEvents(this.data,this.datas_min_max)],null,this.datas_min_max);
   }  
-  basicChart(data_graph:any,safe_zone?:any,min_max?:number[]) {    
+  basicChart(data_graph:any,safe_zone?:any,min_max?:number[]) {  
     const element = this.el().nativeElement
     const data = data_graph;     
     Plotly.newPlot(element, data, graph_layout(safe_zone,this.selectedTelemetry,transformFailsToAnnotations2(this.data,this.date_select_main,min_max ?? [])), graph_config);
@@ -58,8 +58,7 @@ export class GraphMainComponent implements OnInit {
   
   logSelection() {   
     this.data_graph = transformTelemetry2(this.data!.telemetry,this.selectedTelemetry,this.selectedTelemetry);
-    this.basicChart(this.data_graph);
-    console.log(this.data_graph) 
+    this.drawer_options.checked_safe_zone == true ? this.basicChart([...this.data_graph,...transformTelemetryZoneEvents(this.data,this.datas_min_max)],transformSafeZone(this.data!.safeZone ?? []),this.datas_min_max) : this.basicChart([...this.data_graph,...transformTelemetryZoneEvents(this.data,this.datas_min_max)])
   }
   // Logica botones drawer
   onCheckedChange(value: boolean,buttonID?:string) {    

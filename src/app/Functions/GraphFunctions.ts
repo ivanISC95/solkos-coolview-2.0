@@ -138,8 +138,13 @@ const transformTelemetryZoneEvents = (data: DatasResponse | null,rangosTelemetry
   const typeMapping: Record<string, string> = {
     "DISCONNECTION_ALERT": "Desconexión",
     "RECONNECTION_ALERT": "Conexión",
+    "COMPRESSOR_RUN_TIME_EXCEDED_ALERT": "Alerta Compresor",
+    "TEMPERATURE_ALERT" : "Alerta Temperatura",
+    "VOLTAGE_ALERT":"Alerta Voltaje",
     "TEMPERATURE_FAIL": "Falla Temperatura",
-    "COMPRESSOR_RUN_TIME_EXCEDED_ALERT": "Falla Compresor"
+    "FROZEN_ALERT" : "Falla Congelamiento",
+    "COMPRESSOR_FAIL" : "Falla Compresor",
+    "VOLTAGE_FAIL" : "Falla Voltaje"
   };
 
   const events = data.fails.flatMap((fail: Fail) => {
@@ -196,8 +201,6 @@ function transformFailsToAnnotations2(data: DatasResponse | null,valueInputFecha
   const xRange: [number, number] = valueInputFechas 
   const yRange: [number, number] = [0, Math.max(...rangosTelemetry) > 250 ? 500 : 250];
   const minValue = Math.min(...rangosTelemetry)
-  console.log(minValue)
-  console.log(rangosTelemetry)
   if (!data || !data.fails) return [];
   const iconMapping: Record<string, string> = {
     // Info
@@ -205,8 +208,13 @@ function transformFailsToAnnotations2(data: DatasResponse | null,valueInputFecha
     "RECONNECTION_ALERT": "/assets/Informativos/Reconexion.svg",
     // Alerts
     "COMPRESSOR_RUN_TIME_EXCEDED_ALERT": "/assets/Alerts/AltaDemandaCompresor.svg",
+    "TEMPERATURE_ALERT" : "/assets/Alerts/AltaTemperatura.svg",
+    "VOLTAGE_ALERT" : "/assets/Alerts/AltoVoltaje.svg",
     // Fails
     "TEMPERATURE_FAIL": "/assets/Fails/AltaTemperatura.svg",
+    "FROZEN_ALERT" : "/assets/Fails/EvaporadorBloqueado.svg",
+    "COMPRESSOR_FAIL" : "/assets/Fails/FallaCompresor.svg",
+    "VOLTAGE_FAIL" : "/assets/Fails/FallaElectrica.svg"
   };
 
   const annotations = data.fails.flatMap(fail => {

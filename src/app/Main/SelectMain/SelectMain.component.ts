@@ -50,12 +50,9 @@ export class SelectMainComponent {
     this.cdr.markForCheck(); 
     if (this.date) {
       this.dateFormatted = this.date.map(d => d.toISOString().split('T')[0]);
-    }
-    // Fechas para fetch
-     console.log(this.dateFormatted);     
-    // Serial / MAC
-     console.log(this.value);
-    this.apiService.fetchData("https://coolview-api-v2-545989770214.us-central1.run.app/coolview-api/v2/telemetryOs/?id=G06231010425&start_date=2025-01-30&end_date=2025-02-08&is_mac=false")
+    }   
+    // this.apiService.fetchData("https://coolview-api-v2-545989770214.us-central1.run.app/coolview-api/v2/telemetryOs/?id=G06231010425&start_date=2025-01-30&end_date=2025-02-08&is_mac=false")
+    this.apiService.fetchData(`https://coolview-api-v2-545989770214.us-central1.run.app/coolview-api/v2/telemetryOs/?id=${this.value}&start_date=${this.dateFormatted[0]}&end_date=${this.dateFormatted[1]}&is_mac=false`)
       .subscribe({
         next: (data) => {
           this.data_Cooler = data
