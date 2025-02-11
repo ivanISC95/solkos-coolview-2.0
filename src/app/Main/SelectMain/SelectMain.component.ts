@@ -55,7 +55,7 @@ export class SelectMainComponent {
     // console.log(this.dateFormatted);     
     // Serial / MAC
     // console.log(this.value);
-    this.apiService.fetchData("https://coolview-api-v2-545989770214.us-central1.run.app/coolview-api/v2/telemetryOs/?id=E22181202280&start_date=2025-01-01&end_date=2025-01-15&is_mac=false")
+    this.apiService.fetchData("https://coolview-api-v2-545989770214.us-central1.run.app/coolview-api/v2/telemetryOs/?id=G06231010425&start_date=2025-01-30&end_date=2025-02-08&is_mac=false")
       .subscribe({
         next: (data) => {
           this.data_Cooler = data

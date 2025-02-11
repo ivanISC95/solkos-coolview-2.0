@@ -8,6 +8,8 @@ export interface DatasResponse {
 export interface Fail {
     type_fail: TypeFail;
     timestamp: Date;
+    start : Date;
+    end : Date;
 }
 
 export enum TypeFail {

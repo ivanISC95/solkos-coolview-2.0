@@ -132,29 +132,51 @@ const transformSafeZone = (safeZone: SafeZone[]): PlotlyShape[] => {
     },
   ];
 };
-const transformTelemetryZoneEvents = (data:DatasResponse | null) => {
-  const typeMapping = {
+const transformTelemetryZoneEvents = (data: DatasResponse | null) => {
+  if (!data || !data.fails) return [];
+
+  const typeMapping: Record<string, string> = {
     "DISCONNECTION_ALERT": "Desconexión",
-    "RECONNECTION_ALERT": "Conexión"
+    "RECONNECTION_ALERT": "Conexión",
+    "TEMPERATURE_FAIL": "Falla Temperatura",
+    "COMPRESSOR_RUN_TIME_EXCEDED_ALERT": "Falla Compresor"
   };
-  
-  return data!.fails.map((fail:Fail) => ({
-    name: typeMapping[fail.type_fail] || "Desconocido",
-    type: "scatter",
-    mode: "markers",
-    x: [fail.timestamp],
-    y: [1.3666667143503823],
-    customdata: ["Estatus : undefined,Folio : undefined, Comentarios : undefined"],
-    hovertemplate: typeMapping[fail.type_fail] || "Desconocido",
-    showlegend: false,
-    marker: {
-      size: 15,
-      symbol: "square",
-      color: "red"
-      // color: "rgba(0, 0, 0, 0)"
+
+  const events = data.fails.flatMap((fail: Fail) => {
+    const baseEvent = {
+      name: typeMapping[fail.type_fail] || "Desconocido",
+      type: "scatter",
+      mode: "markers",
+      x: [fail.start ?? fail.timestamp],
+      y: [1.3666667143503823],
+      customdata: ["Estatus : undefined,Folio : undefined, Comentarios : undefined"],
+      hovertemplate: typeMapping[fail.type_fail] || "Desconocido",
+      showlegend: false,
+      marker: {
+        size: 15,
+        symbol: "square",
+        color: "red"
+      }
+    };
+
+    // Si es una desconexión y tiene "end", agregamos el evento de conexión
+    if (fail.type_fail === "DISCONNECTION_ALERT" && fail.end) {
+      const reconnectionEvent = {
+        ...baseEvent,
+        name: typeMapping["RECONNECTION_ALERT"], // "Conexión"
+        x: [fail.end], // Usamos "end" como timestamp de conexión
+        hovertemplate: typeMapping["RECONNECTION_ALERT"]
+      };
+
+      return [baseEvent, reconnectionEvent]; // Retornamos ambos eventos
     }
-  }));
-}
+
+    return [baseEvent]; // Retornamos solo el evento normal
+  });
+
+  return events;
+};
+
 // IMG into Events zone
 function transformFailsToAnnotations(data:DatasResponse | null) {
   const iconMapping = {
