@@ -196,6 +196,8 @@ function transformFailsToAnnotations2(data: DatasResponse | null,valueInputFecha
   const xRange: [number, number] = valueInputFechas 
   const yRange: [number, number] = [0, Math.max(...rangosTelemetry) > 250 ? 500 : 250];
   const minValue = Math.min(...rangosTelemetry)
+  console.log(minValue)
+  console.log(rangosTelemetry)
   if (!data || !data.fails) return [];
   const iconMapping: Record<string, string> = {
     // Info
@@ -211,7 +213,7 @@ function transformFailsToAnnotations2(data: DatasResponse | null,valueInputFecha
     const baseAnnotation = {
       source: iconMapping[fail.type_fail] || "",
       x: fail.timestamp ?? fail.start, // Tomamos `timestamp` o `start`
-      y: minValue < 0 ? minValue+0.5 : minValue+2.6,
+      y: minValue < 0 ? minValue+-0.5 : minValue-1,
       xref: "x",
       yref: "y",
       sizex: pixelsToSizeX(6, windowWidth, xRange),

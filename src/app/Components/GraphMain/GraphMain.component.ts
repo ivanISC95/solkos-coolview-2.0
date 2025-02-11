@@ -37,13 +37,13 @@ export class GraphMainComponent implements OnInit {
     this.telemetryOptions.includes(this.selectOptionDefault) ? this.selectedTelemetry = [this.selectOptionDefault] : this.selectedTelemetry = []    
     this.data_graph = transformTelemetry2(this.data!.telemetry, [this.selectOptionDefault],[this.selectOptionDefault]);
     // this.basicChart(this.data_graph);
-    this.basicChart([...this.data_graph,...transformTelemetryZoneEvents(this.data)]);
-    this.datas_min_max = this.data_graph.flatMap((value)=>value.y)     
+    this.datas_min_max = this.data_graph.flatMap((value)=>value.y)         
+    this.basicChart([...this.data_graph,...transformTelemetryZoneEvents(this.data)],null,this.datas_min_max);
   }  
-  basicChart(data_graph:any,safe_zone?:any) {
+  basicChart(data_graph:any,safe_zone?:any,min_max?:number[]) {    
     const element = this.el().nativeElement
     const data = data_graph;     
-    Plotly.newPlot(element, data, graph_layout(safe_zone,this.selectedTelemetry,transformFailsToAnnotations2(this.data,this.date_select_main,this.datas_min_max)), graph_config);
+    Plotly.newPlot(element, data, graph_layout(safe_zone,this.selectedTelemetry,transformFailsToAnnotations2(this.data,this.date_select_main,min_max ?? [])), graph_config);
   }
   resizeChart() {
     const element = this.el().nativeElement;
@@ -63,7 +63,7 @@ export class GraphMainComponent implements OnInit {
   }
   // Logica botones drawer
   onCheckedChange(value: boolean,buttonID?:string) {    
-    buttonID == 'safeZone' && value == true ? this.basicChart([...this.data_graph,...transformTelemetryZoneEvents(this.data)],transformSafeZone(this.data!.safeZone ?? [])) : this.basicChart([...this.data_graph,...transformTelemetryZoneEvents(this.data)])
+    buttonID == 'safeZone' && value == true ? this.basicChart([...this.data_graph,...transformTelemetryZoneEvents(this.data)],transformSafeZone(this.data!.safeZone ?? []),this.datas_min_max) : this.basicChart([...this.data_graph,...transformTelemetryZoneEvents(this.data)])
     // logica para desconexiones datas_min_max tiene los registros,sacar min y max para calcular los ejes y
     console.log(this.datas_min_max)
   }
