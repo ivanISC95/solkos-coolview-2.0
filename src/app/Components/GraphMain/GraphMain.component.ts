@@ -43,11 +43,21 @@ export class GraphMainComponent implements OnInit {
   basicChart(data_graph:any,safe_zone?:any,min_max?:number[]) {  
     const element = this.el().nativeElement
     const data = data_graph;     
-    Plotly.newPlot(element, data, graph_layout(safe_zone,this.selectedTelemetry,transformFailsToAnnotations2(this.data,this.date_select_main,min_max ?? []),this.date_select_main ?? []), graph_config);
+    Plotly.newPlot(element, data, graph_layout(safe_zone,this.selectedTelemetry,transformFailsToAnnotations2(this.data,this.date_select_main,min_max ?? []),this.date_select_main ?? []), graph_config).then((graph:any)=>{graph.on('plotly_relayout',(eventData:any)=>{
+      console.log("relayout",eventData)
+      if (eventData["xaxis.range"]) {
+        const [xMin, xMax] = eventData["xaxis.range"];
+        console.log("Nuevo rango X:", xMin, xMax);
+        
+        // Puedes guardar estos valores en tu estado o variables
+        // this.newXRange = [xMin, xMax]; 
+      }
+    })})
   }
   resizeChart() {
     const element = this.el().nativeElement;
     Plotly.Plots.resize(element);
+    console.log('aqui')
   }
   close() {
     this.drawer_status = false
