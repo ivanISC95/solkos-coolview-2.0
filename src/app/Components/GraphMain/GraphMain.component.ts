@@ -36,14 +36,14 @@ export class GraphMainComponent implements OnInit {
     this.telemetryOptions = getTelemetryNamesTranslated(this.data)
     this.telemetryOptions.includes(this.selectOptionDefault) ? this.selectedTelemetry = [this.selectOptionDefault] : this.selectedTelemetry = []    
     this.data_graph = transformTelemetry2(this.data!.telemetry, [this.selectOptionDefault],[this.selectOptionDefault]);
-    // this.basicChart(this.data_graph);
     this.datas_min_max = this.data_graph.flatMap((value)=>value.y)         
     this.basicChart([...this.data_graph,...transformTelemetryZoneEvents(this.data,this.datas_min_max)],null,this.datas_min_max);
+    console.log(this.date_select_main)
   }  
   basicChart(data_graph:any,safe_zone?:any,min_max?:number[]) {  
     const element = this.el().nativeElement
     const data = data_graph;     
-    Plotly.newPlot(element, data, graph_layout(safe_zone,this.selectedTelemetry,transformFailsToAnnotations2(this.data,this.date_select_main,min_max ?? [])), graph_config);
+    Plotly.newPlot(element, data, graph_layout(safe_zone,this.selectedTelemetry,transformFailsToAnnotations2(this.data,this.date_select_main,min_max ?? []),this.date_select_main ?? []), graph_config);
   }
   resizeChart() {
     const element = this.el().nativeElement;
@@ -56,13 +56,13 @@ export class GraphMainComponent implements OnInit {
     this.date = result
   }
   
-  logSelection() {   
+  logSelection() {    
     this.data_graph = transformTelemetry2(this.data!.telemetry,this.selectedTelemetry,this.selectedTelemetry);
-    this.drawer_options.checked_safe_zone == true ? this.basicChart([...this.data_graph,...transformTelemetryZoneEvents(this.data,this.datas_min_max)],transformSafeZone(this.data!.safeZone ?? []),this.datas_min_max) : this.basicChart([...this.data_graph,...transformTelemetryZoneEvents(this.data,this.datas_min_max)])
+    this.drawer_options.checked_safe_zone == true ? this.basicChart([...this.data_graph,...transformTelemetryZoneEvents(this.data,this.datas_min_max)],transformSafeZone(this.data!.safeZone ?? []),this.datas_min_max) : this.basicChart([...this.data_graph,...transformTelemetryZoneEvents(this.data,this.datas_min_max)],null,this.datas_min_max)
   }
   // Logica botones drawer
   onCheckedChange(value: boolean,buttonID?:string) {    
-    buttonID == 'safeZone' && value == true ? this.basicChart([...this.data_graph,...transformTelemetryZoneEvents(this.data,this.datas_min_max)],transformSafeZone(this.data!.safeZone ?? []),this.datas_min_max) : this.basicChart([...this.data_graph,...transformTelemetryZoneEvents(this.data,this.datas_min_max)])
+    buttonID == 'safeZone' && value == true ? this.basicChart([...this.data_graph,...transformTelemetryZoneEvents(this.data,this.datas_min_max)],transformSafeZone(this.data!.safeZone ?? []),this.datas_min_max) : this.basicChart([...this.data_graph,...transformTelemetryZoneEvents(this.data,this.datas_min_max)],null,this.datas_min_max)
     // logica para desconexiones datas_min_max tiene los registros,sacar min y max para calcular los ejes y    
   }
 }
