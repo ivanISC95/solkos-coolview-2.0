@@ -246,5 +246,31 @@ function transformFailsToAnnotations2(data: DatasResponse | null,valueInputFecha
 
   return annotations;
 }
-
-export{getTelemetryNamesTranslated,transformTelemetry2,transformSafeZone,transformTelemetryZoneEvents,transformFailsToAnnotations2}
+const transformDesconectionsZone = (data: Fail[],datas_min_max:number[]) => {  
+  
+  return data.map((item:Fail) => item.end ? ({
+    type: 'rect',
+    x0: item.end,
+    x1: item.start,
+    y0: Math.min(...datas_min_max),
+    y1: Math.max(...datas_min_max),
+    xref: 'x',
+    yref: 'y',
+    fillcolor: "rgba(161, 161, 170, 0.15)",
+    line: {
+      color: '#57534E',
+      width: 0.5,
+      dash: 'dot'
+    },
+    text: 'Desconexion',
+    font: {
+      family: 'Arial, sans-serif',
+      size: 14,
+      color: 'black'
+    },
+    align: 'center',
+    valign: 'middle',
+    layer: 'above'
+  }) : '');
+};
+export{getTelemetryNamesTranslated,transformTelemetry2,transformSafeZone,transformTelemetryZoneEvents,transformFailsToAnnotations2,transformDesconectionsZone}

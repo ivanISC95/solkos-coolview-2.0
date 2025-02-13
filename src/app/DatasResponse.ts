@@ -6,10 +6,10 @@ export interface DatasResponse {
 }
 
 export interface Fail {
-    type_fail: TypeFail;
-    timestamp: Date;
-    start : Date;
-    end : Date;
+    type_fail: string;
+    timestamp?: Date | string;
+    start : Date | string;
+    end : Date | string;
 }
 
 export enum TypeFail {

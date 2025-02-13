@@ -1,3 +1,5 @@
+import { Fail } from "../DatasResponse"
+
 const LayoutInforTelemetry = (value:string[]) =>{  
   if(value.length > 1){
     return ['','']

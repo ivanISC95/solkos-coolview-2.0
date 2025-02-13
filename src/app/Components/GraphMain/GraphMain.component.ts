@@ -7,7 +7,7 @@ import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
 import { FormsModule } from '@angular/forms';
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
 import { DatasResponse, DrawerOptions } from '../../DatasResponse';
-import { getTelemetryNamesTranslated, transformFailsToAnnotations2, transformSafeZone, transformTelemetry2, transformTelemetryZoneEvents } from '../../Functions/GraphFunctions';
+import { getTelemetryNamesTranslated, transformDesconectionsZone, transformFailsToAnnotations2, transformSafeZone, transformTelemetry2, transformTelemetryZoneEvents } from '../../Functions/GraphFunctions';
 import { graph_config, graph_layout } from '../../Functions/GraphVar';
 
 @Component({
@@ -26,7 +26,7 @@ export class GraphMainComponent implements OnInit {
   drawer_status: boolean = false;
   checked : boolean = false;
   date: null | Date[] = null;
-  drawer_options : DrawerOptions = { checked_safe_zone : false ,checked_disconection : true } // variables drawer
+  drawer_options : DrawerOptions = { checked_safe_zone : false ,checked_disconection : false } // variables drawer
   telemetryOptions: string[] = []; // Multiselect options
   selectedTelemetry: string[] = []; // MultiSelect value
   data_graph : any[] = [] // Datas from graph
@@ -79,8 +79,11 @@ export class GraphMainComponent implements OnInit {
     this.drawer_options.checked_safe_zone == true ? this.basicChart([...this.data_graph,...transformTelemetryZoneEvents(this.data,this.datas_min_max)],transformSafeZone(this.data!.safeZone ?? []),this.datas_min_max) : this.basicChart([...this.data_graph,...transformTelemetryZoneEvents(this.data,this.datas_min_max)],null,this.datas_min_max)
   }
   // Logica botones drawer
-  onCheckedChange(value: boolean,buttonID?:string) {    
-    buttonID == 'safeZone' && value == true ? this.basicChart([...this.data_graph,...transformTelemetryZoneEvents(this.data,this.datas_min_max)],transformSafeZone(this.data!.safeZone ?? []),this.datas_min_max) : this.basicChart([...this.data_graph,...transformTelemetryZoneEvents(this.data,this.datas_min_max)],null,this.datas_min_max)
-    // logica para desconexiones datas_min_max tiene los registros,sacar min y max para calcular los ejes y    
+  onCheckedChange(value: boolean,buttonID?:string) {         
+    if(buttonID == 'safeZone' && value == true){
+      this.basicChart([...this.data_graph,...transformTelemetryZoneEvents(this.data,this.datas_min_max)],transformSafeZone(this.data!.safeZone ?? []),this.datas_min_max)
+    } else if (buttonID == 'disconection' && value == true){
+      this.basicChart([...this.data_graph,...transformTelemetryZoneEvents(this.data,this.datas_min_max)],transformDesconectionsZone(this.data!.fails ?? [],this.datas_min_max),this.datas_min_max)
+    }else{this.basicChart([...this.data_graph,...transformTelemetryZoneEvents(this.data,this.datas_min_max)],null,this.datas_min_max)}
   }
 }
