@@ -31,6 +31,7 @@ const graph_config = {
     modeBarButtonsToRemove: ['pan2d', 'select2d', 'lasso2d', 'autoScale2d'], displaylogo: false
 };
 const graph_layout = (safe_zone?:any,value?:string[],images?: any[],date_range?:any[]) => {    
+  console.log(date_range)
   const dateEnd = new Date(date_range![1])
   dateEnd.setUTCHours(23,59,59,999)  
     return {

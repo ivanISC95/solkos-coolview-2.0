@@ -37,27 +37,35 @@ export class GraphMainComponent implements OnInit {
     this.telemetryOptions.includes(this.selectOptionDefault) ? this.selectedTelemetry = [this.selectOptionDefault] : this.selectedTelemetry = []    
     this.data_graph = transformTelemetry2(this.data!.telemetry, [this.selectOptionDefault],[this.selectOptionDefault]);
     this.datas_min_max = this.data_graph.flatMap((value)=>value.y)         
-    this.basicChart([...this.data_graph,...transformTelemetryZoneEvents(this.data,this.datas_min_max)],null,this.datas_min_max);
-    console.log(this.date_select_main)
+    this.basicChart([...this.data_graph,...transformTelemetryZoneEvents(this.data,this.datas_min_max)],null,this.datas_min_max);    
   }  
   basicChart(data_graph:any,safe_zone?:any,min_max?:number[]) {  
     const element = this.el().nativeElement
-    const data = data_graph;     
-    Plotly.newPlot(element, data, graph_layout(safe_zone,this.selectedTelemetry,transformFailsToAnnotations2(this.data,this.date_select_main,min_max ?? []),this.date_select_main ?? []), graph_config).then((graph:any)=>{graph.on('plotly_relayout',(eventData:any)=>{
-      console.log("relayout",eventData)
+    const data = data_graph;         
+    Plotly.newPlot(element, data, graph_layout(safe_zone,this.selectedTelemetry,transformFailsToAnnotations2(this.data,this.date_select_main,min_max ?? []),this.date_select_main ?? []), graph_config).then((graph:any)=>{graph.on('plotly_relayout',(eventData:any)=>{      
+      if(eventData['xaxis.range[0]']) {
+        const dateEnd = new Date(eventData['xaxis.range[1]'])
+        dateEnd.setUTCHours(23,59,59,999)  
+        this.date_select_main = [new Date(eventData['xaxis.range[0]']),dateEnd]        
+      }
+      if(eventData['yaxis.autorange'] || eventData['xaxis.autorange']) {
+        const dateEnd = new Date(this.date_select_main![1] ?? eventData['xaxis.range'][1])
+        dateEnd.setUTCHours(23,59,59,999)  
+        this.date_select_main = [this.date_select_main![1],dateEnd]
+      }
       if (eventData["xaxis.range"]) {
         const [xMin, xMax] = eventData["xaxis.range"];
-        console.log("Nuevo rango X:", xMin, xMax);
-        
-        // Puedes guardar estos valores en tu estado o variables
-        // this.newXRange = [xMin, xMax]; 
+        this.date_select_main = [new Date(xMin),new Date(xMax)]               
       }
+      const newAnnotations = transformFailsToAnnotations2(this.data, this.date_select_main, min_max ?? []);
+      if (newAnnotations.length) {
+        Plotly.update(element, {}, { images: newAnnotations });
+      }            
     })})
   }
   resizeChart() {
     const element = this.el().nativeElement;
-    Plotly.Plots.resize(element);
-    console.log('aqui')
+    Plotly.Plots.resize(element);    
   }
   close() {
     this.drawer_status = false
