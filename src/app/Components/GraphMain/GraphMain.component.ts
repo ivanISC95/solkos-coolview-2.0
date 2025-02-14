@@ -31,6 +31,7 @@ export class GraphMainComponent implements OnInit {
   selectedTelemetry: string[] = []; // MultiSelect value
   data_graph : any[] = [] // Datas from graph
   datas_min_max : number[] = [] // Y datas for min and max
+  drawer_safezone_disconection : string[] = [] // Vale to know option safezone or disconectionzone
   
   ngOnInit() {
     this.telemetryOptions = getTelemetryNamesTranslated(this.data)
@@ -79,11 +80,24 @@ export class GraphMainComponent implements OnInit {
     this.drawer_options.checked_safe_zone == true ? this.basicChart([...this.data_graph,...transformTelemetryZoneEvents(this.data,this.datas_min_max)],transformSafeZone(this.data!.safeZone ?? []),this.datas_min_max) : this.basicChart([...this.data_graph,...transformTelemetryZoneEvents(this.data,this.datas_min_max)],null,this.datas_min_max)
   }
   // Logica botones drawer
-  onCheckedChange(value: boolean,buttonID?:string) {         
-    if(buttonID == 'safeZone' && value == true){
-      this.basicChart([...this.data_graph,...transformTelemetryZoneEvents(this.data,this.datas_min_max)],transformSafeZone(this.data!.safeZone ?? []),this.datas_min_max)
-    } else if (buttonID == 'disconection' && value == true){
-      this.basicChart([...this.data_graph,...transformTelemetryZoneEvents(this.data,this.datas_min_max)],transformDesconectionsZone(this.data!.fails ?? [],this.datas_min_max),this.datas_min_max)
-    }else{this.basicChart([...this.data_graph,...transformTelemetryZoneEvents(this.data,this.datas_min_max)],null,this.datas_min_max)}
+  
+  onCheckedChange(value: boolean, buttonID?: string) {
+    if (buttonID) {
+      const index = this.drawer_safezone_disconection.indexOf(buttonID);
+      value ? index === -1 && this.drawer_safezone_disconection.push(buttonID) : index !== -1 && this.drawer_safezone_disconection.splice(index, 1);
+    }
+    const hasSafeZone = this.drawer_safezone_disconection.includes('safeZone');
+    const hasDisconnection = this.drawer_safezone_disconection.includes('disconection');  
+    const data = [...this.data_graph, ...transformTelemetryZoneEvents(this.data, this.datas_min_max)];
+    let zones = null;
+    if (hasSafeZone && hasDisconnection) {
+      zones = [...transformSafeZone(this.data!.safeZone ?? []), ...transformDesconectionsZone(this.data!.fails ?? [], this.datas_min_max)];
+    } else if (hasSafeZone) {
+      zones = transformSafeZone(this.data!.safeZone ?? []);
+    } else if (hasDisconnection) {
+      zones = transformDesconectionsZone(this.data!.fails ?? [], this.datas_min_max);
+    }  
+    this.basicChart(data, zones, this.datas_min_max);
   }
+  
 }
