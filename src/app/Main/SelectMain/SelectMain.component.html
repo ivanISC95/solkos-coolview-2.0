@@ -10,18 +10,18 @@
             <app-graph-main [data]="data_Cooler" [selectOptionDefault] = "'Temperatura'" [date_select_main]="date" ></app-graph-main>
         }
         @else if(view_grap_opt == 2){
-            <app-graph-main [data]="data_Cooler" [selectOptionDefault] = "'Temperatura'" ></app-graph-main>
-            <app-graph-main [data]="data_Cooler" [selectOptionDefault] = "'Voltaje'"></app-graph-main>
+            <app-graph-main [data]="data_Cooler" [selectOptionDefault] = "'Temperatura'" [date_select_main]="date"></app-graph-main>
+            <app-graph-main [data]="data_Cooler" [selectOptionDefault] = "'Voltaje'" [date_select_main]="date"></app-graph-main>
         }        
         @else if(view_grap_opt == 3){
-            <app-graph-main [data]="data_Cooler" [style.width]="view_grap_opt == 3 ? '50%' : '100%'" [selectOptionDefault] = "'Temperatura'"></app-graph-main>
-            <app-graph-main [data]="data_Cooler" [style.width]="view_grap_opt == 3 ? '50%' : '100%'" [selectOptionDefault] = "'Voltaje'"></app-graph-main>
+            <app-graph-main [data]="data_Cooler" [style.width]="view_grap_opt == 3 ? '50%' : '100%'" [selectOptionDefault] = "'Temperatura'" [date_select_main]="date"></app-graph-main>
+            <app-graph-main [data]="data_Cooler" [style.width]="view_grap_opt == 3 ? '50%' : '100%'" [selectOptionDefault] = "'Voltaje'" [date_select_main]="date"></app-graph-main>
         }        
         @else if(view_grap_opt == 4){
-            <app-graph-main [data]="data_Cooler" [style.width]="view_grap_opt == 4 ? '49.5%' : '100%' " [style.min-height]="view_grap_opt == 4 ? '45%' : '100%' " [selectOptionDefault] = "'Temperatura'"></app-graph-main>
-            <app-graph-main [data]="data_Cooler" [style.width]="view_grap_opt == 4 ? '49.5%' : '100%' " [style.min-height]="view_grap_opt == 4 ? '45%' : '100%' " [selectOptionDefault] = "'Voltaje'"></app-graph-main>
-            <app-graph-main [data]="data_Cooler" [style.width]="view_grap_opt == 4 ? '49.5%' : '100%' " [style.min-height]="view_grap_opt == 4 ? '45%' : '100%' " [selectOptionDefault] = "'Aperturas'"></app-graph-main>
-            <app-graph-main [data]="data_Cooler" [style.width]="view_grap_opt == 4 ? '49.5%' : '100%' " [style.min-height]="view_grap_opt == 4 ? '45%' : '100%' " [selectOptionDefault] = "'Compresor'"></app-graph-main>
+            <app-graph-main [data]="data_Cooler" [style.width]="view_grap_opt == 4 ? '49.5%' : '100%' " [style.min-height]="view_grap_opt == 4 ? '45%' : '100%' " [selectOptionDefault] = "'Temperatura'" [date_select_main]="date"></app-graph-main>
+            <app-graph-main [data]="data_Cooler" [style.width]="view_grap_opt == 4 ? '49.5%' : '100%' " [style.min-height]="view_grap_opt == 4 ? '45%' : '100%' " [selectOptionDefault] = "'Voltaje'" [date_select_main]="date"></app-graph-main>
+            <app-graph-main [data]="data_Cooler" [style.width]="view_grap_opt == 4 ? '49.5%' : '100%' " [style.min-height]="view_grap_opt == 4 ? '45%' : '100%' " [selectOptionDefault] = "'Aperturas'" [date_select_main]="date"></app-graph-main>
+            <app-graph-main [data]="data_Cooler" [style.width]="view_grap_opt == 4 ? '49.5%' : '100%' " [style.min-height]="view_grap_opt == 4 ? '45%' : '100%' " [selectOptionDefault] = "'Compresor'" [date_select_main]="date"></app-graph-main>
         }        
         @else if(isLoading == false && data_Cooler == null) {
             <div style="width: 100%;height: 100%;display: flex;align-items: center;justify-content: center;">Coolview</div>
