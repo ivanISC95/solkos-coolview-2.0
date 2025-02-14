@@ -5,14 +5,10 @@
       <nz-select nzAllowClear nzShowSearch nzPlaceHolder="" nzMode="multiple" [nzCustomTemplate]="multipleTemplate"
         style="width: 100%; height: 1.875rem !important;" [(ngModel)]="selectedTelemetry"
         (ngModelChange)="logSelection()">
-        <!-- <nz-option nzLabel="Windows" nzValue="windows"></nz-option>
-              <nz-option nzLabel="Apple" nzValue="apple"></nz-option>
-              <nz-option nzLabel="Android" nzValue="android"></nz-option> -->
         <nz-option *ngFor="let telemetry of telemetryOptions" [nzLabel]="telemetry" [nzValue]="telemetry"></nz-option>
       </nz-select>
       <ng-template #multipleTemplate let-selected>
         <div class="ant-select-selection-item-content">
-          <!-- <nz-icon [nzType]="selected.nzValue" /> -->
           {{ selected.nzLabel }}
         </div>
       </ng-template>

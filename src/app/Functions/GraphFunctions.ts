@@ -1,4 +1,4 @@
-import { DatasResponse, Datum, Fail, PlotlyShape, SafeZone, Telemetry } from "../DatasResponse";
+import { DatasResponse, Fail, PlotlyShape, SafeZone, Telemetry } from "../DatasResponse";
 
 const getTelemetryNames = (data: DatasResponse | null) => {
     if (!data || !Array.isArray(data.telemetry) || data == null) {
@@ -160,7 +160,7 @@ const transformTelemetryZoneEvents = (data: DatasResponse | null,rangosTelemetry
       marker: {
         size: 15,
         symbol: "square",
-        color: "red"
+        color: "transparent"
       }
     };
 

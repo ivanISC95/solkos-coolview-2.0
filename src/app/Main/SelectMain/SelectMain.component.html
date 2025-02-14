@@ -4,12 +4,6 @@
         <nz-range-picker [(ngModel)]="date" (ngModelChange)="onChange($event)" style="height: 2.5rem;"></nz-range-picker>
         <button nz-button nzType="default" style="height: 2.5rem;" (click)="searchCooler()" [disabled]="value == '' || date == null  ? true : false">Buscar {{isLoading}}</button>
     </section>
-    <!-- <section class="view_select_main">
-        <div class="view_select_main_opt"><img src="assets/GraphView/opt1.svg" alt="graph_view_option_1"></div>
-        <div class="view_select_main_opt"><img src="assets/GraphView/opt2.svg" alt="graph_view_option_2"></div>
-        <div class="view_select_main_opt"><img src="assets/GraphView/opt3.svg" alt="graph_view_option_3"></div>
-        <div class="view_select_main_opt"><img src="assets/GraphView/opt4.svg" alt="graph_view_option_4"></div>
-    </section> -->
     <app-graph-view (mensajeEvento)="recibirMensaje($event)"></app-graph-view>
     <section class="grap_select_main" [style.flex-direction]="view_grap_opt == 3 ? 'row' : view_grap_opt == 4 ? 'row': 'column'" [style.flex-wrap]="view_grap_opt == 4 ? 'wrap' : ''" >        
         @if (view_grap_opt == 1 && data_Cooler != null) {            
