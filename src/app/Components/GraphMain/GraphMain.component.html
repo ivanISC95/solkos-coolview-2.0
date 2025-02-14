@@ -59,7 +59,7 @@
       <hr style="width: 100%;background-color: var(--Neutral-Outline-Variant, #CACACA);border: 1px solid transparent;">
       <section style="width: 100%;height: 6.25rem;">
         <nz-flex nzVertical style="width: 15rem;" nzGap="0.5rem">
-          <label nz-checkbox [(ngModel)]="checked" (ngModelChange)="onCheckedChange($event)">Elementos en la gráfica</label>
+          <label nz-checkbox [(ngModel)]="drawer_options.checked_safe_disc" (ngModelChange)="onCheckedChange($event,'safe_and_disconection')">Elementos en la gráfica</label>
           <label nz-checkbox [(ngModel)]="drawer_options.checked_safe_zone" (ngModelChange)="onCheckedChange($event,'safeZone')">Zona segura (inteligente)</label>
           <label nz-checkbox [(ngModel)]="drawer_options.checked_disconection" (ngModelChange)="onCheckedChange($event,'disconection')">Desconexiones</label>
         </nz-flex>

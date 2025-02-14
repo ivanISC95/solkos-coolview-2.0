@@ -56,6 +56,7 @@ export interface PlotlyShape {
 };
 
 export interface DrawerOptions {
+    checked_safe_disc : boolean;    
     checked_safe_zone : boolean;
-    checked_disconection : boolean;
+    checked_disconection : boolean;    
 }
