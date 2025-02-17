@@ -59,4 +59,9 @@ export interface DrawerOptions {
     checked_safe_disc : boolean;    
     checked_safe_zone : boolean;
     checked_disconection : boolean;    
+    checked_Alerts : boolean;
+    checked_events_zone : boolean;
+    checked_Fails : boolean;
+    checked_Info : boolean;
+    checked_Desconections :  boolean;
 }

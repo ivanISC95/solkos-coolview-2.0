@@ -24,9 +24,8 @@ export class GraphMainComponent implements OnInit {
   @Input() date_select_main: Date[] | null = null
   readonly el = viewChild.required<ElementRef>('chart');
   drawer_status: boolean = false;
-  checked: boolean = false;
   date: null | Date[] = null;
-  drawer_options: DrawerOptions = { checked_safe_disc: false, checked_safe_zone: false, checked_disconection: false } // variables drawer
+  drawer_options: DrawerOptions = { checked_safe_disc: false, checked_safe_zone: false, checked_disconection: false,checked_events_zone : false,checked_Alerts : false, checked_Fails : false, checked_Info : false, checked_Desconections : false } // variables drawer
   telemetryOptions: string[] = []; // Multiselect options
   selectedTelemetry: string[] = []; // MultiSelect value
   data_graph: any[] = [] // Datas from graph
@@ -84,12 +83,17 @@ export class GraphMainComponent implements OnInit {
   // Logica botones drawer
 
   onCheckedChange(value: boolean, buttonID?: string) {
+    console.log(value)
+    console.log(buttonID)
     if (buttonID) {
       const index = this.drawer_safezone_disconection.indexOf(buttonID);
       value ? index === -1 && this.drawer_safezone_disconection.push(buttonID) : index !== -1 && this.drawer_safezone_disconection.splice(index, 1);
     }
     const options = this.drawer_safezone_disconection;
+    console.log(this.data_graph)
+    console.log(transformTelemetryZoneEvents(this.data, this.datas_min_max))
     const data = [...this.data_graph, ...transformTelemetryZoneEvents(this.data, this.datas_min_max)];
+    console.log(data)
     const zones = options.includes('safe_and_disconection') || (options.includes('safeZone') && options.includes('disconection'))
       ? [...transformSafeZone(this.data!.safeZone ?? []), ...transformDesconectionsZone(this.data!.fails ?? [], this.datas_min_max)]
       : options.includes('safeZone')
