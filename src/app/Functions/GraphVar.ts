@@ -33,9 +33,10 @@ const graph_config = {
     modeBarButtonsToRemove: ['pan2d', 'select2d', 'lasso2d', 'autoScale2d'], displaylogo: false
 };
 const graph_layout = (safe_zone?:any,value?:string[],images?: any[],date_range?:any[]) => {    
-  console.log(date_range)
+  const dateInit = new Date(date_range![0])
   const dateEnd = new Date(date_range![1])
   dateEnd.setUTCHours(23,59,59,999)  
+  dateInit.setUTCHours(0,0,0,0)
     return {
         autosize: true,
         showlegend: true,
@@ -63,7 +64,7 @@ const graph_layout = (safe_zone?:any,value?:string[],images?: any[],date_range?:
             tickformat: '%d-%b',
             showgrid: false,
             // type: 'date'
-            range: date_range!.length > 0 ? [date_range![0], dateEnd] : undefined
+            range: date_range!.length > 0 ? [dateInit, dateEnd] : undefined
         },
         yaxis: {
             autorange: true,
