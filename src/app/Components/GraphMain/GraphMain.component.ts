@@ -25,24 +25,40 @@ export class GraphMainComponent implements OnInit {
   readonly el = viewChild.required<ElementRef>('chart');
   drawer_status: boolean = false;
   date: null | Date[] = null;
-  drawer_options: DrawerOptions = { checked_safe_disc: false, checked_safe_zone: false, checked_disconection: false,checked_events_zone : false,checked_Alerts : false, checked_Fails : false, checked_Info : false, checked_Desconections : false } // variables drawer
+  drawer_options: DrawerOptions = { checked_safe_disc: false, checked_safe_zone: false, checked_disconection: false,checked_events_zone : false,checked_Alerts : true, checked_Fails : true, checked_Info : true, checked_Desconections : true } // variables drawer
   telemetryOptions: string[] = []; // Multiselect options
   selectedTelemetry: string[] = []; // MultiSelect value
   data_graph: any[] = [] // Datas from graph
   datas_min_max: number[] = [] // Y datas for min and max
   drawer_safezone_disconection: string[] = [] // Vale to know option safezone or disconectionzone
+  drawer_data_filter: string[] = [];
 
   ngOnInit() {
     this.telemetryOptions = getTelemetryNamesTranslated(this.data)
     this.telemetryOptions.includes(this.selectOptionDefault) ? this.selectedTelemetry = [this.selectOptionDefault] : this.selectedTelemetry = []
     this.data_graph = transformTelemetry2(this.data!.telemetry, [this.selectOptionDefault], [this.selectOptionDefault]);
     this.datas_min_max = this.data_graph.flatMap((value) => value.y)
-    this.basicChart([...this.data_graph, ...transformTelemetryZoneEvents(this.data, this.datas_min_max)], null, this.datas_min_max);
+    this.basicChart([...this.data_graph, ...transformTelemetryZoneEvents(this.data!.fails, this.datas_min_max)], null, this.datas_min_max);
   }
   basicChart(data_graph: any, safe_zone?: any, min_max?: number[]) {
     const element = this.el().nativeElement
     const data = data_graph;
-    Plotly.newPlot(element, data, graph_layout(safe_zone, this.selectedTelemetry, transformFailsToAnnotations2(this.data, this.date_select_main, min_max ?? []), this.date_select_main ?? []), graph_config).then((graph: any) => {
+    const filteredData = data.filter((item:any) => {
+      if (this.drawer_data_filter.includes('FAIL') && item.name.includes('Falla')) {
+        return false; // Excluye las fallas si 'FAIL' está en el filtro
+      }
+      if (this.drawer_data_filter.includes('ALERT') && item.name.includes('Alerta')) {
+        return false;
+      }
+      if (this.drawer_data_filter.includes('INFORMATIVES') && item.name.includes('Informativo')) {
+        return false;
+      }
+      if (this.drawer_data_filter.includes('DESCONECTIONS') && item.name.includes('Desconexión')) {
+        return false;
+      }
+      return true; // Incluye todos los demás
+    });    
+    Plotly.newPlot(element, filteredData, graph_layout(safe_zone, this.selectedTelemetry, transformFailsToAnnotations2(this.data, this.date_select_main, min_max ?? []), this.date_select_main ?? []), graph_config).then((graph: any) => {
       graph.on('plotly_relayout', (eventData: any) => {
         if (eventData['xaxis.range[0]']) {
           const dateEnd = new Date(eventData['xaxis.range[1]'])
@@ -78,30 +94,39 @@ export class GraphMainComponent implements OnInit {
 
   logSelection() {
     this.data_graph = transformTelemetry2(this.data!.telemetry, this.selectedTelemetry, this.selectedTelemetry);
-    this.drawer_options.checked_safe_zone == true ? this.basicChart([...this.data_graph, ...transformTelemetryZoneEvents(this.data, this.datas_min_max)], transformSafeZone(this.data!.safeZone ?? []), this.datas_min_max) : this.basicChart([...this.data_graph, ...transformTelemetryZoneEvents(this.data, this.datas_min_max)], null, this.datas_min_max)
+    this.drawer_options.checked_safe_zone == true ? this.basicChart([...this.data_graph, ...transformTelemetryZoneEvents(this.data!.fails, this.datas_min_max)], transformSafeZone(this.data!.safeZone ?? []), this.datas_min_max) : this.basicChart([...this.data_graph, ...transformTelemetryZoneEvents(this.data!.fails, this.datas_min_max)], null, this.datas_min_max)
   }
-  // Logica botones drawer
 
-  onCheckedChange(value: boolean, buttonID?: string) {
-    console.log(value)
-    console.log(buttonID)
+  onCheckedChange(value: boolean, buttonID?: string) {        
     if (buttonID) {
       const index = this.drawer_safezone_disconection.indexOf(buttonID);
       value ? index === -1 && this.drawer_safezone_disconection.push(buttonID) : index !== -1 && this.drawer_safezone_disconection.splice(index, 1);
+  
+      // Manejo de drawer_data_filter
+      const filterIndex = this.drawer_data_filter.indexOf(buttonID);
+      if (value == false) {
+        if (filterIndex === -1 && ['FAIL', 'ALERT', 'INFORMATIVES', 'DESCONECTIONS'].includes(buttonID)) {
+          this.drawer_data_filter.push(buttonID);
+        }
+      } else {
+        if (filterIndex !== -1) {
+          this.drawer_data_filter.splice(filterIndex, 1);
+        }
+      }
     }
+  
     const options = this.drawer_safezone_disconection;
-    console.log(this.data_graph)
-    console.log(transformTelemetryZoneEvents(this.data, this.datas_min_max))
-    const data = [...this.data_graph, ...transformTelemetryZoneEvents(this.data, this.datas_min_max)];
-    console.log(data)
+    const data = [...this.data_graph, ...transformTelemetryZoneEvents(this.data!.fails, this.datas_min_max)];    
     const zones = options.includes('safe_and_disconection') || (options.includes('safeZone') && options.includes('disconection'))
       ? [...transformSafeZone(this.data!.safeZone ?? []), ...transformDesconectionsZone(this.data!.fails ?? [], this.datas_min_max)]
       : options.includes('safeZone')
         ? transformSafeZone(this.data!.safeZone ?? [])
         : options.includes('disconection')
           ? transformDesconectionsZone(this.data!.fails ?? [], this.datas_min_max)
-          : null;
-    this.basicChart(data, zones, this.datas_min_max);
+          : null;    
+  
+    this.basicChart(data, zones, this.datas_min_max);    
   }
+  
 
 }

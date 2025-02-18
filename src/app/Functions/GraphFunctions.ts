@@ -132,8 +132,8 @@ const transformSafeZone = (safeZone: SafeZone[]): PlotlyShape[] => {
     },
   ];
 };
-const transformTelemetryZoneEvents = (data: DatasResponse | null,rangosTelemetry:number[]) => {
-  if (!data || !data.fails) return [];
+const transformTelemetryZoneEvents = (data: Fail[] | null,rangosTelemetry:number[]) => {
+  if (!data) return [];
   const minValue = Math.min(...rangosTelemetry)
   const typeMapping: Record<string, string> = {
     "DISCONNECTION_ALERT": "Desconexión",
@@ -147,7 +147,7 @@ const transformTelemetryZoneEvents = (data: DatasResponse | null,rangosTelemetry
     "VOLTAGE_FAIL" : "Falla Voltaje"
   };
 
-  const events = data.fails.flatMap((fail: Fail) => {
+  const events = data.flatMap((fail: Fail) => {
     const baseEvent = {
       name: typeMapping[fail.type_fail] || "Desconocido",
       type: "scatter",
@@ -160,7 +160,7 @@ const transformTelemetryZoneEvents = (data: DatasResponse | null,rangosTelemetry
       marker: {
         size: 15,
         symbol: "square",
-        color: "transparent"
+        color: "red"
       }
     };
 
