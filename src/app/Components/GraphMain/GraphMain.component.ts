@@ -40,10 +40,28 @@ export class GraphMainComponent implements OnInit {
     this.datas_min_max = this.data_graph.flatMap((value) => value.y)
     this.basicChart([...this.data_graph, ...transformTelemetryZoneEvents(this.data!.fails, this.datas_min_max)], null, this.datas_min_max);
   }
-  basicChart(data_graph: any, safe_zone?: any, min_max?: number[]) {
+  basicChart(data_graph: any, safe_zone?: any, min_max?: number[],events_filter?:string[]) {
     const element = this.el().nativeElement
     const data = data_graph;
-    Plotly.newPlot(element, data, graph_layout(safe_zone, this.selectedTelemetry, transformFailsToAnnotations2(this.data, this.date_select_main, min_max ?? []), this.date_select_main ?? []), graph_config).then((graph: any) => {
+    const filteredData = transformFailsToAnnotations2(this.data, this.date_select_main, min_max ?? []).filter((item: any) => {
+      const sourceLower = item.source.toLowerCase(); // Convertir a minúsculas para coincidencias más seguras
+    
+      if (this.drawer_data_filter.includes('FAIL') && sourceLower.includes('/fails/')) {
+        return false; 
+      }
+      if (this.drawer_data_filter.includes('ALERT') && sourceLower.includes('/alertas/')) {
+        return false;
+      }
+      if (this.drawer_data_filter.includes('INFORMATIVES') && sourceLower.includes('/informativos/')) {
+        return false;
+      }
+      if (this.drawer_data_filter.includes('DESCONECTIONS') && (sourceLower.includes('desconexion') || sourceLower.includes('reconexion'))) {
+        return false;
+      }
+    
+      return true; // Incluir todos los demás
+    });  
+    Plotly.newPlot(element, data, graph_layout(safe_zone, this.selectedTelemetry, filteredData, this.date_select_main ?? []), graph_config).then((graph: any) => {
       graph.on('plotly_relayout', (eventData: any) => {
         if (eventData['xaxis.range[0]']) {
           const dateEnd = new Date(eventData['xaxis.range[1]'])
@@ -127,7 +145,7 @@ export class GraphMainComponent implements OnInit {
         : options.includes('disconection')
           ? transformDesconectionsZone(this.data!.fails ?? [], this.datas_min_max)
           : null;
-    this.basicChart(data, zones, this.datas_min_max);        
+    this.basicChart(data, zones, this.datas_min_max,this.drawer_data_filter);        
   }
 
 }

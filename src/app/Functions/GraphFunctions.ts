@@ -160,7 +160,7 @@ const transformTelemetryZoneEvents = (data: Fail[] | null,rangosTelemetry:number
       marker: {
         size: 15,
         symbol: "square",
-        color: "red"
+        color: "transparent"
       }
     };
 
