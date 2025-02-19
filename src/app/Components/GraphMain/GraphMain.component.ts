@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, ElementRef, viewChild, OnInit, AfterViewInit, HostListener } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, ElementRef, viewChild, OnInit } from '@angular/core';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { CommonModule } from '@angular/common';
 import { NzDrawerModule } from 'ng-zorro-antd/drawer';
@@ -31,7 +31,7 @@ export class GraphMainComponent implements OnInit {
   data_graph: any[] = [] // Datas from graph
   datas_min_max: number[] = [] // Y datas for min and max
   drawer_safezone_disconection: string[] = [] // Vale to know option safezone or disconectionzone
-  drawer_data_filter: string[] = [];
+  drawer_data_filter: string[] = []; // Values to filter events zone from drawer
 
   ngOnInit() {
     this.telemetryOptions = getTelemetryNamesTranslated(this.data)
@@ -40,16 +40,15 @@ export class GraphMainComponent implements OnInit {
     this.datas_min_max = this.data_graph.flatMap((value) => value.y)
     this.basicChart([...this.data_graph, ...transformTelemetryZoneEvents(this.data!.fails, this.datas_min_max)], null, this.datas_min_max);
   }
-  basicChart(data_graph: any, safe_zone?: any, min_max?: number[],events_filter?:string[]) {
+  basicChart(data_graph: any, safe_zone?: any, min_max?: number[], events_filter?: string[]) {
     const element = this.el().nativeElement
     const data = data_graph;
     const filteredData = transformFailsToAnnotations2(this.data, this.date_select_main, min_max ?? []).filter((item: any) => {
       const sourceLower = item.source.toLowerCase(); // Convertir a minúsculas para coincidencias más seguras
-    
       if (this.drawer_data_filter.includes('FAIL') && sourceLower.includes('/fails/')) {
-        return false; 
+        return false;
       }
-      if (this.drawer_data_filter.includes('ALERT') && sourceLower.includes('/alertas/')) {
+      if (this.drawer_data_filter.includes('ALERT') && sourceLower.includes('/alerts/')) {
         return false;
       }
       if (this.drawer_data_filter.includes('INFORMATIVES') && sourceLower.includes('/informativos/')) {
@@ -58,9 +57,10 @@ export class GraphMainComponent implements OnInit {
       if (this.drawer_data_filter.includes('DESCONECTIONS') && (sourceLower.includes('desconexion') || sourceLower.includes('reconexion'))) {
         return false;
       }
-    
+
       return true; // Incluir todos los demás
-    });  
+    });
+
     Plotly.newPlot(element, data, graph_layout(safe_zone, this.selectedTelemetry, filteredData, this.date_select_main ?? []), graph_config).then((graph: any) => {
       graph.on('plotly_relayout', (eventData: any) => {
         if (eventData['xaxis.range[0]']) {
@@ -117,10 +117,10 @@ export class GraphMainComponent implements OnInit {
         }
       }
     }
-    
+
     const filteredData = transformTelemetryZoneEvents(this.data!.fails, this.datas_min_max).filter(item => {
       if (this.drawer_data_filter.includes('FAIL') && item.name.includes('Falla')) {
-        return false; 
+        return false;
       }
       if (this.drawer_data_filter.includes('ALERT') && item.name.includes('Alerta')) {
         return false;
@@ -145,7 +145,7 @@ export class GraphMainComponent implements OnInit {
         : options.includes('disconection')
           ? transformDesconectionsZone(this.data!.fails ?? [], this.datas_min_max)
           : null;
-    this.basicChart(data, zones, this.datas_min_max,this.drawer_data_filter);        
+    this.basicChart(data, zones, this.datas_min_max, this.drawer_data_filter);
   }
 
 }

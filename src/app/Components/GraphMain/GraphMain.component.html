@@ -37,9 +37,6 @@
           <nz-select nzAllowClear nzShowSearch nzPlaceHolder="" nzMode="multiple" [nzCustomTemplate]="multipleTemplate"
             style="width: 87%; height: 1.875rem !important;" [(ngModel)]="selectedTelemetry"
             (ngModelChange)="logSelection()">
-            <!-- <nz-option nzLabel="Windows" nzValue="windows"></nz-option>
-              <nz-option nzLabel="Apple" nzValue="apple"></nz-option>
-              <nz-option nzLabel="Android" nzValue="android"></nz-option> -->
             <nz-option *ngFor="let telemetry of telemetryOptions" [nzLabel]="telemetry"
               [nzValue]="telemetry"></nz-option>
           </nz-select>
