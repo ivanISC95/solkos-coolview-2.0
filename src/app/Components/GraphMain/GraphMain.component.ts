@@ -99,9 +99,27 @@ export class GraphMainComponent implements OnInit {
         }
       }
     }
-
+    
+    const filteredData = transformTelemetryZoneEvents(this.data!.fails, this.datas_min_max).filter(item => {
+      if (this.drawer_data_filter.includes('FAIL') && item.name.includes('Falla')) {
+        return false; 
+      }
+      if (this.drawer_data_filter.includes('ALERT') && item.name.includes('Alerta')) {
+        return false;
+      }
+      if (this.drawer_data_filter.includes('INFORMATIVES') && item.name.includes('Informativo')) {
+        return false;
+      }
+      if (this.drawer_data_filter.includes('DESCONECTIONS') && item.name.includes('Desconexión')) {
+        return false;
+      }
+      if (this.drawer_data_filter.includes('DESCONECTIONS') && item.name.includes('Conexión')) {
+        return false;
+      }
+      return true; // Incluye todos los demás
+    });
     const options = this.drawer_safezone_disconection;
-    const data = [...this.data_graph, ...transformTelemetryZoneEvents(this.data!.fails, this.datas_min_max)];
+    const data = [...this.data_graph, ...filteredData];
     const zones = options.includes('safe_and_disconection') || (options.includes('safeZone') && options.includes('disconection'))
       ? [...transformSafeZone(this.data!.safeZone ?? []), ...transformDesconectionsZone(this.data!.fails ?? [], this.datas_min_max)]
       : options.includes('safeZone')
@@ -109,8 +127,7 @@ export class GraphMainComponent implements OnInit {
         : options.includes('disconection')
           ? transformDesconectionsZone(this.data!.fails ?? [], this.datas_min_max)
           : null;
-    this.basicChart(data, zones, this.datas_min_max);
+    this.basicChart(data, zones, this.datas_min_max);        
   }
-
 
 }
