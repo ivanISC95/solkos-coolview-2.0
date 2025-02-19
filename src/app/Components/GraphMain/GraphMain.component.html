@@ -18,8 +18,12 @@
       <img src="../../../assets/Settings/settingsIcon.svg" alt="settings" loading="lazy" />
     </div>
   </section>
-  <section class="grap_select_main_content_graph">
-    <div #chart style="height: 100% !important;width: 100% !important;"></div>
+  <section class="grap_select_main_content_graph">    
+    <div #chart style="height: 100% !important;width: 100% !important;">
+      @if(this.data_graph.length == 0){
+        <div style="height: 100% !important;width: 100% !important;display: flex;align-items: center;justify-content: center;">Selecciona un Filtro</div>
+      }
+    </div>    
   </section>
 </section>
 @if (drawer_status == true) {
