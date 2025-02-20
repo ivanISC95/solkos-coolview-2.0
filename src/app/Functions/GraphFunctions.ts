@@ -11,7 +11,9 @@ const getTelemetryNamesTranslated = (data: any): string[] => {
       "door_state": "Aperturas",
       "compressor_state": "Compresor",
       "internal_temperature": "Temperatura",
-      "voltage_consumption": "Voltaje"
+      "voltage_consumption": "Voltaje",
+      "condenser_temperature" : "Temperatura Condensador",
+      "energy_consumption" : "Consumo de Energia"
     };
   
     return getTelemetryNames(data).map(name => nameMap[name] || name);
@@ -21,14 +23,18 @@ const nameMap: { [key: string]: string } = {
   "internal_temperature": "Temperatura",
   "door_state": "Aperturas",
   "compressor_state": "Compresor",
-  "voltage_consumption": "Voltaje"
+  "voltage_consumption": "Voltaje",
+  "condenser_temperature" : "Temperatura Condensador",
+  "energy_consumption" : "Consumo de Energia"
 };
 
 const colorMap: Record<string, string> = {
   "door_state": "#909296",
   "compressor_state": "#9C36B5",
   "internal_temperature": "#028CFF",
-  "voltage_consumption": "#E67700"
+  "voltage_consumption": "#E67700",
+  "condenser_temperature" : "#0B7285",
+  "energy_consumption": "#40C057"
 };
 
 const typeMap: Record<string, string> = {
