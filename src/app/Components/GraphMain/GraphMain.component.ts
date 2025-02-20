@@ -38,13 +38,12 @@ export class GraphMainComponent implements OnInit {
     this.telemetryOptions.includes(this.selectOptionDefault) ? this.selectedTelemetry = [this.selectOptionDefault] : this.selectedTelemetry = []
     this.data_graph = transformTelemetry2(this.data!.telemetry, [this.selectOptionDefault], [this.selectOptionDefault]);
     this.datas_min_max = this.data_graph.flatMap((value) => value.y)
-    console.log(this.datas_min_max)
     this.basicChart([...this.data_graph, ...transformTelemetryZoneEvents(this.data!.fails, this.datas_min_max)], null, this.datas_min_max);
   }
-  basicChart(data_graph: any, safe_zone?: any, min_max?: number[], events_filter?: string[]) {
+  basicChart(data_graph: any, safe_zone?: any, min_max?: number[], events_filter?: string[]) {    
     const element = this.el().nativeElement
     const data = data_graph;
-    const filteredData = transformFailsToAnnotations2(this.data, this.date_select_main, min_max ?? []).filter((item: any) => {
+    const filteredData = transformFailsToAnnotations2(this.data, this.date_select_main, min_max ?? [],events_filter).filter((item: any) => {
       const sourceLower = item.source.toLowerCase(); // Convertir a minúsculas para coincidencias más seguras
       if (this.drawer_data_filter.includes('FAIL') && sourceLower.includes('/fails/')) {
         return false;
@@ -97,11 +96,10 @@ export class GraphMainComponent implements OnInit {
   }
 
   logSelection() {    
-    if(this.selectedTelemetry.includes('Aperturas') || this.selectedTelemetry.includes('Compresor')){
-      this.datas_min_max = [-2]
-    }else{this.datas_min_max = this.data_graph.flatMap((value) => value.y)}
     this.data_graph = transformTelemetry2(this.data!.telemetry, this.selectedTelemetry, this.selectedTelemetry);
-    this.drawer_options.checked_safe_zone == true ? this.basicChart([...this.data_graph, ...transformTelemetryZoneEvents(this.data!.fails, this.datas_min_max)], transformSafeZone(this.data!.safeZone ?? []), this.datas_min_max) : this.basicChart([...this.data_graph, ...transformTelemetryZoneEvents(this.data!.fails, this.datas_min_max)], null, this.datas_min_max)
+    this.drawer_options.checked_safe_zone == true 
+    ? this.basicChart([...this.data_graph, ...transformTelemetryZoneEvents(this.data!.fails, this.datas_min_max)], transformSafeZone(this.data!.safeZone ?? []), this.datas_min_max,this.selectedTelemetry) 
+    : this.basicChart([...this.data_graph, ...transformTelemetryZoneEvents(this.data!.fails, this.datas_min_max)], null, this.datas_min_max,this.selectedTelemetry)
   }
 
   onCheckedChange(value: boolean, buttonID?: string) {

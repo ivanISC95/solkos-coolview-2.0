@@ -166,7 +166,7 @@ const transformTelemetryZoneEvents = (data: Fail[] | null,rangosTelemetry:number
       marker: {
         size: 15,
         symbol: "square",
-        color: "transparent"
+        color: "red"
       }
     };
 
@@ -202,7 +202,8 @@ const pixelsToSizeY = (px: number, rangeY: [number, number]) => {
   return (px / 600) * graphHeight; // 600 es un ejemplo de altura en px del gráfico
 };
 // function to create images inthe graph
-function transformFailsToAnnotations2(data: DatasResponse | null,valueInputFechas:any,rangosTelemetry:number[]) {  
+function transformFailsToAnnotations2(data: DatasResponse | null,valueInputFechas:any,rangosTelemetry:number[],events_filter? :string[]) {  
+  console.log(events_filter)
   const windowWidth = window.innerWidth;
   const xRange: [number, number] = valueInputFechas 
   const yRange: [number, number] = [0, Math.max(...rangosTelemetry) > 250 ? 500 : 250];
