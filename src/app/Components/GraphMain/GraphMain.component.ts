@@ -38,6 +38,7 @@ export class GraphMainComponent implements OnInit {
     this.telemetryOptions.includes(this.selectOptionDefault) ? this.selectedTelemetry = [this.selectOptionDefault] : this.selectedTelemetry = []
     this.data_graph = transformTelemetry2(this.data!.telemetry, [this.selectOptionDefault], [this.selectOptionDefault]);
     this.datas_min_max = this.data_graph.flatMap((value) => value.y)
+    console.log(this.datas_min_max)
     this.basicChart([...this.data_graph, ...transformTelemetryZoneEvents(this.data!.fails, this.datas_min_max)], null, this.datas_min_max);
   }
   basicChart(data_graph: any, safe_zone?: any, min_max?: number[], events_filter?: string[]) {
@@ -95,7 +96,10 @@ export class GraphMainComponent implements OnInit {
     this.date = result
   }
 
-  logSelection() {
+  logSelection() {    
+    if(this.selectedTelemetry.includes('Aperturas') || this.selectedTelemetry.includes('Compresor')){
+      this.datas_min_max = [-2]
+    }else{this.datas_min_max = this.data_graph.flatMap((value) => value.y)}
     this.data_graph = transformTelemetry2(this.data!.telemetry, this.selectedTelemetry, this.selectedTelemetry);
     this.drawer_options.checked_safe_zone == true ? this.basicChart([...this.data_graph, ...transformTelemetryZoneEvents(this.data!.fails, this.datas_min_max)], transformSafeZone(this.data!.safeZone ?? []), this.datas_min_max) : this.basicChart([...this.data_graph, ...transformTelemetryZoneEvents(this.data!.fails, this.datas_min_max)], null, this.datas_min_max)
   }
