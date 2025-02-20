@@ -6,7 +6,7 @@ import { NzFlexDirective } from 'ng-zorro-antd/flex';
 import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
 import { FormsModule } from '@angular/forms';
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
-import { DatasResponse, DrawerOptions } from '../../DatasResponse';
+import { DatasResponse, DrawerOptions } from '../../Interfaces/DatasResponse';
 import { getTelemetryNamesTranslated, transformDesconectionsZone, transformFailsToAnnotations2, transformSafeZone, transformTelemetry2, transformTelemetryZoneEvents } from '../../Functions/GraphFunctions';
 import { graph_config, graph_layout } from '../../Functions/GraphVar';
 

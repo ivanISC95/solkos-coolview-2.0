@@ -1,4 +1,4 @@
-import { DatasResponse, Fail, PlotlyShape, SafeZone, Telemetry } from "../DatasResponse";
+import { DatasResponse, Fail, PlotlyShape, SafeZone, Telemetry } from "../Interfaces/DatasResponse";
 
 const getTelemetryNames = (data: DatasResponse | null) => {
     if (!data || !Array.isArray(data.telemetry) || data == null) {

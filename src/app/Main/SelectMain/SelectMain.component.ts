@@ -8,7 +8,7 @@ import { NzSelectModule } from 'ng-zorro-antd/select';
 import { GraphMainComponent } from "../../Components/GraphMain/GraphMain.component";
 import { GraphViewComponent } from "../../Components/GraphView/GraphView.component";
 import { ApiService } from '../../services/api.service';
-import { DatasResponse } from '../../DatasResponse';
+import { DatasResponse } from '../../Interfaces/DatasResponse';
 import { AnimationItem } from 'lottie-web';
 import { LottieComponent, AnimationOptions } from 'ngx-lottie';
 
