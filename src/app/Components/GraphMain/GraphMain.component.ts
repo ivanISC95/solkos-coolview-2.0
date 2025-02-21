@@ -71,15 +71,17 @@ export class GraphMainComponent implements OnInit {
           this.date_select_main = [new Date(eventData['xaxis.range[0]']), dateEnd]
         }
         if (eventData['yaxis.autorange'] || eventData['xaxis.autorange']) {
-          const dateEnd = new Date(this.date_select_main![1] ?? eventData['xaxis.range'][1])
-          dateEnd.setUTCHours(23, 59, 59, 999)
-          this.date_select_main = [this.date_select_main![1], dateEnd]
+          const dateInit = new Date(this.date_select_main![0])
+          dateInit.setUTCHours(0,0,0,0)
+          const dateEnd = new Date(this.date_select_main![1])
+          dateEnd.setUTCHours(23, 59, 59, 999)                      
+          this.date_select_main = [dateInit, dateEnd]
         }
         if (eventData["xaxis.range"]) {
           const [xMin, xMax] = eventData["xaxis.range"];
           this.date_select_main = [new Date(xMin), new Date(xMax)]
         }
-        const newAnnotations = transformFailsToAnnotations2(this.data, this.date_select_main, min_max ?? []);
+        const newAnnotations = transformFailsToAnnotations2(this.data, this.date_select_main, min_max ?? []);        
         if (newAnnotations.length) {
           Plotly.update(element, {}, { images: newAnnotations });
         }
