@@ -7,7 +7,7 @@
     <app-graph-view (mensajeEvento)="recibirMensaje($event)"></app-graph-view>
     <section class="grap_select_main" [style.flex-direction]="view_grap_opt == 3 ? 'row' : view_grap_opt == 4 ? 'row': 'column'" [style.flex-wrap]="view_grap_opt == 4 ? 'wrap' : ''" >        
         @if (view_grap_opt == 1 && data_Cooler != null) {            
-            <app-graph-main [data]="data_Cooler" [selectOptionDefault] = "'Temperatura'" [date_select_main]="date" ></app-graph-main>
+            <app-graph-main [data]="data_Cooler" [selectOptionDefault] = "'Temperatura'" [date_select_main]="date" [search_Main]="searchCooler.bind(this)" ></app-graph-main>
         }
         @else if(view_grap_opt == 2){
             <app-graph-main [data]="data_Cooler" [selectOptionDefault] = "'Temperatura'" [date_select_main]="date"></app-graph-main>
@@ -28,7 +28,7 @@
         }
         @else if (isLoading == true) { 
             <div style="width: 100%;height: 99%;display: flex;align-items: center;justify-content: center;">
-                <ng-lottie [options]="options" (animationCreated)="animationCreated($event)" style="width: 20%; height: 20%;" />
+                <ng-lottie [options]="options" style="width: 20%; height: 20%;" />
             </div>
         }        
     </section>

@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input, ElementRef, viewChild, OnInit } from '@angular/core';
 import { NzSelectModule } from 'ng-zorro-antd/select';
+import { NzButtonModule } from 'ng-zorro-antd/button';
 import { CommonModule } from '@angular/common';
 import { NzDrawerModule } from 'ng-zorro-antd/drawer';
 import { NzFlexDirective } from 'ng-zorro-antd/flex';
@@ -13,7 +14,7 @@ import { graph_config, graph_layout } from '../../Functions/GraphVar';
 @Component({
   selector: 'app-graph-main',
   standalone: true,
-  imports: [NzSelectModule, CommonModule, NzDrawerModule, NzFlexDirective, NzCheckboxModule, FormsModule, NzDatePickerModule],
+  imports: [NzSelectModule, CommonModule, NzDrawerModule, NzFlexDirective, NzCheckboxModule, FormsModule, NzDatePickerModule,NzButtonModule],
   templateUrl: './GraphMain.component.html',
   styleUrl: './GraphMain.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -22,6 +23,7 @@ export class GraphMainComponent implements OnInit {
   @Input() data: DatasResponse | null = null
   @Input() selectOptionDefault: string = '' // Default option to Multiselect
   @Input() date_select_main: Date[] | null = null
+  @Input() search_Main!: (value:any) => Promise<void>;
   readonly el = viewChild.required<ElementRef>('chart');
   drawer_status: boolean = false;
   date: null | Date[] = null;
@@ -150,4 +152,9 @@ export class GraphMainComponent implements OnInit {
     this.basicChart(data, zones, this.datas_min_max, this.drawer_data_filter);
   }
 
+  async search() {  
+    if (this.search_Main) {      
+      await this.search_Main(this.date);
+    }
+  }
 }
