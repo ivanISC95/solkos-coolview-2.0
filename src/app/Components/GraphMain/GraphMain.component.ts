@@ -98,8 +98,8 @@ export class GraphMainComponent implements OnInit {
   logSelection() {    
     this.data_graph = transformTelemetry2(this.data!.telemetry, this.selectedTelemetry, this.selectedTelemetry);
     this.drawer_options.checked_safe_zone == true 
-    ? this.basicChart([...this.data_graph, ...transformTelemetryZoneEvents(this.data!.fails, this.datas_min_max)], transformSafeZone(this.data!.safeZone ?? []), this.datas_min_max,this.selectedTelemetry) 
-    : this.basicChart([...this.data_graph, ...transformTelemetryZoneEvents(this.data!.fails, this.datas_min_max)], null, this.datas_min_max,this.selectedTelemetry)
+    ? this.basicChart([...this.data_graph, ...transformTelemetryZoneEvents(this.data!.fails, this.datas_min_max,this.selectedTelemetry)], transformSafeZone(this.data!.safeZone ?? []), this.datas_min_max,this.selectedTelemetry) 
+    : this.basicChart([...this.data_graph, ...transformTelemetryZoneEvents(this.data!.fails, this.datas_min_max,this.selectedTelemetry)], null, this.datas_min_max,this.selectedTelemetry)
   }
 
   onCheckedChange(value: boolean, buttonID?: string) {

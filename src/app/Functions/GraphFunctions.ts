@@ -138,9 +138,9 @@ const transformSafeZone = (safeZone: SafeZone[]): PlotlyShape[] => {
     },
   ];
 };
-const transformTelemetryZoneEvents = (data: Fail[] | null,rangosTelemetry:number[]) => {
+const transformTelemetryZoneEvents = (data: Fail[] | null,rangosTelemetry:number[],events_filter? :string[]) => {
   if (!data) return [];
-  const minValue = Math.min(...rangosTelemetry)
+  const minValue =  events_filter?.includes('Aperturas') == true || events_filter?.includes('Compresor') ? -2 :  Math.min(...rangosTelemetry)
   const typeMapping: Record<string, string> = {
     "DISCONNECTION_ALERT": "Desconexión",
     "RECONNECTION_ALERT": "Conexión",
@@ -203,11 +203,10 @@ const pixelsToSizeY = (px: number, rangeY: [number, number]) => {
 };
 // function to create images inthe graph
 function transformFailsToAnnotations2(data: DatasResponse | null,valueInputFechas:any,rangosTelemetry:number[],events_filter? :string[]) {  
-  console.log(events_filter)
   const windowWidth = window.innerWidth;
   const xRange: [number, number] = valueInputFechas 
   const yRange: [number, number] = [0, Math.max(...rangosTelemetry) > 250 ? 500 : 250];
-  const minValue = Math.min(...rangosTelemetry)
+  const minValue = events_filter?.includes('Aperturas') == true || events_filter?.includes('Compresor') ? -2 : Math.min(...rangosTelemetry)
   if (!data || !data.fails) return [];
   const iconMapping: Record<string, string> = {
     // Info
