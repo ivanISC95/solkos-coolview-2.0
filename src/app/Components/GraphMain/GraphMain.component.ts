@@ -41,7 +41,6 @@ export class GraphMainComponent implements OnInit {
     this.data_graph = transformTelemetry2(this.data!.telemetry, [this.selectOptionDefault], [this.selectOptionDefault]);
     this.datas_min_max = this.data_graph.flatMap((value) => value.y)
     this.basicChart([...this.data_graph, ...transformTelemetryZoneEvents(this.data!.fails, this.datas_min_max)], null, this.datas_min_max);
-    console.log(this.datas_min_max)
   }
   basicChart(data_graph: any, safe_zone?: any, min_max?: number[], events_filter?: string[]) {    
     const element = this.el().nativeElement
@@ -65,8 +64,7 @@ export class GraphMainComponent implements OnInit {
     });
 
     Plotly.newPlot(element, data, graph_layout(safe_zone, this.selectedTelemetry, filteredData, this.date_select_main ?? []), graph_config).then((graph: any) => {
-      graph.on('plotly_relayout', (eventData: any) => {
-        console.log(eventData)
+      graph.on('plotly_relayout', (eventData: any) => {      
         if (eventData['xaxis.range[0]']) {
           const dateEnd = new Date(eventData['xaxis.range[1]'])
           dateEnd.setUTCHours(23, 59, 59, 999)
@@ -76,7 +74,7 @@ export class GraphMainComponent implements OnInit {
           const dateInit = new Date(this.date_select_main![0])
           dateInit.setUTCHours(0,0,0,0)
           const dateEnd = new Date(this.date_select_main![1])
-          dateEnd.setUTCHours(23, 59, 59, 999)                      
+          dateEnd.setUTCHours(23, 59, 59, 999)         
           this.date_select_main = [dateInit, dateEnd]
         }
         if (eventData["xaxis.range"]) {
@@ -103,11 +101,10 @@ export class GraphMainComponent implements OnInit {
 
   logSelection() {    
     this.data_graph = transformTelemetry2(this.data!.telemetry, this.selectedTelemetry, this.selectedTelemetry);
+    this.selectedTelemetry.includes('Aperturas') ? this.datas_min_max = [...this.datas_min_max,-2]  : this.datas_min_max = this.data_graph.map(item => item.y).flat()
     this.drawer_options.checked_safe_zone == true 
     ? this.basicChart([...this.data_graph, ...transformTelemetryZoneEvents(this.data!.fails, this.datas_min_max,this.selectedTelemetry)], transformSafeZone(this.data!.safeZone ?? []), this.datas_min_max,this.selectedTelemetry) 
-    : this.basicChart([...this.data_graph, ...transformTelemetryZoneEvents(this.data!.fails, this.datas_min_max,this.selectedTelemetry)], null, this.datas_min_max,this.selectedTelemetry)
-    console.log(this.datas_min_max)
-    console.log(this.data_graph)
+    : this.basicChart([...this.data_graph, ...transformTelemetryZoneEvents(this.data!.fails, this.datas_min_max,this.selectedTelemetry)], null, this.datas_min_max,this.selectedTelemetry)    
   }
 
   onCheckedChange(value: boolean, buttonID?: string) {
