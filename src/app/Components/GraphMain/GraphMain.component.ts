@@ -14,7 +14,7 @@ import { graph_config, graph_layout } from '../../Functions/GraphVar';
 @Component({
   selector: 'app-graph-main',
   standalone: true,
-  imports: [NzSelectModule, CommonModule, NzDrawerModule, NzFlexDirective, NzCheckboxModule, FormsModule, NzDatePickerModule,NzButtonModule],
+  imports: [NzSelectModule, CommonModule, NzDrawerModule, NzFlexDirective, NzCheckboxModule, FormsModule, NzDatePickerModule, NzButtonModule],
   templateUrl: './GraphMain.component.html',
   styleUrl: './GraphMain.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -23,7 +23,7 @@ export class GraphMainComponent implements OnInit {
   @Input() data: DatasResponse | null = null
   @Input() selectOptionDefault: string = '' // Default option to Multiselect
   @Input() date_select_main: Date[] | null = null
-  @Input() search_Main!: (value:any) => Promise<void>;
+  @Input() search_Main!: (value: any) => Promise<void>;
   readonly el = viewChild.required<ElementRef>('chart');
   drawer_status: boolean = false;
   date: null | Date[] = null;
@@ -42,10 +42,12 @@ export class GraphMainComponent implements OnInit {
     this.datas_min_max = this.data_graph.flatMap((value) => value.y)
     this.basicChart([...this.data_graph, ...transformTelemetryZoneEvents(this.data!.fails, this.datas_min_max)], null, this.datas_min_max);
   }
-  basicChart(data_graph: any, safe_zone?: any, min_max?: number[], events_filter?: string[]) {    
+
+
+  basicChart(data_graph: any, safe_zone?: any, min_max?: number[], events_filter?: string[]) {
     const element = this.el().nativeElement
     const data = data_graph;
-    const filteredData = transformFailsToAnnotations2(this.data, this.date_select_main, min_max ?? [],events_filter).filter((item: any) => {
+    const filteredData = transformFailsToAnnotations2(this.data, this.date_select_main, min_max ?? [], events_filter).filter((item: any) => {
       const sourceLower = item.source.toLowerCase(); // Convertir a minúsculas para coincidencias más seguras
       if (this.drawer_data_filter.includes('FAIL') && sourceLower.includes('/fails/')) {
         return false;
@@ -59,12 +61,11 @@ export class GraphMainComponent implements OnInit {
       if (this.drawer_data_filter.includes('DESCONECTIONS') && (sourceLower.includes('desconexion') || sourceLower.includes('reconexion'))) {
         return false;
       }
-
       return true; // Incluir todos los demás
     });
 
     Plotly.newPlot(element, data, graph_layout(safe_zone, this.selectedTelemetry, filteredData, this.date_select_main ?? []), graph_config).then((graph: any) => {
-      graph.on('plotly_relayout', (eventData: any) => {      
+      graph.on('plotly_relayout', (eventData: any) => {
         if (eventData['xaxis.range[0]']) {
           const dateEnd = new Date(eventData['xaxis.range[1]'])
           dateEnd.setUTCHours(23, 59, 59, 999)
@@ -72,26 +73,45 @@ export class GraphMainComponent implements OnInit {
         }
         if (eventData['yaxis.autorange'] || eventData['xaxis.autorange']) {
           const dateInit = new Date(this.date_select_main![0])
-          dateInit.setUTCHours(0,0,0,0)
+          dateInit.setUTCHours(0, 0, 0, 0)
           const dateEnd = new Date(this.date_select_main![1])
-          dateEnd.setUTCHours(23, 59, 59, 999)         
+          dateEnd.setUTCHours(23, 59, 59, 999)
           this.date_select_main = [dateInit, dateEnd]
         }
         if (eventData["xaxis.range"]) {
           const [xMin, xMax] = eventData["xaxis.range"];
           this.date_select_main = [new Date(xMin), new Date(xMax)]
         }
-        const newAnnotations = transformFailsToAnnotations2(this.data, this.date_select_main, min_max ?? []);        
+        const newAnnotations = transformFailsToAnnotations2(this.data, this.date_select_main, min_max ?? []);
         if (newAnnotations.length) {
           Plotly.update(element, {}, { images: newAnnotations });
         }
       })
+      const hideFirstYTick = () => {
+        // Busca todos los ticks del eje Y
+        const yTicks = element.querySelectorAll('.yaxislayer-above .ytick text');
+        if (yTicks.length > 0) {
+          const firstTick = yTicks[0] as SVGTextElement;
+          if (firstTick) {
+            firstTick.style.visibility = 'hidden';
+          }
+        }
+      };
+
+      // Ejecutar inmediatamente al renderizar
+      hideFirstYTick();
+
+      // Al hacer zoom, pan u otro cambio
+      graph.on('plotly_relayout', () => {
+        hideFirstYTick();
+      });
     })
   }
   resizeChart() {
     const element = this.el().nativeElement;
     Plotly.Plots.resize(element);
   }
+
   close() {
     this.drawer_status = false
   }
@@ -99,12 +119,12 @@ export class GraphMainComponent implements OnInit {
     this.date = result
   }
 
-  logSelection() {    
+  logSelection() {
     this.data_graph = transformTelemetry2(this.data!.telemetry, this.selectedTelemetry, this.selectedTelemetry);
-    this.selectedTelemetry.includes('Aperturas') ? this.datas_min_max = [...this.datas_min_max,-2]  : this.datas_min_max = this.data_graph.map(item => item.y).flat()
-    this.drawer_options.checked_safe_zone == true 
-    ? this.basicChart([...this.data_graph, ...transformTelemetryZoneEvents(this.data!.fails, this.datas_min_max,this.selectedTelemetry)], transformSafeZone(this.data!.safeZone ?? []), this.datas_min_max,this.selectedTelemetry) 
-    : this.basicChart([...this.data_graph, ...transformTelemetryZoneEvents(this.data!.fails, this.datas_min_max,this.selectedTelemetry)], null, this.datas_min_max,this.selectedTelemetry)    
+    this.selectedTelemetry.includes('Aperturas') ? this.datas_min_max = [...this.datas_min_max, -2] : this.datas_min_max = this.data_graph.map(item => item.y).flat()
+    this.drawer_options.checked_safe_zone == true
+      ? this.basicChart([...this.data_graph, ...transformTelemetryZoneEvents(this.data!.fails, this.datas_min_max, this.selectedTelemetry)], transformSafeZone(this.data!.safeZone ?? []), this.datas_min_max, this.selectedTelemetry)
+      : this.basicChart([...this.data_graph, ...transformTelemetryZoneEvents(this.data!.fails, this.datas_min_max, this.selectedTelemetry)], null, this.datas_min_max, this.selectedTelemetry)
   }
 
   onCheckedChange(value: boolean, buttonID?: string) {
@@ -155,8 +175,8 @@ export class GraphMainComponent implements OnInit {
     this.basicChart(data, zones, this.datas_min_max, this.drawer_data_filter);
   }
 
-  async search() {  
-    if (this.search_Main) {      
+  async search() {
+    if (this.search_Main) {
       await this.search_Main(this.date);
     }
   }
