@@ -48,6 +48,7 @@ export class GraphMainComponent implements OnInit {
   basicChart(data_graph: any, safe_zone?: any, min_max?: number[], events_filter?: string[]) {
     const element = this.el().nativeElement
     const data = data_graph;
+    this.resizeChart();
     const filteredData = transformFailsToAnnotations2(this.data, this.date_select_main, min_max ?? [], events_filter).filter((item: any) => {
       const sourceLower = item.source.toLowerCase(); // Convertir a minúsculas para coincidencias más seguras
       if (this.drawer_data_filter.includes('FAIL') && sourceLower.includes('/fails/')) {
