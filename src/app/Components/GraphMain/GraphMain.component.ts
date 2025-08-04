@@ -129,8 +129,14 @@ export class GraphMainComponent implements OnInit {
       this.NoData().nativeElement.style.display = 'none';
     }
 
-    this.data_graph = transformTelemetry2(this.data!.telemetry, this.selectedTelemetry, this.selectedTelemetry);
-    this.selectedTelemetry.includes('Aperturas') ? this.datas_min_max = [...this.datas_min_max, -2] : this.datas_min_max = this.data_graph.map(item => item.y).flat()
+    this.data_graph = transformTelemetry2(this.data!.telemetry, this.selectedTelemetry, this.selectedTelemetry);            
+    if(this.selectedTelemetry.includes('Aperturas') || this.selectedTelemetry.includes('Compresor')) {            
+      this.selectedTelemetry.includes('Aperturas') ? this.datas_min_max = [...this.datas_min_max, 0.7] : this.datas_min_max = [...this.datas_min_max, -3]
+    } 
+    
+    else {
+      this.datas_min_max = this.data_graph.map(item => item.y).flat();
+    }
     this.drawer_options.checked_safe_zone == true
       ? this.basicChart([...this.data_graph, ...transformTelemetryZoneEvents(this.data!.fails, this.datas_min_max, this.selectedTelemetry)], transformSafeZone(this.data!.safeZone ?? []), this.datas_min_max, this.selectedTelemetry)
       : this.basicChart([...this.data_graph, ...transformTelemetryZoneEvents(this.data!.fails, this.datas_min_max, this.selectedTelemetry)], null, this.datas_min_max, this.selectedTelemetry)

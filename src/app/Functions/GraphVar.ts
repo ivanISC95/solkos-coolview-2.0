@@ -63,12 +63,12 @@ const graph_layout = (safe_zone?:any,value?:string[],images?: any[],date_range?:
         xaxis: {
             tickformat: '%d-%b',
             showgrid: false,
-            type: 'date',
+            // type: 'date',
             range: date_range!.length > 0 ? [dateInit, dateEnd] : undefined
         },
         yaxis: {
             autorange: true,
-            tickformat: '~s',
+            tickformat: '',
             // ticksuffix: LayoutInforTelemetry(value)[1],
             ticksuffix: LayoutInforTelemetry(value ?? [])[1] ,
             zeroline: false,
