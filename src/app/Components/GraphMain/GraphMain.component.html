@@ -19,11 +19,10 @@
     </div>
   </section>
   <section class="grap_select_main_content_graph">    
-    <div #chart style="height: 100% !important;width: 100% !important;">
-      @if(this.data_graph.length == 0){
-        <div style="height: 100% !important;width: 100% !important;display: flex;align-items: center;justify-content: center;">Selecciona un Filtro</div>
-      }
-    </div>    
+    <div #chart style="height: 100% !important;width: 100% !important;"></div>        
+    <div #NoData style="height: 100% !important;width: 100% !important;display: none;align-items: center;justify-content: center;" >
+      <h1 style="color: #000;font-size: 0.75rem;font-style: normal;font-weight: 400;">Select a telemetry</h1>
+    </div>
   </section>
 </section>
 @if (drawer_status == true) {

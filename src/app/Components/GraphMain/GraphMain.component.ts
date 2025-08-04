@@ -25,6 +25,7 @@ export class GraphMainComponent implements OnInit {
   @Input() date_select_main: Date[] | null = null
   @Input() search_Main!: (value: any) => Promise<void>;
   readonly el = viewChild.required<ElementRef>('chart');
+  readonly NoData = viewChild.required<ElementRef>('NoData');
   drawer_status: boolean = false;
   date: null | Date[] = null;
   drawer_options: DrawerOptions = { checked_safe_disc: false, checked_safe_zone: false, checked_disconection: false, checked_events_zone: false, checked_Alerts: true, checked_Fails: true, checked_Info: true, checked_Desconections: true } // variables drawer
@@ -119,7 +120,15 @@ export class GraphMainComponent implements OnInit {
     this.date = result
   }
 
-  logSelection() {
+  logSelection() {    
+    if (this.selectedTelemetry.length === 0) {
+      this.el().nativeElement.style.display = 'none';
+      this.NoData().nativeElement.style.display = 'flex'
+    } else {
+      this.el().nativeElement.style.display = 'block';
+      this.NoData().nativeElement.style.display = 'none';
+    }
+
     this.data_graph = transformTelemetry2(this.data!.telemetry, this.selectedTelemetry, this.selectedTelemetry);
     this.selectedTelemetry.includes('Aperturas') ? this.datas_min_max = [...this.datas_min_max, -2] : this.datas_min_max = this.data_graph.map(item => item.y).flat()
     this.drawer_options.checked_safe_zone == true
