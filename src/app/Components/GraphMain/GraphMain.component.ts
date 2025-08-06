@@ -84,7 +84,23 @@ export class GraphMainComponent implements OnInit {
           const [xMin, xMax] = eventData["xaxis.range"];
           this.date_select_main = [new Date(xMin), new Date(xMax)]
         }
-        const newAnnotations = transformFailsToAnnotations2(this.data, this.date_select_main, min_max ?? []);
+        const newAnnotations = transformFailsToAnnotations2(this.data, this.date_select_main, min_max ?? []).filter((item: any) => {
+          const sourceLower = item.source.toLowerCase(); // Convertir a minúsculas para coincidencias más seguras
+          if (this.drawer_data_filter.includes('FAIL') && sourceLower.includes('/fails/')) {
+            return false;
+          }
+          if (this.drawer_data_filter.includes('ALERT') && sourceLower.includes('/alerts/')) {
+            return false;
+          }
+          if (this.drawer_data_filter.includes('INFORMATIVES') && sourceLower.includes('/informativos/')) {
+            return false;
+          }
+          if (this.drawer_data_filter.includes('DESCONECTIONS') && (sourceLower.includes('desconexion') || sourceLower.includes('reconexion'))) {
+            return false;
+          }
+          return true; // Incluir todos los demás
+        });
+        console.log(newAnnotations)
         if (newAnnotations.length) {
           Plotly.update(element, {}, { images: newAnnotations });
         }
@@ -121,7 +137,7 @@ export class GraphMainComponent implements OnInit {
     this.date = result
   }
 
-  logSelection() {    
+  logSelection() {
     if (this.selectedTelemetry.length === 0) {
       this.el().nativeElement.style.display = 'none';
       this.NoData().nativeElement.style.display = 'flex'
@@ -130,11 +146,11 @@ export class GraphMainComponent implements OnInit {
       this.NoData().nativeElement.style.display = 'none';
     }
 
-    this.data_graph = transformTelemetry2(this.data!.telemetry, this.selectedTelemetry, this.selectedTelemetry);            
-    if(this.selectedTelemetry.includes('Aperturas') || this.selectedTelemetry.includes('Compresor')) {            
+    this.data_graph = transformTelemetry2(this.data!.telemetry, this.selectedTelemetry, this.selectedTelemetry);
+    if (this.selectedTelemetry.includes('Aperturas') || this.selectedTelemetry.includes('Compresor')) {
       this.selectedTelemetry.includes('Aperturas') ? this.datas_min_max = [...this.datas_min_max, 0.7] : this.datas_min_max = [...this.datas_min_max, -3]
-    } 
-    
+    }
+
     else {
       this.datas_min_max = this.data_graph.map(item => item.y).flat();
     }
