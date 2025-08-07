@@ -65,7 +65,7 @@
       <hr style="width: 100%;background-color: var(--Neutral-Outline-Variant, #CACACA);border: 1px solid transparent;">
       <section style="width: 100%;height: 7.25rem">
         <nz-flex nzVertical style="width: 15rem;" nzGap="0.5rem">
-          <label nz-checkbox [(ngModel)]="drawer_options.checked_events_zone">Zona de eventos</label>
+          <label nz-checkbox [(ngModel)]="drawer_options.checked_events_zone" (ngModelChange)="onCheckedChange($event, 'events_zone')">Zona de eventos</label>
           <label nz-checkbox [(ngModel)]="drawer_options.checked_Alerts" (ngModelChange)="onCheckedChange($event,'ALERT')" [nzDisabled]="!checkBoxStatus['Alertas']">Alertas</label>
           <label nz-checkbox [(ngModel)]="drawer_options.checked_Fails" (ngModelChange)="onCheckedChange($event,'FAIL')" [nzDisabled]="!checkBoxStatus['Fallas']">Fallas</label>
           <label nz-checkbox [(ngModel)]="drawer_options.checked_Info" (ngModelChange)="onCheckedChange($event,'INFORMATIVES')" [nzDisabled]="!checkBoxStatus['Informativos']">Informativos</label>

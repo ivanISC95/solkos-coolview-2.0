@@ -64,4 +64,5 @@ export interface DrawerOptions {
     checked_Fails : boolean;
     checked_Info : boolean;
     checked_Desconections :  boolean;
+    [key: string]: any; // ← Agrega esto
 }

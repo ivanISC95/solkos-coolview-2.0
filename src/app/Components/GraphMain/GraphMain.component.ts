@@ -28,7 +28,7 @@ export class GraphMainComponent implements OnInit {
   readonly NoData = viewChild.required<ElementRef>('NoData');
   drawer_status: boolean = false;
   date: null | Date[] = null;
-  drawer_options: DrawerOptions = { checked_safe_disc: false, checked_safe_zone: false, checked_disconection: false, checked_events_zone: false, checked_Alerts: true, checked_Fails: true, checked_Info: true, checked_Desconections: true } // variables drawer
+  drawer_options: DrawerOptions = { checked_safe_disc: false, checked_safe_zone: false, checked_disconection: false, checked_events_zone: true, checked_Alerts: true, checked_Fails: true, checked_Info: true, checked_Desconections: true } // variables drawer
   telemetryOptions: string[] = []; // Multiselect options
   selectedTelemetry: string[] = []; // MultiSelect value
   data_graph: any[] = [] // Datas from graph
@@ -36,12 +36,11 @@ export class GraphMainComponent implements OnInit {
   drawer_safezone_disconection: string[] = [] // Vale to know option safezone or disconectionzone
   drawer_data_filter: string[] = []; // Values to filter events zone from drawer
   checkBoxStatus: { [key: string]: boolean } = {
-  'Desconexiones': false,
-  'Fallas': false,
-  'Alertas': false,
-  'Informativos': false,
-  // Puedes agregar más llaves si lo necesitas: 'Alertas': false, etc.
-};
+    'Desconexiones': false,
+    'Fallas': false,
+    'Alertas': false,
+    'Informativos': false,
+  };
 
 
   ngOnInit() {
@@ -76,7 +75,7 @@ export class GraphMainComponent implements OnInit {
         return false;
       }
       return true; // Incluir todos los demás
-    });    
+    });
     Plotly.newPlot(element, data, graph_layout(safe_zone, this.selectedTelemetry, filteredData, this.date_select_main ?? []), graph_config).then((graph: any) => {
       graph.on('plotly_relayout', (eventData: any) => {
         if (eventData['xaxis.range[0]']) {
@@ -110,7 +109,7 @@ export class GraphMainComponent implements OnInit {
             return false;
           }
           return true; // Incluir todos los demás
-        });        
+        });
         if (newAnnotations.length) {
           Plotly.update(element, {}, { images: newAnnotations });
         }
@@ -172,50 +171,64 @@ export class GraphMainComponent implements OnInit {
   onCheckedChange(value: boolean, buttonID?: string) {
     if (buttonID) {
       const index = this.drawer_safezone_disconection.indexOf(buttonID);
-      value ? index === -1 && this.drawer_safezone_disconection.push(buttonID) : index !== -1 && this.drawer_safezone_disconection.splice(index, 1);
-
-      // Manejo de drawer_data_filter
-      const filterIndex = this.drawer_data_filter.indexOf(buttonID);
-      if (value == false) {
-        if (filterIndex === -1 && ['FAIL', 'ALERT', 'INFORMATIVES', 'DESCONECTIONS'].includes(buttonID)) {
-          this.drawer_data_filter.push(buttonID);
-        }
+      if (value) {
+        if (index === -1) this.drawer_safezone_disconection.push(buttonID);
       } else {
-        if (filterIndex !== -1) {
+        if (index !== -1) this.drawer_safezone_disconection.splice(index, 1);
+      }
+
+      // Manejamos los filtros para eventos
+      const eventTypes = ['FAIL', 'ALERT', 'INFORMATIVES', 'DESCONECTIONS'];
+
+      if (eventTypes.includes(buttonID)) {
+        const filterIndex = this.drawer_data_filter.indexOf(buttonID);
+        if (!value && filterIndex === -1) {
+          // Si se desactiva, agregamos a filtros
+          this.drawer_data_filter.push(buttonID);
+        } else if (value && filterIndex !== -1) {
+          // Si se activa, quitamos del filtro
           this.drawer_data_filter.splice(filterIndex, 1);
         }
+      }
+
+      // Si se desactiva la Zona de eventos, quitamos todos los filtros
+      if (buttonID === 'events_zone' && !value) {
+        this.drawer_data_filter = ['FAIL', 'ALERT', 'INFORMATIVES', 'DESCONECTIONS'];
+      }
+
+      // Si se activa la Zona de eventos, pero los filtros están todos activos, reiniciamos filtros (mostrar todo)
+      if (buttonID === 'events_zone' && value) {
+        this.drawer_data_filter = [];
       }
     }
 
     const filteredData = transformTelemetryZoneEvents(this.data!.fails, this.datas_min_max).filter(item => {
-      if (this.drawer_data_filter.includes('FAIL') && item.name.includes('Falla')) {
-        return false;
-      }
-      if (this.drawer_data_filter.includes('ALERT') && item.name.includes('Alerta')) {
-        return false;
-      }
-      if (this.drawer_data_filter.includes('INFORMATIVES') && item.name.includes('Informativo')) {
-        return false;
-      }
-      if (this.drawer_data_filter.includes('DESCONECTIONS') && item.name.includes('Desconexión')) {
-        return false;
-      }
-      if (this.drawer_data_filter.includes('DESCONECTIONS') && item.name.includes('Conexión')) {
-        return false;
-      }
-      return true; // Incluye todos los demás
+      if (this.drawer_data_filter.includes('FAIL') && item.name.includes('Falla')) return false;
+      if (this.drawer_data_filter.includes('ALERT') && item.name.includes('Alerta')) return false;
+      if (this.drawer_data_filter.includes('INFORMATIVES') && item.name.includes('Informativo')) return false;
+      if (this.drawer_data_filter.includes('DESCONECTIONS') && item.name.includes('Desconexión')) return false;
+      if (this.drawer_data_filter.includes('DESCONECTIONS') && item.name.includes('Conexión')) return false;
+      return true;
     });
+
     const options = this.drawer_safezone_disconection;
     const data = [...this.data_graph, ...filteredData];
-    const zones = options.includes('safe_and_disconection') || (options.includes('safeZone') && options.includes('disconection'))
-      ? [...transformSafeZone(this.data!.safeZone ?? []), ...transformDesconectionsZone(this.data!.fails ?? [], this.datas_min_max)]
-      : options.includes('safeZone')
-        ? transformSafeZone(this.data!.safeZone ?? [])
-        : options.includes('disconection')
-          ? transformDesconectionsZone(this.data!.fails ?? [], this.datas_min_max)
-          : null;
+
+    const zones =
+      options.includes('safe_and_disconection') || (options.includes('safeZone') && options.includes('disconection'))
+        ? [
+          ...transformSafeZone(this.data!.safeZone ?? []),
+          ...transformDesconectionsZone(this.data!.fails ?? [], this.datas_min_max),
+        ]
+        : options.includes('safeZone')
+          ? transformSafeZone(this.data!.safeZone ?? [])
+          : options.includes('disconection')
+            ? transformDesconectionsZone(this.data!.fails ?? [], this.datas_min_max)
+            : null;
+
     this.basicChart(data, zones, this.datas_min_max, this.drawer_data_filter);
   }
+
 
   async search() {
     if (this.search_Main) {
