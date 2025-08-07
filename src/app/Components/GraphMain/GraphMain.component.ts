@@ -50,6 +50,10 @@ export class GraphMainComponent implements OnInit {
     this.data_graph = transformTelemetry2(this.data!.telemetry, [this.selectOptionDefault], [this.selectOptionDefault]);
     this.datas_min_max = this.data_graph.flatMap((value) => value.y)
     this.basicChart([...this.data_graph, ...transformTelemetryZoneEvents(this.data!.fails, this.datas_min_max)], null, this.datas_min_max);
+    this.checkBoxStatus['Fallas'] = this.data?.fails.some(item => item.type_fail.toLowerCase().includes('fail')) ?? false
+    this.checkBoxStatus['Desconexiones'] = this.data?.fails.some(item => item.type_fail.toLowerCase().includes('disconnection')) ?? false
+    this.checkBoxStatus['Alertas'] = this.data?.fails.filter(item => item.type_fail.toLowerCase() != 'disconnection_alert').some(item => item.type_fail.toLowerCase().includes('alert')) ?? false
+    this.checkBoxStatus['Informativos'] = this.data?.fails.some(item => item.type_fail.toLowerCase().includes('informativo')) ?? false
   }
 
 
@@ -72,13 +76,7 @@ export class GraphMainComponent implements OnInit {
         return false;
       }
       return true; // Incluir todos los demás
-    });
-    this.checkBoxStatus['Fallas'] = filteredData.some(item => item.source.toLowerCase().includes('/fails/'));
-    this.checkBoxStatus['Desconexiones'] = filteredData.some(item => item.source.toLowerCase().includes('desconexion.svg'));
-    this.checkBoxStatus['Alertas'] = filteredData.some(item => item.source.toLowerCase().includes('/alerts/'));
-    this.checkBoxStatus['Informativos'] = filteredData.some(item => item.source.toLowerCase().includes('/informativos/'));
-    console.log(filteredData)
-    console.log(this.checkBoxStatus)
+    });    
     Plotly.newPlot(element, data, graph_layout(safe_zone, this.selectedTelemetry, filteredData, this.date_select_main ?? []), graph_config).then((graph: any) => {
       graph.on('plotly_relayout', (eventData: any) => {
         if (eventData['xaxis.range[0]']) {
@@ -98,7 +96,7 @@ export class GraphMainComponent implements OnInit {
           this.date_select_main = [new Date(xMin), new Date(xMax)]
         }
         const newAnnotations = transformFailsToAnnotations2(this.data, this.date_select_main, min_max ?? []).filter((item: any) => {
-          const sourceLower = item.source.toLowerCase(); // Convertir a minúsculas para coincidencias más seguras
+          const sourceLower = item.source.toLowerCase();
           if (this.drawer_data_filter.includes('FAIL') && sourceLower.includes('/fails/')) {
             return false;
           }
@@ -112,8 +110,7 @@ export class GraphMainComponent implements OnInit {
             return false;
           }
           return true; // Incluir todos los demás
-        });
-        console.log(newAnnotations)
+        });        
         if (newAnnotations.length) {
           Plotly.update(element, {}, { images: newAnnotations });
         }
