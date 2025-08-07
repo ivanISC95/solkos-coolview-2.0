@@ -66,10 +66,10 @@
       <section style="width: 100%;height: 7.25rem">
         <nz-flex nzVertical style="width: 15rem;" nzGap="0.5rem">
           <label nz-checkbox [(ngModel)]="drawer_options.checked_events_zone">Zona de eventos</label>
-          <label nz-checkbox [(ngModel)]="drawer_options.checked_Alerts" (ngModelChange)="onCheckedChange($event,'ALERT')" >Alertas</label>
-          <label nz-checkbox [(ngModel)]="drawer_options.checked_Fails" (ngModelChange)="onCheckedChange($event,'FAIL')">Fallas</label>
-          <label nz-checkbox [(ngModel)]="drawer_options.checked_Info" (ngModelChange)="onCheckedChange($event,'INFORMATIVES')">Informativos</label>
-          <label nz-checkbox [(ngModel)]="drawer_options.checked_Desconections" (ngModelChange)="onCheckedChange($event,'DESCONECTIONS')">Desconexiones</label>
+          <label nz-checkbox [(ngModel)]="drawer_options.checked_Alerts" (ngModelChange)="onCheckedChange($event,'ALERT')" [nzDisabled]="!checkBoxStatus['Alertas']">Alertas</label>
+          <label nz-checkbox [(ngModel)]="drawer_options.checked_Fails" (ngModelChange)="onCheckedChange($event,'FAIL')" [nzDisabled]="!checkBoxStatus['Fallas']">Fallas</label>
+          <label nz-checkbox [(ngModel)]="drawer_options.checked_Info" (ngModelChange)="onCheckedChange($event,'INFORMATIVES')" [nzDisabled]="!checkBoxStatus['Informativos']">Informativos</label>
+          <label nz-checkbox [(ngModel)]="drawer_options.checked_Desconections" (ngModelChange)="onCheckedChange($event,'DESCONECTIONS')" [nzDisabled]="!checkBoxStatus['Desconexiones']">Desconexiones</label>
         </nz-flex>
       </section>
     </section>

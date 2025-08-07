@@ -35,6 +35,14 @@ export class GraphMainComponent implements OnInit {
   datas_min_max: number[] = [] // Y datas for min and max
   drawer_safezone_disconection: string[] = [] // Vale to know option safezone or disconectionzone
   drawer_data_filter: string[] = []; // Values to filter events zone from drawer
+  checkBoxStatus: { [key: string]: boolean } = {
+  'Desconexiones': false,
+  'Fallas': false,
+  'Alertas': false,
+  'Informativos': false,
+  // Puedes agregar más llaves si lo necesitas: 'Alertas': false, etc.
+};
+
 
   ngOnInit() {
     this.telemetryOptions = getTelemetryNamesTranslated(this.data)
@@ -65,7 +73,12 @@ export class GraphMainComponent implements OnInit {
       }
       return true; // Incluir todos los demás
     });
-
+    this.checkBoxStatus['Fallas'] = filteredData.some(item => item.source.toLowerCase().includes('/fails/'));
+    this.checkBoxStatus['Desconexiones'] = filteredData.some(item => item.source.toLowerCase().includes('desconexion.svg'));
+    this.checkBoxStatus['Alertas'] = filteredData.some(item => item.source.toLowerCase().includes('/alerts/'));
+    this.checkBoxStatus['Informativos'] = filteredData.some(item => item.source.toLowerCase().includes('/informativos/'));
+    console.log(filteredData)
+    console.log(this.checkBoxStatus)
     Plotly.newPlot(element, data, graph_layout(safe_zone, this.selectedTelemetry, filteredData, this.date_select_main ?? []), graph_config).then((graph: any) => {
       graph.on('plotly_relayout', (eventData: any) => {
         if (eventData['xaxis.range[0]']) {
