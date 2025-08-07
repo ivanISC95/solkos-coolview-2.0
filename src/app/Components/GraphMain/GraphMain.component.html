@@ -26,7 +26,7 @@
   </section>
 </section>
 @if (drawer_status == true) {
-<nz-drawer [nzClosable]="drawer_status" [nzVisible]="true" nzPlacement="right" nzTitle="Configuración del grafico" (nzOnClose)="close()" style="scrollbar-width: thin;">
+<nz-drawer [nzClosable]="drawer_status" [nzVisible]="true" nzPlacement="right" nzTitle="Configuración del grafico" (nzOnClose)="close()" style="scrollbar-width: thin;" [nzWidth]="'100%'">
   <ng-container *nzDrawerContent>
     <section style="width: 100%;height: 100%;display: flex; flex-direction: column;gap: 0.5rem;">
       <section style="width: 100%;height: auto;display: flex;flex-direction: column;justify-content: space-between;gap: 0.5rem;">
