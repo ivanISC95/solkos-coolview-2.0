@@ -1,9 +1,17 @@
 :host {
   display: block;
 }
+section{
+  width: 100%;
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  /* background-color: aliceblue; */
+}
 .grap_select_main {
   width: 100%;
-  height: 95dvh;
+  height: 100vh; /* Valor por defecto */
   overflow-y: auto;
   display: flex;
   flex-direction: column;
@@ -11,4 +19,16 @@
   padding: 0.5rem;
   box-sizing: border-box;
   scrollbar-width: thin;
+}
+
+/* Si estás en una pantalla 1920x1200 con escala 100%, usa 97dvh */
+@media (width: 1920px) and (height: 1200px) and (resolution: 1dppx) {
+  .grap_select_main {
+    height: 97dvh;
+  }
+}
+@media (width: 1920px) and (height: 1200px) {
+  .grap_select_main {
+    height: 97dvh;
+  }
 }
