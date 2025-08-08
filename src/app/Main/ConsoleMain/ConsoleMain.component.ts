@@ -1,11 +1,80 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { ApiService } from '../../services/api.service';
+import { DatasResponse } from '../../Interfaces/DatasResponse';
+import { getDateRange_dateFunctions, getDateRangeFromEndDate_dateFunctions } from '../../Functions/DateFunctions';
+import { GraphViewComponent } from '../../Components/GraphView/GraphView.component';
+import { GraphMainComponent } from '../../Components/GraphMain/GraphMain.component';
+import { LottieComponent, AnimationOptions } from 'ngx-lottie';
 
 @Component({
   selector: 'app-console-main',
   standalone: true,
-  imports: [],
+  imports: [GraphViewComponent,GraphMainComponent,LottieComponent],
   templateUrl: './ConsoleMain.component.html',
   styleUrl: './ConsoleMain.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ConsoleMainComponent { }
+export class ConsoleMainComponent {
+  id: string | null = null;
+  isLoading = false;
+  data_dates: any; // Dates from API
+  date: null | Date[] = null; // Dates to graph
+  data_error: any;
+  data_Cooler: DatasResponse | null = null;
+  view_grap_opt: null | number = 1;
+
+  constructor(private route: ActivatedRoute, private cdr: ChangeDetectorRef, private apiService: ApiService) { }
+
+  ngOnInit() {
+    this.id = this.route.snapshot.paramMap.get('id');
+    this.searchDate();
+    this.date = getDateRange_dateFunctions(this.data_dates);
+    if (this.id !== null) {
+      this.searchCooler(this.id, getDateRangeFromEndDate_dateFunctions(this.data_dates,1));
+    }    
+  }
+  async searchDate() {
+    this.isLoading = true;
+    this.cdr.detectChanges();
+    this.apiService.fetchDates("https://coolview-api-v2-545989770214.us-central1.run.app/coolview-api/dates/?serie=B4A2EB465FE6")
+      .subscribe({
+        next: (data) => {
+          this.data_dates = data
+        },
+        error: (error) => {
+          this.isLoading = false;
+          this.data_error = error;
+          console.error(error)
+        },
+        complete: () => {
+          this.isLoading = false;
+          this.cdr.markForCheck()
+        }
+      })
+  }
+  async searchCooler(mac:string,dates: string[] | Date[]): Promise<void> {
+    this.isLoading = true;
+    this.cdr.markForCheck();            
+    this.apiService.fetchData(`https://coolview-api-v2-545989770214.us-central1.run.app/coolview-api/v2/telemetryOs/?id=${mac}&start_date=${dates[0]}&end_date=${dates[1]}&is_mac=false`)
+      .subscribe({
+        next: (data) => {
+          this.data_Cooler = data
+        },
+        error: (error) => {
+          this.isLoading = false;
+          console.error("Error en la petición:", error);
+        },
+        complete: () => {
+          this.isLoading = false;
+          this.cdr.markForCheck(); 
+        }
+      });
+  }
+  recibirMensaje(mensaje: number) {
+    this.view_grap_opt = mensaje;
+  }
+  options: AnimationOptions = {
+      path: '/assets/Loader/loader.json',
+    };
+}

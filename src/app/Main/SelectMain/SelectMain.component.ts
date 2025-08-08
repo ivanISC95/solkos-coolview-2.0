@@ -43,9 +43,11 @@ export class SelectMainComponent {
 
   async searchCooler(date_child?:any): Promise<void> {
     this.isLoading = true;
-    this.cdr.markForCheck(); 
+    this.cdr.markForCheck();     
     if (this.date || date_child) {
       date_child ? this.dateFormatted = date_child.map((d:any) => d.toISOString().split('T')[0]) : this.dateFormatted = this.date!.map(d => d.toISOString().split('T')[0])
+      console.log(this.dateFormatted)
+      console.log(this.date)
     }       
     this.apiService.fetchData(`https://coolview-api-v2-545989770214.us-central1.run.app/coolview-api/v2/telemetryOs/?id=${this.value}&start_date=${this.dateFormatted[0]}&end_date=${this.dateFormatted[1]}&is_mac=false`)
       .subscribe({

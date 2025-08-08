@@ -18,4 +18,7 @@ export class ApiService {
     });
     return this.http.get<any>(url,{headers}); // Retorna un Observable con los datos de la API
   }
+  fetchDates (url:string): Observable<any>{
+    return this.http.get<any>(url)
+  }
 }
