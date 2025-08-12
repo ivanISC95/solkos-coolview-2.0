@@ -6,11 +6,13 @@ import { getDateRange_dateFunctions, getDateRangeFromEndDate_dateFunctions } fro
 import { GraphViewComponent } from '../../Components/GraphView/GraphView.component';
 import { GraphMainComponent } from '../../Components/GraphMain/GraphMain.component';
 import { LottieComponent, AnimationOptions } from 'ngx-lottie';
+import { NzAlertModule } from 'ng-zorro-antd/alert';
+
 
 @Component({
   selector: 'app-console-main',
   standalone: true,
-  imports: [GraphViewComponent,GraphMainComponent,LottieComponent],
+  imports: [GraphViewComponent,GraphMainComponent,LottieComponent,NzAlertModule],
   templateUrl: './ConsoleMain.component.html',
   styleUrl: './ConsoleMain.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -46,10 +48,11 @@ export class ConsoleMainComponent {
           this.isLoading = false;
           this.data_error = error;
           console.error(error)
+          this.cdr.markForCheck();
         },
         complete: () => {
           this.isLoading = false;
-          this.cdr.markForCheck()
+          this.cdr.markForCheck();
         }
       })
   }
@@ -63,6 +66,8 @@ export class ConsoleMainComponent {
         },
         error: (error) => {
           this.isLoading = false;
+          this.data_error = error;
+          this.cdr.markForCheck(); 
           console.error("Error en la petición:", error);
         },
         complete: () => {

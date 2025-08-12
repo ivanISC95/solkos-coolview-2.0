@@ -21,6 +21,10 @@ section{
   scrollbar-width: thin;
 }
 
+nz-alert {
+        margin-bottom: 16px;
+      }
+
 /* Si estás en una pantalla 1920x1200 con escala 100%, usa 97dvh */
 @media (width: 1920px) and (height: 1200px) and (resolution: 1dppx) {
   .grap_select_main {
