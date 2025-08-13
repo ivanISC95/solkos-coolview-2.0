@@ -21,7 +21,7 @@ export class ConsoleMainComponent {
   id: string | null = null;
   isLoading = false;
   data_dates: any; // Dates from API
-  date: null | Date[] = null; // Dates to graph
+  date: null | Date[] | any = null; // Dates to graph
   data_error: any;
   data_Cooler: DatasResponse | null = null;
   view_grap_opt: null | number = 1;
@@ -31,9 +31,9 @@ export class ConsoleMainComponent {
   ngOnInit() {
     this.id = this.route.snapshot.paramMap.get('id');
     this.searchDate();
-    this.date = getDateRange_dateFunctions(this.data_dates);
+    this.date = getDateRange_dateFunctions(this.data_dates);    
     if (this.id !== null) {
-      this.searchCooler(this.id, getDateRangeFromEndDate_dateFunctions(this.data_dates,1));
+      this.searchCooler(getDateRangeFromEndDate_dateFunctions(this.data_dates,1));
     }    
   }
   async searchDate() {
@@ -56,10 +56,17 @@ export class ConsoleMainComponent {
         }
       })
   }
-  async searchCooler(mac:string,dates: string[] | Date[]): Promise<void> {
+  async searchCooler(dates: string[] | Date[]): Promise<void> {    
+    const stringDates = dates.map(d => {
+      if (d instanceof Date) {        
+        this.date = dates;
+        return d.toISOString().split('T')[0];
+      }
+      return d;
+    });
     this.isLoading = true;
     this.cdr.markForCheck();            
-    this.apiService.fetchData(`https://coolview-api-v2-545989770214.us-central1.run.app/coolview-api/v2/telemetryOs/?id=${mac}&start_date=${dates[0]}&end_date=${dates[1]}&is_mac=false`)
+    this.apiService.fetchData(`https://coolview-api-v2-545989770214.us-central1.run.app/coolview-api/v2/telemetryOs/?id=${this.id}&start_date=${stringDates[0]}&end_date=${stringDates[1]}&is_mac=false`)
       .subscribe({
         next: (data) => {
           this.data_Cooler = data
