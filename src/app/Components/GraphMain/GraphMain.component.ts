@@ -28,7 +28,7 @@ export class GraphMainComponent implements OnInit {
   readonly NoData = viewChild.required<ElementRef>('NoData');
   drawer_status: boolean = false;
   date: null | Date[] = null;
-  drawer_options: DrawerOptions = { checked_safe_disc: false, checked_safe_zone: false, checked_disconection: false, checked_events_zone: true, checked_Alerts: true, checked_Fails: true, checked_Info: true, checked_Desconections: true } // variables drawer
+  drawer_options: DrawerOptions = { checked_safe_disc: false, checked_safe_zone: false, checked_disconection: false, checked_events_zone: false, checked_Alerts: false, checked_Fails: false, checked_Info: false, checked_Desconections: false } // variables drawer
   telemetryOptions: string[] = []; // Multiselect options
   selectedTelemetry: string[] = []; // MultiSelect value
   data_graph: any[] = [] // Datas from graph
@@ -48,7 +48,7 @@ export class GraphMainComponent implements OnInit {
     this.telemetryOptions.includes(this.selectOptionDefault) ? this.selectedTelemetry = [this.selectOptionDefault] : this.selectedTelemetry = []
     this.data_graph = transformTelemetry2(this.data!.telemetry, [this.selectOptionDefault], [this.selectOptionDefault]);
     this.datas_min_max = this.data_graph.flatMap((value) => value.y)
-    this.basicChart([...this.data_graph, ...transformTelemetryZoneEvents(this.data!.fails, this.datas_min_max)], null, this.datas_min_max);
+    this.basicChart([...this.data_graph], null, this.datas_min_max);
     this.checkBoxStatus['Fallas'] = this.data?.fails.some(item => item.type_fail.toLowerCase().includes('fail')) ?? false
     this.checkBoxStatus['Desconexiones'] = this.data?.fails.some(item => item.type_fail.toLowerCase().includes('disconnection')) ?? false
     this.checkBoxStatus['Alertas'] = this.data?.fails.filter(item => item.type_fail.toLowerCase() != 'disconnection_alert').some(item => item.type_fail.toLowerCase().includes('alert')) ?? false
@@ -59,23 +59,32 @@ export class GraphMainComponent implements OnInit {
   basicChart(data_graph: any, safe_zone?: any, min_max?: number[], events_filter?: string[]) {
     const element = this.el().nativeElement
     const data = data_graph;
-    this.resizeChart();
+    this.resizeChart();    
     const filteredData = transformFailsToAnnotations2(this.data, this.date_select_main, min_max ?? [], events_filter).filter((item: any) => {
-      const sourceLower = item.source.toLowerCase(); // Convertir a minúsculas para coincidencias más seguras
-      if (this.drawer_data_filter.includes('FAIL') && sourceLower.includes('/fails/')) {
+      const sourceLower = item.source.toLowerCase();
+      const isFail = sourceLower.includes('/fails/');
+      const isAlert = sourceLower.includes('/alerts/');
+      const isInfo = sourceLower.includes('/informativos/');
+      const isDesconnection = sourceLower === "/assets/informativos/desconexion.svg";
+      const isReconnection = sourceLower === "/assets/informativos/reconexion.svg";
+
+      // Fails
+      if (!this.drawer_options.checked_Fails && isFail) {
         return false;
       }
-      if (this.drawer_data_filter.includes('ALERT') && sourceLower.includes('/alerts/')) {
+
+      // Alerts
+      if (!this.drawer_options.checked_Alerts && isAlert) {
         return false;
       }
-      if (this.drawer_data_filter.includes('INFORMATIVES') && sourceLower.includes('/informativos/')) {
+      // Desconexiones
+      if (!this.drawer_options.checked_Desconections && (isDesconnection || isReconnection)) {
         return false;
       }
-      if (this.drawer_data_filter.includes('DESCONECTIONS') && (sourceLower.includes('desconexion') || sourceLower.includes('reconexion'))) {
-        return false;
-      }
-      return true; // Incluir todos los demás
+
+      return true;
     });
+    
     Plotly.newPlot(element, data, graph_layout(safe_zone, this.selectedTelemetry, filteredData, this.date_select_main ?? []), graph_config).then((graph: any) => {
       graph.on('plotly_relayout', (eventData: any) => {
         if (eventData['xaxis.range[0]']) {
@@ -94,21 +103,30 @@ export class GraphMainComponent implements OnInit {
           const [xMin, xMax] = eventData["xaxis.range"];
           this.date_select_main = [new Date(xMin), new Date(xMax)]
         }
-        const newAnnotations = transformFailsToAnnotations2(this.data, this.date_select_main, min_max ?? []).filter((item: any) => {
+        const newAnnotations = transformFailsToAnnotations2(this.data, this.date_select_main, min_max ?? [], events_filter).filter((item: any) => {
           const sourceLower = item.source.toLowerCase();
-          if (this.drawer_data_filter.includes('FAIL') && sourceLower.includes('/fails/')) {
+          const isFail = sourceLower.includes('/fails/');
+          const isAlert = sourceLower.includes('/alerts/');
+          const isInfo = sourceLower.includes('/informativos/');
+          const isDesconnection = sourceLower === "/assets/informativos/desconexion.svg";
+          const isReconnection = sourceLower === "/assets/informativos/reconexion.svg";
+
+          // Fails
+          if (!this.drawer_options.checked_Fails && isFail) {
             return false;
           }
-          if (this.drawer_data_filter.includes('ALERT') && sourceLower.includes('/alerts/')) {
+
+          // Alerts
+          if (!this.drawer_options.checked_Alerts && isAlert) {
             return false;
           }
-          if (this.drawer_data_filter.includes('INFORMATIVES') && sourceLower.includes('/informativos/')) {
+
+          // Desconexiones
+          if (!this.drawer_options.checked_Desconections && (isDesconnection || isReconnection)) {
             return false;
           }
-          if (this.drawer_data_filter.includes('DESCONECTIONS') && (sourceLower.includes('desconexion') || sourceLower.includes('reconexion'))) {
-            return false;
-          }
-          return true; // Incluir todos los demás
+
+          return true;
         });
         if (newAnnotations.length) {
           Plotly.update(element, {}, { images: newAnnotations });
