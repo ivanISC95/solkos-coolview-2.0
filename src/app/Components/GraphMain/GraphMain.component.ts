@@ -59,7 +59,7 @@ export class GraphMainComponent implements OnInit {
   basicChart(data_graph: any, safe_zone?: any, min_max?: number[], events_filter?: string[]) {
     const element = this.el().nativeElement
     const data = data_graph;
-    this.resizeChart();    
+    this.resizeChart();
     const filteredData = transformFailsToAnnotations2(this.data, this.date_select_main, min_max ?? [], events_filter).filter((item: any) => {
       const sourceLower = item.source.toLowerCase();
       const isFail = sourceLower.includes('/fails/');
@@ -84,7 +84,7 @@ export class GraphMainComponent implements OnInit {
 
       return true;
     });
-    
+
     Plotly.newPlot(element, data, graph_layout(safe_zone, this.selectedTelemetry, filteredData, this.date_select_main ?? []), graph_config).then((graph: any) => {
       graph.on('plotly_relayout', (eventData: any) => {
         if (eventData['xaxis.range[0]']) {
@@ -150,6 +150,11 @@ export class GraphMainComponent implements OnInit {
       graph.on('plotly_relayout', () => {
         hideFirstYTick();
       });
+      const modebars = document.querySelectorAll('.modebar') as NodeListOf<HTMLElement>;
+      modebars.forEach(modebar => {
+        modebar.style.top = '-7px';
+      });
+
     })
   }
   resizeChart() {

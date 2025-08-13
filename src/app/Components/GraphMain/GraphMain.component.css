@@ -31,6 +31,10 @@
   height: 90%;
   /* background-color: blue; */
 }
+
+.modebar{
+  top: -7px !important;
+}
 ::ng-deep .ant-drawer-header {
   display: flex !important;
   flex-direction: column !important;
