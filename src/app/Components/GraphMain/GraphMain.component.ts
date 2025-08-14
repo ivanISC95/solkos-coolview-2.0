@@ -8,7 +8,7 @@ import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
 import { FormsModule } from '@angular/forms';
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
 import { DatasResponse, DrawerOptions } from '../../Interfaces/DatasResponse';
-import { getTelemetryNamesTranslated, transformDesconectionsZone, transformFailsToAnnotations2, transformSafeZone, transformTelemetry2, transformTelemetryZoneEvents } from '../../Functions/GraphFunctions';
+import { getTelemetryNamesTranslated, hideFirstYTick, transformDesconectionsZone, transformFailsToAnnotations2, transformSafeZone, transformTelemetry2, transformTelemetryZoneEvents } from '../../Functions/GraphFunctions';
 import { graph_config, graph_layout } from '../../Functions/GraphVar';
 
 @Component({
@@ -49,10 +49,11 @@ export class GraphMainComponent implements OnInit {
     this.data_graph = transformTelemetry2(this.data!.telemetry, [this.selectOptionDefault], [this.selectOptionDefault]);
     this.datas_min_max = this.data_graph.flatMap((value) => value.y)
     this.basicChart([...this.data_graph], null, this.datas_min_max);
+    console.log(this.data)
     this.checkBoxStatus['Fallas'] = this.data?.fails.some(item => item.type_fail.toLowerCase().includes('fail')) ?? false
     this.checkBoxStatus['Desconexiones'] = this.data?.fails.some(item => item.type_fail.toLowerCase().includes('disconnection')) ?? false
     this.checkBoxStatus['Alertas'] = this.data?.fails.filter(item => item.type_fail.toLowerCase() != 'disconnection_alert').some(item => item.type_fail.toLowerCase().includes('alert')) ?? false
-    this.checkBoxStatus['Informativos'] = this.data?.fails.some(item => item.type_fail.toLowerCase().includes('informativo')) ?? false
+    this.checkBoxStatus['Informativos'] = (this.data?.serviceOrder?.length ?? 0) > 0
   }
 
 
@@ -65,8 +66,8 @@ export class GraphMainComponent implements OnInit {
       const isFail = sourceLower.includes('/fails/');
       const isAlert = sourceLower.includes('/alerts/');
       const isInfo = sourceLower.includes('/informativos/');
-      const isDesconnection = sourceLower === "/assets/informativos/desconexion.svg";
-      const isReconnection = sourceLower === "/assets/informativos/reconexion.svg";
+      const isDesconnection = sourceLower === "/assets/connections/desconexion.svg";
+      const isReconnection = sourceLower === "/assets/connections/reconexion.svg";
 
       // Fails
       if (!this.drawer_options.checked_Fails && isFail) {
@@ -108,8 +109,8 @@ export class GraphMainComponent implements OnInit {
           const isFail = sourceLower.includes('/fails/');
           const isAlert = sourceLower.includes('/alerts/');
           const isInfo = sourceLower.includes('/informativos/');
-          const isDesconnection = sourceLower === "/assets/informativos/desconexion.svg";
-          const isReconnection = sourceLower === "/assets/informativos/reconexion.svg";
+          const isDesconnection = sourceLower === "/assets/connections/desconexion.svg";
+          const isReconnection = sourceLower === "/assets/connections/reconexion.svg";
 
           // Fails
           if (!this.drawer_options.checked_Fails && isFail) {
@@ -132,23 +133,12 @@ export class GraphMainComponent implements OnInit {
           Plotly.update(element, {}, { images: newAnnotations });
         }
       })
-      const hideFirstYTick = () => {
-        // Busca todos los ticks del eje Y
-        const yTicks = element.querySelectorAll('.yaxislayer-above .ytick text');
-        if (yTicks.length > 0) {
-          const firstTick = yTicks[0] as SVGTextElement;
-          if (firstTick) {
-            firstTick.style.visibility = 'hidden';
-          }
-        }
-      };
-
-      // Ejecutar inmediatamente al renderizar
-      hideFirstYTick();
-
-      // Al hacer zoom, pan u otro cambio
-      graph.on('plotly_relayout', () => {
-        hideFirstYTick();
+      console.log(filteredData)
+      // Ejecutar inmediatamente al renderizar      
+      hideFirstYTick(element);
+            
+      graph.on('plotly_relayout', () => {        
+        hideFirstYTick(element);
       });
       const modebars = document.querySelectorAll('.modebar') as NodeListOf<HTMLElement>;
       modebars.forEach(modebar => {

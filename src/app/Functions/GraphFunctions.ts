@@ -1,23 +1,23 @@
 import { DatasResponse, Fail, PlotlyShape, SafeZone, Telemetry } from "../Interfaces/DatasResponse";
 
 const getTelemetryNames = (data: DatasResponse | null) => {
-    if (!data || !Array.isArray(data.telemetry) || data == null) {
-      return [];
-    }
-    return data.telemetry.map(item => item.name);
+  if (!data || !Array.isArray(data.telemetry) || data == null) {
+    return [];
   }
+  return data.telemetry.map(item => item.name);
+}
 const getTelemetryNamesTranslated = (data: any): string[] => {
-    const nameMap: { [key: string]: string } = {
-      "door_state": "Aperturas",
-      "compressor_state": "Compresor",
-      "internal_temperature": "Temperatura",
-      "evaporator_temperature" : "Temperatura Evaporador",
-      "condenser_temperature" : "Temperatura Condensador",
-      "voltage_consumption": "Voltaje",
-      "energy_consumption" : "Consumo de Energia",
-    };
-  
-    return getTelemetryNames(data).map(name => nameMap[name] || name);
+  const nameMap: { [key: string]: string } = {
+    "door_state": "Aperturas",
+    "compressor_state": "Compresor",
+    "internal_temperature": "Temperatura",
+    "evaporator_temperature": "Temperatura Evaporador",
+    "condenser_temperature": "Temperatura Condensador",
+    "voltage_consumption": "Voltaje",
+    "energy_consumption": "Consumo de Energia",
+  };
+
+  return getTelemetryNames(data).map(name => nameMap[name] || name);
 }
 // Funcion traduce los nombres desde el API a español
 const nameMap: { [key: string]: string } = {
@@ -25,17 +25,17 @@ const nameMap: { [key: string]: string } = {
   "door_state": "Aperturas",
   "compressor_state": "Compresor",
   "voltage_consumption": "Voltaje",
-  "condenser_temperature" : "Temperatura Condensador",
-  "energy_consumption" : "Consumo de Energia",
-  "evaporator_temperature" : "Temperatura Evaporador"
+  "condenser_temperature": "Temperatura Condensador",
+  "energy_consumption": "Consumo de Energia",
+  "evaporator_temperature": "Temperatura Evaporador"
 };
 
 const colorMap: Record<string, string> = {
   "door_state": "#909296",
   "compressor_state": "#9C36B5",
   "internal_temperature": "#028CFF",
-  "condenser_temperature" : "#0B7285",
-  "evaporator_temperature" : "#728CAF",
+  "condenser_temperature": "#0B7285",
+  "evaporator_temperature": "#728CAF",
   "voltage_consumption": "#E67700",
   "energy_consumption": "#40C057",
 };
@@ -44,42 +44,42 @@ const typeMap: Record<string, string> = {
   "column": "bar",
   "line": "line"
 };
-const LayoutInforTelemetry = (value:string[]) =>{  
-  if(value.length > 1){
-    return ['','']
-  }      
-  if(value.includes('Temperatura')){
-    return ['Temperatura','℃']
-  }  
-  if(value.includes('Temperatura Condensador')){
-    return ['Temperatura Condensador','℃']
+const LayoutInforTelemetry = (value: string[]) => {
+  if (value.length > 1) {
+    return ['', '']
   }
-  if(value.includes('Temperatura Evaporador')){
-    return ['Temperatura Evaporador','℃']
+  if (value.includes('Temperatura')) {
+    return ['Temperatura', '℃']
   }
-  if(value.includes('Voltaje')){
-    return ['Voltaje','V']
+  if (value.includes('Temperatura Condensador')) {
+    return ['Temperatura Condensador', '℃']
   }
-  if(value.includes('Aperturas')){
-    return ['Aperturas','']
+  if (value.includes('Temperatura Evaporador')) {
+    return ['Temperatura Evaporador', '℃']
   }
-  if(value.includes('Compresor')){
-    return ['Compresor','%']
+  if (value.includes('Voltaje')) {
+    return ['Voltaje', 'V']
   }
-  if(value.includes('Consumo de Energía')){
-    return ['Consumo de Energía','KW/h']
+  if (value.includes('Aperturas')) {
+    return ['Aperturas', '']
   }
-  return ['','']
+  if (value.includes('Compresor')) {
+    return ['Compresor', '%']
+  }
+  if (value.includes('Consumo de Energía')) {
+    return ['Consumo de Energía', 'KW/h']
+  }
+  return ['', '']
 }
-const transformTelemetry2 = (data: Telemetry[] | null, selectedNames: string[],value:string[]): any[] => {
+const transformTelemetry2 = (data: Telemetry[] | null, selectedNames: string[], value: string[]): any[] => {
   if (!data) return [];
-  const customData = data.flatMap(serie => 
+  const customData = data.flatMap(serie =>
     serie.data.map(point => {
       const date = new Date(point.x);
       return date.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit', hour12: true });
     })
   );
-    
+
   return data
     .filter(({ name }) => selectedNames.includes(nameMap[name])) // Filtra solo los que están en selectedNames
     .map(({ name, type, data }) => ({
@@ -141,7 +141,7 @@ const transformSafeZone = (safeZone: SafeZone[]): PlotlyShape[] => {
     },
   ];
 };
-const transformTelemetryZoneEvents = (data: Fail[] | null,rangosTelemetry:number[],events_filter? :string[]) => {
+const transformTelemetryZoneEvents = (data: Fail[] | null, rangosTelemetry: number[], events_filter?: string[]) => {
   if (!data) return [];
   // const minValue =  events_filter?.includes('Aperturas') == true || events_filter?.includes('Compresor') ? -2 :  Math.min(...rangosTelemetry)
   const minValue = Math.min(...rangosTelemetry)
@@ -149,12 +149,12 @@ const transformTelemetryZoneEvents = (data: Fail[] | null,rangosTelemetry:number
     "DISCONNECTION_ALERT": "Desconexión",
     "RECONNECTION_ALERT": "Conexión",
     "COMPRESSOR_RUN_TIME_EXCEDED_ALERT": "Alerta Compresor",
-    "TEMPERATURE_ALERT" : "Alerta Temperatura",
-    "VOLTAGE_ALERT":"Alerta Voltaje",
+    "TEMPERATURE_ALERT": "Alerta Temperatura",
+    "VOLTAGE_ALERT": "Alerta Voltaje",
     "TEMPERATURE_FAIL": "Falla Temperatura",
-    "FROZEN_ALERT" : "Falla Congelamiento",
-    "COMPRESSOR_FAIL" : "Falla Compresor",
-    "VOLTAGE_FAIL" : "Falla Voltaje"
+    "FROZEN_ALERT": "Falla Congelamiento",
+    "COMPRESSOR_FAIL": "Falla Compresor",
+    "VOLTAGE_FAIL": "Falla Voltaje"
   };
 
   const events = data.flatMap((fail: Fail) => {
@@ -163,7 +163,7 @@ const transformTelemetryZoneEvents = (data: Fail[] | null,rangosTelemetry:number
       type: "scatter",
       mode: "markers",
       x: [fail.start ?? fail.timestamp],
-      y: [minValue < 0 ? minValue+-0.5 : minValue-1],
+      y: [minValue < 0 ? minValue + -0.5 : minValue - 1],
       customdata: ["Estatus : undefined,Folio : undefined, Comentarios : undefined"],
       hovertemplate: typeMapping[fail.type_fail] || "Desconocido",
       showlegend: false,
@@ -206,33 +206,33 @@ const pixelsToSizeY = (px: number, rangeY: [number, number]) => {
   return (px / 600) * graphHeight; // 600 es un ejemplo de altura en px del gráfico
 };
 // function to create images inthe graph
-function transformFailsToAnnotations2(data: DatasResponse | null,valueInputFechas:any,rangosTelemetry:number[],events_filter? :string[]) {    
+function transformFailsToAnnotations2(data: DatasResponse | null, valueInputFechas: any, rangosTelemetry: number[], events_filter?: string[]) {
   const windowWidth = window.innerWidth;
-  const xRange: [number, number] = valueInputFechas 
+  const xRange: [number, number] = valueInputFechas
   const yRange: [number, number] = [0, Math.max(...rangosTelemetry) > 250 ? 500 : 250];
   // const minValue = events_filter?.includes('Aperturas') == true || events_filter?.includes('Compresor') ? -2 : Math.min(...rangosTelemetry)
   const minValue = Math.min(...rangosTelemetry)
   if (!data || !data.fails) return [];
   const iconMapping: Record<string, string> = {
-    // Info
-    "DISCONNECTION_ALERT": "/assets/Informativos/Desconexion.svg",
-    "RECONNECTION_ALERT": "/assets/Informativos/Reconexion.svg",
+    // Connections
+    "DISCONNECTION_ALERT": "/assets/Connections/Desconexion.svg",
+    "RECONNECTION_ALERT": "/assets/Connections/Reconexion.svg",
     // Alerts
     "COMPRESSOR_RUN_TIME_EXCEDED_ALERT": "/assets/Alerts/AltaDemandaCompresor.svg",
-    "TEMPERATURE_ALERT" : "/assets/Alerts/AltaTemperatura.svg",
-    "VOLTAGE_ALERT" : "/assets/Alerts/AltoVoltaje.svg",
+    "TEMPERATURE_ALERT": "/assets/Alerts/AltaTemperatura.svg",
+    "VOLTAGE_ALERT": "/assets/Alerts/AltoVoltaje.svg",
     // Fails
     "TEMPERATURE_FAIL": "/assets/Fails/AltaTemperatura.svg",
-    "FROZEN_ALERT" : "/assets/Fails/EvaporadorBloqueado.svg",
-    "COMPRESSOR_FAIL" : "/assets/Fails/FallaCompresor.svg",
-    "VOLTAGE_FAIL" : "/assets/Fails/FallaElectrica.svg"
+    "FROZEN_ALERT": "/assets/Fails/EvaporadorBloqueado.svg",
+    "COMPRESSOR_FAIL": "/assets/Fails/FallaCompresor.svg",
+    "VOLTAGE_FAIL": "/assets/Fails/FallaElectrica.svg"
   };
 
   const annotations = data.fails.flatMap(fail => {
     const baseAnnotation = {
       source: iconMapping[fail.type_fail] || "",
       x: fail.timestamp ?? fail.start, // Tomamos `timestamp` o `start`
-      y: minValue < 0 ? minValue+2.6 : minValue+2.7,
+      y: minValue < 0 ? minValue + 2.6 : minValue + 2.7,
       xref: "x",
       yref: "y",
       sizex: pixelsToSizeX(18, windowWidth, xRange),
@@ -257,9 +257,9 @@ function transformFailsToAnnotations2(data: DatasResponse | null,valueInputFecha
 
   return annotations;
 }
-const transformDesconectionsZone = (data: Fail[],datas_min_max:number[]) => {  
-  
-  return data.map((item:Fail) => item.end ? ({
+const transformDesconectionsZone = (data: Fail[], datas_min_max: number[]) => {
+
+  return data.map((item: Fail) => item.end ? ({
     type: 'rect',
     x0: item.end,
     x1: item.start,
@@ -284,4 +284,16 @@ const transformDesconectionsZone = (data: Fail[],datas_min_max:number[]) => {
     layer: 'above'
   }) : '');
 };
-export{getTelemetryNamesTranslated,transformTelemetry2,transformSafeZone,transformTelemetryZoneEvents,transformFailsToAnnotations2,transformDesconectionsZone}
+// Ocultar primer elemento leyenda del eje Y
+const hideFirstYTick = (element: any) => {
+  // Busca todos los ticks del eje Y
+  const yTicks = element.querySelectorAll('.yaxislayer-above .ytick text');
+  if (yTicks.length > 0) {
+    const firstTick = yTicks[0] as SVGTextElement;
+    if (firstTick) {
+      firstTick.style.visibility = 'hidden';
+    }
+  }
+};
+
+export { getTelemetryNamesTranslated, transformTelemetry2, transformSafeZone, transformTelemetryZoneEvents, transformFailsToAnnotations2, transformDesconectionsZone, hideFirstYTick }

@@ -3,8 +3,18 @@ export interface DatasResponse {
     telemetry: Telemetry[];
     safeZone: SafeZone[];
     fails: Fail[];
+    serviceOrder : ServiceOrder[]
 }
-
+export interface ServiceOrder {
+    close_date : Date;
+    cooler_id : string;
+    open_date : Date;
+    sol_id : string;
+    status : string;
+    tech_comments : string;
+    type : string;
+    type_description : string;
+}
 export interface Fail {
     type_fail: string;
     timestamp?: Date | string;

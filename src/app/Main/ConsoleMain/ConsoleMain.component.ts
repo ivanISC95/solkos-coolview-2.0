@@ -39,7 +39,7 @@ export class ConsoleMainComponent {
   async searchDate() {
     this.isLoading = true;
     this.cdr.detectChanges();
-    this.apiService.fetchDates("https://coolview-api-v2-545989770214.us-central1.run.app/coolview-api/dates/?serie=B4A2EB465FE6")
+    this.apiService.fetchDates(`https://coolview-api-v2-545989770214.us-central1.run.app/coolview-api/dates/?serie=${this.id}`)
       .subscribe({
         next: (data) => {
           this.data_dates = data
