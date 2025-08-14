@@ -40,8 +40,8 @@ const graph_layout = (safe_zone?:any,value?:string[],images?: any[],date_range?:
     return {
         autosize: true,
         showlegend: true,
-        plot_bgcolor: '#f8f9fa',
-        paper_bgcolor: '#f8f9fa',
+        plot_bgcolor: '#FFF',
+        paper_bgcolor: '#FFF',
         hovermode: 'x',
         font: {
             family: 'DM Mono',
@@ -62,12 +62,18 @@ const graph_layout = (safe_zone?:any,value?:string[],images?: any[],date_range?:
         },
         xaxis: {
             tickformat: '%d-%b',
-            showgrid: false,
+            showgrid: true,
+            gridcolor: '#868E96',
+            gridwidth: 1,
+            griddash: 'dot',
             // type: 'date',
             range: date_range!.length > 0 ? [dateInit, dateEnd] : undefined
         },
         yaxis: {
             autorange: true,
+            gridcolor: '#868E96',
+            gridwidth: 1,
+            griddash: 'dot',
             tickformat: '',
             // ticksuffix: LayoutInforTelemetry(value)[1],
             ticksuffix: LayoutInforTelemetry(value ?? [])[1] ,
