@@ -63,16 +63,16 @@ const graph_layout = (safe_zone?:any,value?:string[],images?: any[],date_range?:
         xaxis: {
             tickformat: '%d-%b',
             showgrid: true,
-            gridcolor: '#868E96',
-            gridwidth: 1,
+            gridcolor: 'light gray',
+            gridwidth: 2,
             griddash: 'dot',
             // type: 'date',
             range: date_range!.length > 0 ? [dateInit, dateEnd] : undefined
         },
         yaxis: {
             autorange: true,
-            gridcolor: '#868E96',
-            gridwidth: 1,
+            gridcolor: 'light gray',
+            gridwidth: 2,
             griddash: 'dot',
             tickformat: '',
             // ticksuffix: LayoutInforTelemetry(value)[1],
