@@ -1,4 +1,4 @@
-import { DatasResponse, Fail, PlotlyShape, SafeZone, Telemetry } from "../Interfaces/DatasResponse";
+import { DatasResponse, DrawerOptions, Fail, PlotlyShape, SafeZone, Telemetry } from "../Interfaces/DatasResponse";
 
 const getTelemetryNames = (data: DatasResponse | null) => {
   if (!data || !Array.isArray(data.telemetry) || data == null) {
@@ -141,7 +141,7 @@ const transformSafeZone = (safeZone: SafeZone[]): PlotlyShape[] => {
     },
   ];
 };
-const transformTelemetryZoneEvents = (data: Fail[] | null, rangosTelemetry: number[], events_filter?: string[]) => {
+const transformTelemetryZoneEvents = (data: Fail[] | null, rangosTelemetry: number[], drawer_checked_opt?: DrawerOptions) => {
   if (!data) return [];
   // const minValue =  events_filter?.includes('Aperturas') == true || events_filter?.includes('Compresor') ? -2 :  Math.min(...rangosTelemetry)
   const minValue = Math.min(...rangosTelemetry)
@@ -189,7 +189,16 @@ const transformTelemetryZoneEvents = (data: Fail[] | null, rangosTelemetry: numb
     return [baseEvent]; // Retornamos solo el evento normal
   });
 
-  return events;
+  const prueba = events.filter(item => {
+    if (!drawer_checked_opt?.checked_Fails && item.name.includes('Falla')) return false;
+    if (!drawer_checked_opt?.checked_Alerts && item.name.includes('Alerta')) return false;
+    if (!drawer_checked_opt?.checked_Info && item.name.includes('Informativo')) return false;
+    if (!drawer_checked_opt?.checked_Desconections && item.name.includes('Desconexión')) return false;
+    if (!drawer_checked_opt?.checked_Desconections && item.name.includes('Conexión')) return false;
+    return true;
+  })
+
+  return prueba;
 };
 
 // IMG into Events zone
