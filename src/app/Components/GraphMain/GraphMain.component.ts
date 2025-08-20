@@ -41,6 +41,7 @@ export class GraphMainComponent implements OnInit {
     'Alertas': false,
     'Informativos': false,
   };
+  graph_zones : any[] | null = null;
 
 
   ngOnInit() {
@@ -174,9 +175,20 @@ export class GraphMainComponent implements OnInit {
     else {
       this.datas_min_max = this.data_graph.map(item => item.y).flat();
     }
-    this.drawer_options.checked_safe_zone == true
-      ? this.basicChart([...this.data_graph, ...transformTelemetryZoneEvents(this.data!.fails, this.datas_min_max,this.drawer_options)], transformSafeZone(this.data!.safeZone ?? []), this.datas_min_max, this.selectedTelemetry)
-      : this.basicChart([...this.data_graph, ...transformTelemetryZoneEvents(this.data!.fails, this.datas_min_max,this.drawer_options)], null, this.datas_min_max, this.selectedTelemetry)
+    // this.drawer_options.checked_safe_zone == true
+    //   ? this.basicChart([...this.data_graph, ...transformTelemetryZoneEvents(this.data!.fails, this.datas_min_max,this.drawer_options)], transformSafeZone(this.data!.safeZone ?? []), this.datas_min_max, this.selectedTelemetry)
+    //   : this.basicChart([...this.data_graph, ...transformTelemetryZoneEvents(this.data!.fails, this.datas_min_max,this.drawer_options)], null, this.datas_min_max, this.selectedTelemetry)
+    this.graph_zones = this.drawer_safezone_disconection.includes('safe_and_disconection') || (this.drawer_safezone_disconection.includes('safeZone') && this.drawer_safezone_disconection.includes('disconection'))
+      ? [
+        ...transformSafeZone(this.data!.safeZone ?? []),
+        ...transformDesconectionsZone(this.data!.fails ?? [], this.datas_min_max),
+      ]
+      : this.drawer_safezone_disconection.includes('safeZone')
+        ? transformSafeZone(this.data!.safeZone ?? [])
+        : this.drawer_safezone_disconection.includes('disconection')
+          ? transformDesconectionsZone(this.data!.fails ?? [], this.datas_min_max)
+          : null;
+    this.basicChart([...this.data_graph, ...transformTelemetryZoneEvents(this.data!.fails, this.datas_min_max,this.drawer_options)], this.graph_zones, this.datas_min_max, this.selectedTelemetry)
   }
 
   onCheckedChange(value: boolean, buttonID?: string) {
@@ -229,7 +241,7 @@ export class GraphMainComponent implements OnInit {
           : options.includes('disconection')
             ? transformDesconectionsZone(this.data!.fails ?? [], this.datas_min_max)
             : null;
-
+    this.graph_zones = zones ?? [];
     this.basicChart(data, zones, this.datas_min_max, this.drawer_data_filter);
   }
 
