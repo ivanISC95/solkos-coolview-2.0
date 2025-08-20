@@ -14,6 +14,8 @@ const getTelemetryNamesTranslated = (data: any): string[] => {
     "evaporator_temperature": "Temperatura Evaporador",
     "condenser_temperature": "Temperatura Condensador",
     "voltage_consumption": "Voltaje",
+    "voltage_min": "Voltaje Mínimo",
+    "voltage_max": "Voltaje Máximo",
     "energy_consumption": "Consumo de Energia",
   };
 
@@ -25,6 +27,8 @@ const nameMap: { [key: string]: string } = {
   "door_state": "Aperturas",
   "compressor_state": "Compresor",
   "voltage_consumption": "Voltaje",
+  "voltage_min": "Voltaje Mínimo",
+  "voltage_max": "Voltaje Máximo",
   "condenser_temperature": "Temperatura Condensador",
   "energy_consumption": "Consumo de Energia",
   "evaporator_temperature": "Temperatura Evaporador"
@@ -37,6 +41,8 @@ const colorMap: Record<string, string> = {
   "condenser_temperature": "#0B7285",
   "evaporator_temperature": "#728CAF",
   "voltage_consumption": "#E67700",
+  "voltage_min": "#FCC419",
+  "voltage_max": "#E67700",
   "energy_consumption": "#40C057",
 };
 
@@ -56,6 +62,15 @@ const LayoutInforTelemetry = (value: string[]) => {
   }
   if (value.includes('Temperatura Evaporador')) {
     return ['Temperatura Evaporador', '℃']
+  }
+  if (value.includes('Voltaje')) {
+    return ['Voltaje', 'V']
+  }
+  if (value.includes('Voltaje Mínimo')) {
+    return ['Voltaje Mínimo', 'V']
+  }
+  if (value.includes('Voltaje Máximo')) {
+    return ['Voltaje Máximo', 'V']
   }
   if (value.includes('Voltaje')) {
     return ['Voltaje', 'V']

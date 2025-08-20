@@ -16,6 +16,12 @@ const LayoutInforTelemetry = (value:string[]) =>{
   if(value.includes('Voltaje')){
     return ['Voltaje','V']
   }
+   if (value.includes('Voltaje Mínimo')) {
+    return ['Voltaje Mínimo', 'V']
+  }
+  if (value.includes('Voltaje Máximo')) {
+    return ['Voltaje Máximo', 'V']
+  }
   if(value.includes('Aperturas')){
     return ['Aperturas','']
   }
