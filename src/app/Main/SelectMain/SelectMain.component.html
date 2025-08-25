@@ -2,7 +2,7 @@
     <section class="select_select_main">
         <input nz-input placeholder="Ingresa tu Serie/Mac" [(ngModel)]="value" type="" style="height: 2.5rem;width: 30%;" />
         <nz-range-picker [(ngModel)]="date" (ngModelChange)="onChange($event)" style="height: 2.5rem;"></nz-range-picker>
-        <button nz-button nzType="default" style="height: 2.5rem;" (click)="searchCooler()" [disabled]="value == '' || date == null  ? true : false">Buscar {{isLoading}}</button>
+        <button nz-button nzType="default" style="height: 2.5rem;" (click)="searchCooler()" [disabled]="value == '' || date == null  ? true : false">Buscar</button>
     </section>
     <app-graph-view (mensajeEvento)="recibirMensaje($event)"></app-graph-view>
     <section class="grap_select_main" [style.flex-direction]="view_grap_opt == 3 ? 'row' : view_grap_opt == 4 ? 'row': 'column'" [style.flex-wrap]="view_grap_opt == 4 ? 'wrap' : ''" >        
