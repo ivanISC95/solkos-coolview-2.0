@@ -1,0 +1,26 @@
+{
+  "hosting": [
+    {
+      "public": "dist/solkos-coolview-2.0/browser",
+      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+      "site": "solkos-coolview-2",
+      "rewrites": [
+        {
+          "source": "**",
+          "destination": "/index.html"
+        }
+      ]
+    },
+    {
+      "public": "dist/solkos-coolview-2.0/browser",
+      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+      "site": "solkos-coolview-2-qa",
+      "rewrites": [
+        {
+          "source": "**",
+          "destination": "/index.html"
+        }
+      ]
+    }
+  ]
+}
