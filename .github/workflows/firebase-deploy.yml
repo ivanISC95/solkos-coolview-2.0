@@ -23,7 +23,7 @@ jobs:
         run: npm ci
 
       - name: Build Angular app
-        run: ng build --configuration production
+        run: npm run build --if-present
 
       - name: Deploy to Firebase Hosting (QA)
         if: github.ref == 'refs/heads/develop'
