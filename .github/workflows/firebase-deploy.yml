@@ -3,18 +3,19 @@ name: Deploy to Firebase Hosting
 on:
   push:
     branches:
-      - main   # 👈 o la rama que uses para producción
+      - main
+      - develop
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
       - name: Use Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: '18'
 
@@ -22,7 +23,12 @@ jobs:
         run: npm ci
 
       - name: Build Angular app
-        run: npm run build --if-present
+        run: ng build --configuration production
 
-      - name: Deploy to Firebase Hosting
-        run: npx firebase deploy --only hosting:solkos-coolview-2-qa --token "$FIREBASE_TOKEN"
+      - name: Deploy to Firebase Hosting (QA)
+        if: github.ref == 'refs/heads/develop'
+        uses: w9jds/firebase-action@v13
+        with:
+          args: deploy --only hosting:solkos-coolview-2-qa
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
