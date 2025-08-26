@@ -30,11 +30,7 @@ export class ConsoleMainComponent {
 
   ngOnInit() {
     this.id = this.route.snapshot.paramMap.get('id');
-    this.searchDate();
-    this.date = getDateRange_dateFunctions(this.data_dates);    
-    if (this.id !== null) {
-      this.searchCooler(getDateRangeFromEndDate_dateFunctions(this.data_dates,1));
-    }    
+    this.searchDate();           
   }
   async searchDate() {
     this.isLoading = true;
@@ -42,7 +38,9 @@ export class ConsoleMainComponent {
     this.apiService.fetchDates(`https://coolview-api-v2-545989770214.us-central1.run.app/coolview-api/dates/?serie=${this.id}`)
       .subscribe({
         next: (data) => {
-          this.data_dates = data
+          this.data_dates = data;
+          this.date = getDateRange_dateFunctions(this.data_dates); 
+          this.searchCooler(getDateRangeFromEndDate_dateFunctions(this.data_dates,1));
         },
         error: (error) => {
           this.isLoading = false;
@@ -57,14 +55,14 @@ export class ConsoleMainComponent {
       })
   }
   async searchCooler(dates: string[] | Date[]): Promise<void> {    
+    this.isLoading = true;
     const stringDates = dates.map(d => {
       if (d instanceof Date) {        
         this.date = dates;
         return d.toISOString().split('T')[0];
       }
       return d;
-    });
-    this.isLoading = true;
+    });    
     this.cdr.markForCheck();            
     this.apiService.fetchData(`https://coolview-api-v2-545989770214.us-central1.run.app/coolview-api/v2/telemetryOs/?id=${this.id}&start_date=${stringDates[0]}&end_date=${stringDates[1]}&is_mac=false`)
       .subscribe({
