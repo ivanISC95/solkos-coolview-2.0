@@ -1,4 +1,4 @@
-import { DatasResponse, DrawerOptions, Fail, PlotlyShape, SafeZone, Telemetry } from "../Interfaces/DatasResponse";
+import { DatasResponse, DrawerOptions, Fail, PlotlyShape, SafeZone, ServiceOrder, Telemetry } from "../Interfaces/DatasResponse";
 
 const getTelemetryNames = (data: DatasResponse | null) => {
   if (!data || !Array.isArray(data.telemetry) || data == null) {
@@ -156,7 +156,7 @@ const transformSafeZone = (safeZone: SafeZone[]): PlotlyShape[] => {
     },
   ];
 };
-const transformTelemetryZoneEvents = (data: Fail[] | null, rangosTelemetry: number[], drawer_checked_opt?: DrawerOptions) => {
+const transformTelemetryZoneEvents = (data: Fail[] | null, rangosTelemetry: number[], drawer_checked_opt?: DrawerOptions,data_OS?:ServiceOrder[]) => {
   if (!data) return [];
   // const minValue =  events_filter?.includes('Aperturas') == true || events_filter?.includes('Compresor') ? -2 :  Math.min(...rangosTelemetry)
   const minValue = Math.min(...rangosTelemetry)
@@ -188,8 +188,6 @@ const transformTelemetryZoneEvents = (data: Fail[] | null, rangosTelemetry: numb
         color: "transparent"
       }
     };
-
-    // Si es una desconexión y tiene "end", agregamos el evento de conexión
     if (fail.type_fail === "DISCONNECTION_ALERT" && fail.end) {
       const reconnectionEvent = {
         ...baseEvent,
@@ -200,14 +198,32 @@ const transformTelemetryZoneEvents = (data: Fail[] | null, rangosTelemetry: numb
 
       return [baseEvent, reconnectionEvent]; // Retornamos ambos eventos
     }
-
     return [baseEvent]; // Retornamos solo el evento normal
   });
-
+  if(data_OS){
+    const datos_ordenes = data_OS.flatMap(item =>{
+      return {
+        name: "Servicio",
+      type: "scatter",
+      mode: "markers",
+      x: [item.close_date ?? item.open_date],
+      y: [minValue < 0 ? minValue + -0.5 : minValue - 1],
+      customdata: ["Estatus : undefined,Folio : undefined, Comentarios : undefined"],
+      hovertemplate: "Servicio",
+      showlegend: false,
+      marker: {
+        size: 15,
+        symbol: "square",
+        color: "transparent"
+      }
+      }
+    })
+    events.push(...datos_ordenes)
+  }
   const prueba = events.filter(item => {
     if (!drawer_checked_opt?.checked_Fails && item.name.includes('Falla')) return false;
     if (!drawer_checked_opt?.checked_Alerts && item.name.includes('Alerta')) return false;
-    if (!drawer_checked_opt?.checked_Info && item.name.includes('Informativo')) return false;
+    if (!drawer_checked_opt?.checked_Info && item.name.includes('Servicio')) return false;
     if (!drawer_checked_opt?.checked_Desconections && item.name.includes('Desconexión')) return false;
     if (!drawer_checked_opt?.checked_Desconections && item.name.includes('Conexión')) return false;
     return true;
@@ -229,12 +245,11 @@ const pixelsToSizeY = (px: number, rangeY: [number, number]) => {
   const graphHeight = yMax - yMin;
   return (px / 600) * graphHeight; // 600 es un ejemplo de altura en px del gráfico
 };
-// function to create images inthe graph
-function transformFailsToAnnotations2(data: DatasResponse | null, valueInputFechas: any, rangosTelemetry: number[], events_filter?: string[]) {
+// function to create images in the graph
+function transformFailsToAnnotations2(data: DatasResponse | null, valueInputFechas: any, rangosTelemetry: number[], data_OS?: ServiceOrder[]) {
   const windowWidth = window.innerWidth;
   const xRange: [number, number] = valueInputFechas
   const yRange: [number, number] = [0, Math.max(...rangosTelemetry) > 250 ? 500 : 250];
-  // const minValue = events_filter?.includes('Aperturas') == true || events_filter?.includes('Compresor') ? -2 : Math.min(...rangosTelemetry)
   const minValue = Math.min(...rangosTelemetry)
   if (!data || !data.fails) return [];
   const iconMapping: Record<string, string> = {
@@ -278,7 +293,22 @@ function transformFailsToAnnotations2(data: DatasResponse | null, valueInputFech
 
     return [baseAnnotation]; // Retornamos solo el evento normal
   });
-
+  if (data_OS) {
+    const datos_ordenes = data_OS.flatMap(item => {
+      return {
+        source: "/assets/Informativos/Servicios.svg",
+        x: item.close_date ?? item.open_date,
+        y: minValue < 0 ? minValue + 2.6 : minValue + 2.7,
+        xref: "x",
+        yref: "y",
+        sizex: pixelsToSizeX(18, windowWidth, xRange),
+        sizey: pixelsToSizeY(18, yRange),
+        opacity: 1,
+        layer: ""
+      }
+    })
+    annotations.push(...datos_ordenes)
+  }
   return annotations;
 }
 const transformDesconectionsZone = (data: Fail[], datas_min_max: number[]) => {

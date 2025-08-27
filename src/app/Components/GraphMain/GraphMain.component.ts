@@ -7,7 +7,7 @@ import { NzFlexDirective } from 'ng-zorro-antd/flex';
 import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
 import { FormsModule } from '@angular/forms';
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
-import { DatasResponse, DrawerOptions } from '../../Interfaces/DatasResponse';
+import { DatasResponse, DrawerOptions, ServiceOrder } from '../../Interfaces/DatasResponse';
 import { getTelemetryNamesTranslated, hideFirstYTick, transformDesconectionsZone, transformFailsToAnnotations2, transformSafeZone, transformTelemetry2, transformTelemetryZoneEvents } from '../../Functions/GraphFunctions';
 import { graph_config, graph_layout } from '../../Functions/GraphVar';
 
@@ -41,7 +41,7 @@ export class GraphMainComponent implements OnInit {
     'Alertas': false,
     'Informativos': false,
   };
-  graph_zones : any[] | null = null;
+  graph_zones: any[] | null = null;
 
 
   ngOnInit() {
@@ -49,7 +49,7 @@ export class GraphMainComponent implements OnInit {
     this.telemetryOptions.includes(this.selectOptionDefault) ? this.selectedTelemetry = [this.selectOptionDefault] : this.selectedTelemetry = []
     this.data_graph = transformTelemetry2(this.data!.telemetry, [this.selectOptionDefault], [this.selectOptionDefault]);
     this.datas_min_max = this.data_graph.flatMap((value) => value.y)
-    this.basicChart([...this.data_graph], null, this.datas_min_max);    
+    this.basicChart([...this.data_graph], null, this.datas_min_max, this.data?.serviceOrder);
     this.checkBoxStatus['Fallas'] = this.data?.fails.some(item => item.type_fail.toLowerCase().includes('fail')) ?? false
     this.checkBoxStatus['Desconexiones'] = this.data?.fails.some(item => item.type_fail.toLowerCase().includes('disconnection')) ?? false
     this.checkBoxStatus['Alertas'] = this.data?.fails.filter(item => item.type_fail.toLowerCase() != 'disconnection_alert').some(item => item.type_fail.toLowerCase().includes('alert')) ?? false
@@ -57,18 +57,17 @@ export class GraphMainComponent implements OnInit {
   }
 
 
-  basicChart(data_graph: any, safe_zone?: any, min_max?: number[], events_filter?: string[]) {
+  basicChart(data_graph: any, safe_zone?: any, min_max?: number[], data_OS?: ServiceOrder[]) {    
     const element = this.el().nativeElement
     const data = data_graph;
-    this.resizeChart();
-    const filteredData = transformFailsToAnnotations2(this.data, this.date_select_main, min_max ?? [], events_filter).filter((item: any) => {
+    this.resizeChart();    
+    const filteredData = transformFailsToAnnotations2(this.data, this.date_select_main, min_max ?? [], data_OS).filter((item: any) => {
       const sourceLower = item.source.toLowerCase();
       const isFail = sourceLower.includes('/fails/');
       const isAlert = sourceLower.includes('/alerts/');
-      const isInfo = sourceLower.includes('/informativos/');
+      const isInfo = sourceLower === "/assets/informativos/servicios.svg"
       const isDesconnection = sourceLower === "/assets/connections/desconexion.svg";
-      const isReconnection = sourceLower === "/assets/connections/reconexion.svg";
-
+      const isReconnection = sourceLower === "/assets/connections/reconexion.svg";      
       // Fails
       if (!this.drawer_options.checked_Fails && isFail) {
         return false;
@@ -82,10 +81,13 @@ export class GraphMainComponent implements OnInit {
       if (!this.drawer_options.checked_Desconections && (isDesconnection || isReconnection)) {
         return false;
       }
-
+      
+      if (!this.drawer_options.checked_Info && isInfo) {
+        return false
+      }
       return true;
-    });
-
+    });    
+    
     Plotly.newPlot(element, data, graph_layout(safe_zone, this.selectedTelemetry, filteredData, this.date_select_main ?? []), graph_config).then((graph: any) => {
       graph.on('plotly_relayout', (eventData: any) => {
         if (eventData['xaxis.range[0]']) {
@@ -104,7 +106,7 @@ export class GraphMainComponent implements OnInit {
           const [xMin, xMax] = eventData["xaxis.range"];
           this.date_select_main = [new Date(xMin), new Date(xMax)]
         }
-        const newAnnotations = transformFailsToAnnotations2(this.data, this.date_select_main, min_max ?? [], events_filter).filter((item: any) => {
+        const newAnnotations = transformFailsToAnnotations2(this.data, this.date_select_main, min_max ?? [], data_OS).filter((item: any) => {
           const sourceLower = item.source.toLowerCase();
           const isFail = sourceLower.includes('/fails/');
           const isAlert = sourceLower.includes('/alerts/');
@@ -127,16 +129,19 @@ export class GraphMainComponent implements OnInit {
             return false;
           }
 
+          if (!this.drawer_options.checked_Info && isInfo) {
+            return false
+          }
           return true;
         });
         if (newAnnotations.length) {
           Plotly.update(element, {}, { images: newAnnotations });
         }
-      })      
+      })
       // Ejecutar inmediatamente al renderizar      
       hideFirstYTick(element);
-            
-      graph.on('plotly_relayout', () => {        
+
+      graph.on('plotly_relayout', () => {
         hideFirstYTick(element);
       });
       const modebars = document.querySelectorAll('.modebar') as NodeListOf<HTMLElement>;
@@ -175,9 +180,6 @@ export class GraphMainComponent implements OnInit {
     else {
       this.datas_min_max = this.data_graph.map(item => item.y).flat();
     }
-    // this.drawer_options.checked_safe_zone == true
-    //   ? this.basicChart([...this.data_graph, ...transformTelemetryZoneEvents(this.data!.fails, this.datas_min_max,this.drawer_options)], transformSafeZone(this.data!.safeZone ?? []), this.datas_min_max, this.selectedTelemetry)
-    //   : this.basicChart([...this.data_graph, ...transformTelemetryZoneEvents(this.data!.fails, this.datas_min_max,this.drawer_options)], null, this.datas_min_max, this.selectedTelemetry)
     this.graph_zones = this.drawer_safezone_disconection.includes('safe_and_disconection') || (this.drawer_safezone_disconection.includes('safeZone') && this.drawer_safezone_disconection.includes('disconection'))
       ? [
         ...transformSafeZone(this.data!.safeZone ?? []),
@@ -188,10 +190,11 @@ export class GraphMainComponent implements OnInit {
         : this.drawer_safezone_disconection.includes('disconection')
           ? transformDesconectionsZone(this.data!.fails ?? [], this.datas_min_max)
           : null;
-    this.basicChart([...this.data_graph, ...transformTelemetryZoneEvents(this.data!.fails, this.datas_min_max,this.drawer_options)], this.graph_zones, this.datas_min_max, this.selectedTelemetry)
+    this.basicChart([...this.data_graph, ...transformTelemetryZoneEvents(this.data!.fails, this.datas_min_max, this.drawer_options, this.data?.serviceOrder)], this.graph_zones, this.datas_min_max)
   }
 
   onCheckedChange(value: boolean, buttonID?: string) {
+    
     if (buttonID) {
       const index = this.drawer_safezone_disconection.indexOf(buttonID);
       if (value) {
@@ -203,7 +206,7 @@ export class GraphMainComponent implements OnInit {
       // Manejamos los filtros para eventos
       const eventTypes = ['FAIL', 'ALERT', 'INFORMATIVES', 'DESCONECTIONS'];
 
-      if (eventTypes.includes(buttonID)) {
+      if (eventTypes.includes(buttonID)) {        
         const filterIndex = this.drawer_data_filter.indexOf(buttonID);
         if (!value && filterIndex === -1) {
           // Si se desactiva, agregamos a filtros
@@ -223,9 +226,8 @@ export class GraphMainComponent implements OnInit {
       if (buttonID === 'events_zone' && value) {
         this.drawer_data_filter = [];
       }
-    }
-
-    const filteredData = transformTelemetryZoneEvents(this.data!.fails, this.datas_min_max,this.drawer_options)
+    }    
+    const filteredData = transformTelemetryZoneEvents(this.data!.fails, this.datas_min_max, this.drawer_options, this.data?.serviceOrder)
 
     const options = this.drawer_safezone_disconection;
     const data = [...this.data_graph, ...filteredData];
@@ -242,7 +244,7 @@ export class GraphMainComponent implements OnInit {
             ? transformDesconectionsZone(this.data!.fails ?? [], this.datas_min_max)
             : null;
     this.graph_zones = zones ?? [];
-    this.basicChart(data, zones, this.datas_min_max, this.drawer_data_filter);
+    this.basicChart(data, zones, this.datas_min_max,this.data?.serviceOrder);
   }
 
 
