@@ -38,6 +38,12 @@ export class ConsoleMainComponent {
     this.apiService.fetchDates(`https://coolview-api-v2-545989770214.us-central1.run.app/coolview-api/dates/?serie=${this.id}`)
       .subscribe({
         next: (data) => {
+          if(data?.flag === false){
+            this.isLoading = false;
+            this.data_error = "date low to limit date 2000-01-01. No data";
+            this.cdr.markForCheck();
+            return;
+          }
           this.data_dates = data;
           this.date = getDateRange_dateFunctions(this.data_dates); 
           this.searchCooler(getDateRangeFromEndDate_dateFunctions(this.data_dates,1));
@@ -48,13 +54,14 @@ export class ConsoleMainComponent {
           console.error(error)
           this.cdr.markForCheck();
         },
-        complete: () => {
-          this.isLoading = false;
-          this.cdr.markForCheck();
-        }
+        // complete: () => {
+        //   this.isLoading = false;
+        //   this.cdr.markForCheck();
+        // }
       })
   }
-  async searchCooler(dates: string[] | Date[]): Promise<void> {    
+  async searchCooler(dates: string[] | Date[]): Promise<void> {  
+    this.cdr.detectChanges();  
     this.isLoading = true;
     const stringDates = dates.map(d => {
       if (d instanceof Date) {        
@@ -62,8 +69,7 @@ export class ConsoleMainComponent {
         return d.toISOString().split('T')[0];
       }
       return d;
-    });    
-    this.cdr.markForCheck();            
+    });             
     this.apiService.fetchData(`https://coolview-api-v2-545989770214.us-central1.run.app/coolview-api/v2/telemetryOs/?id=${this.id}&start_date=${stringDates[0]}&end_date=${stringDates[1]}&is_mac=false`)
       .subscribe({
         next: (data) => {

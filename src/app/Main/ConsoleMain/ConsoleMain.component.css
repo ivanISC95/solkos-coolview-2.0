@@ -36,3 +36,7 @@ nz-alert {
     height: 97dvh;
   }
 }
+
+.plotly-notifier{
+  display: none !important;
+}
