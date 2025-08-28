@@ -246,7 +246,7 @@ const pixelsToSizeY = (px: number, rangeY: [number, number]) => {
   return (px / 600) * graphHeight; // 600 es un ejemplo de altura en px del gráfico
 };
 // function to create images in the graph
-function transformFailsToAnnotations2(data: DatasResponse | null, valueInputFechas: any, rangosTelemetry: number[], data_OS?: ServiceOrder[]) {
+function transformFailsToAnnotations2(data: DatasResponse | null, valueInputFechas: any, rangosTelemetry: number[], data_OS?: ServiceOrder[],graph_view_opt?:number) {
   const windowWidth = window.innerWidth;
   const xRange: [number, number] = valueInputFechas
   const yRange: [number, number] = [0, Math.max(...rangosTelemetry) > 250 ? 500 : 250];
@@ -274,7 +274,8 @@ function transformFailsToAnnotations2(data: DatasResponse | null, valueInputFech
       y: minValue < 0 ? minValue + 2.6 : minValue + 2.7,
       xref: "x",
       yref: "y",
-      sizex: pixelsToSizeX(18, windowWidth, xRange),
+      // sizex: pixelsToSizeX(18, windowWidth, xRange),
+      sizex: graph_view_opt === 4 ? pixelsToSizeX(60, windowWidth, xRange) : pixelsToSizeX(18, windowWidth, xRange),
       sizey: pixelsToSizeY(18, yRange),
       opacity: 1,
       layer: ""
@@ -301,7 +302,8 @@ function transformFailsToAnnotations2(data: DatasResponse | null, valueInputFech
         y: minValue < 0 ? minValue + 2.6 : minValue + 2.7,
         xref: "x",
         yref: "y",
-        sizex: pixelsToSizeX(18, windowWidth, xRange),
+        // sizex: pixelsToSizeX(18, windowWidth, xRange),
+        sizex: graph_view_opt === 4 ? pixelsToSizeX(60, windowWidth, xRange) : pixelsToSizeX(18, windowWidth, xRange),
         sizey: pixelsToSizeY(18, yRange),
         opacity: 1,
         layer: ""
@@ -309,7 +311,6 @@ function transformFailsToAnnotations2(data: DatasResponse | null, valueInputFech
     })
     annotations.push(...datos_ordenes)
   }
-  console.log(annotations);
   return annotations.filter(a => a.source !== "");
 }
 const transformDesconectionsZone = (data: Fail[], datas_min_max: number[]) => {

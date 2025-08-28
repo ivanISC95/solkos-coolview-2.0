@@ -20,7 +20,7 @@ import { graph_config, graph_layout } from '../../Functions/GraphVar';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GraphMainComponent implements OnInit {
-  @Input() graph_view_opt : number = 0
+  @Input() graph_view_opt : number = 0 // Tipe of visibility graph
   @Input() data: DatasResponse | null = null
   @Input() selectOptionDefault: string = '' // Default option to Multiselect ejem Temperature
   @Input() date_select_main: Date[] | null = null
@@ -62,7 +62,7 @@ export class GraphMainComponent implements OnInit {
     const element = this.el().nativeElement
     const data = data_graph;
     this.resizeChart();    
-    const filteredData = transformFailsToAnnotations2(this.data, this.date_select_main, min_max ?? [], data_OS).filter((item: any) => {
+    const filteredData = transformFailsToAnnotations2(this.data, this.date_select_main, min_max ?? [], data_OS,this.graph_view_opt).filter((item: any) => {
       const sourceLower = item.source.toLowerCase();
       const isFail = sourceLower.includes('/fails/');
       const isAlert = sourceLower.includes('/alerts/');
@@ -107,7 +107,7 @@ export class GraphMainComponent implements OnInit {
           const [xMin, xMax] = eventData["xaxis.range"];
           this.date_select_main = [new Date(xMin), new Date(xMax)]
         }
-        const newAnnotations = transformFailsToAnnotations2(this.data, this.date_select_main, min_max ?? [], data_OS).filter((item: any) => {
+        const newAnnotations = transformFailsToAnnotations2(this.data, this.date_select_main, min_max ?? [], data_OS,this.graph_view_opt).filter((item: any) => {
           const sourceLower = item.source.toLowerCase();
           const isFail = sourceLower.includes('/fails/');
           const isAlert = sourceLower.includes('/alerts/');
