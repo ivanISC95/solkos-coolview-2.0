@@ -165,7 +165,7 @@ const transformTelemetryZoneEvents = (data: Fail[] | null, rangosTelemetry: numb
     "RECONNECTION_ALERT": "Conexión",
     "COMPRESSOR_RUN_TIME_EXCEDED_ALERT": "Alerta Compresor",
     "TEMPERATURE_ALERT": "Alerta Temperatura",
-    "VOLTAGE_ALERT": "Alerta Voltaje",
+    "VOLTAGE_ALERT": "Alerta Bajo/Alto Voltaje",
     "TEMPERATURE_FAIL": "Falla Temperatura",
     "FROZEN_ALERT": "Falla Congelamiento",
     "COMPRESSOR_FAIL": "Falla Compresor",
@@ -229,7 +229,7 @@ const transformTelemetryZoneEvents = (data: Fail[] | null, rangosTelemetry: numb
     return true;
   })
 
-  return prueba;
+  return prueba.filter(a => a.name !== "Desconocido");
 };
 
 // IMG into Events zone
@@ -309,7 +309,8 @@ function transformFailsToAnnotations2(data: DatasResponse | null, valueInputFech
     })
     annotations.push(...datos_ordenes)
   }
-  return annotations;
+  console.log(annotations);
+  return annotations.filter(a => a.source !== "");
 }
 const transformDesconectionsZone = (data: Fail[], datas_min_max: number[]) => {
 
