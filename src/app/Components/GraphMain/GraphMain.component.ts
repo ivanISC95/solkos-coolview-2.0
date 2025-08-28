@@ -20,8 +20,9 @@ import { graph_config, graph_layout } from '../../Functions/GraphVar';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GraphMainComponent implements OnInit {
+  @Input() graph_view_opt : number = 0
   @Input() data: DatasResponse | null = null
-  @Input() selectOptionDefault: string = '' // Default option to Multiselect
+  @Input() selectOptionDefault: string = '' // Default option to Multiselect ejem Temperature
   @Input() date_select_main: Date[] | null = null
   @Input() search_Main!: (value: any) => Promise<void>;
   readonly el = viewChild.required<ElementRef>('chart');
@@ -44,7 +45,7 @@ export class GraphMainComponent implements OnInit {
   graph_zones: any[] | null = null;
 
 
-  ngOnInit() {
+  ngOnInit() {    
     this.telemetryOptions = getTelemetryNamesTranslated(this.data)
     this.telemetryOptions.includes(this.selectOptionDefault) ? this.selectedTelemetry = [this.selectOptionDefault] : this.selectedTelemetry = []
     this.data_graph = transformTelemetry2(this.data!.telemetry, [this.selectOptionDefault], [this.selectOptionDefault]);

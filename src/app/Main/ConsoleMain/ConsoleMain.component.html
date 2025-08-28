@@ -22,16 +22,16 @@
         @else if(view_grap_opt == 4 && isLoading == false){
         <app-graph-main [data]="data_Cooler" [style.width]="view_grap_opt == 4 ? '49.5%' : '100%' "
             [style.min-height]="view_grap_opt == 4 ? '45%' : '100%' " [selectOptionDefault]="'Temperatura'"
-            [date_select_main]="date" [search_Main]="searchCooler.bind(this)"></app-graph-main>
+            [date_select_main]="date" [search_Main]="searchCooler.bind(this)" [graph_view_opt]="view_grap_opt"></app-graph-main>
         <app-graph-main [data]="data_Cooler" [style.width]="view_grap_opt == 4 ? '49.5%' : '100%' "
             [style.min-height]="view_grap_opt == 4 ? '45%' : '100%' " [selectOptionDefault]="'Voltaje'"
-            [date_select_main]="date" [search_Main]="searchCooler.bind(this)"></app-graph-main>
+            [date_select_main]="date" [search_Main]="searchCooler.bind(this)" [graph_view_opt]="view_grap_opt"></app-graph-main>
         <app-graph-main [data]="data_Cooler" [style.width]="view_grap_opt == 4 ? '49.5%' : '100%' "
             [style.min-height]="view_grap_opt == 4 ? '45%' : '100%' " [selectOptionDefault]="'Aperturas'"
-            [date_select_main]="date" [search_Main]="searchCooler.bind(this)"></app-graph-main>
+            [date_select_main]="date" [search_Main]="searchCooler.bind(this)" [graph_view_opt]="view_grap_opt"></app-graph-main>
         <app-graph-main [data]="data_Cooler" [style.width]="view_grap_opt == 4 ? '49.5%' : '100%' "
             [style.min-height]="view_grap_opt == 4 ? '45%' : '100%' " [selectOptionDefault]="'Compresor'"
-            [date_select_main]="date" [search_Main]="searchCooler.bind(this)"></app-graph-main>
+            [date_select_main]="date" [search_Main]="searchCooler.bind(this)" [graph_view_opt]="view_grap_opt"></app-graph-main>
         }
         <!-- @else if(isLoading == false && data_Cooler == null) {
             <div style="width: 100%;height: 100%;display: flex;align-items: center;justify-content: center;">Coolview</div>
