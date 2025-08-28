@@ -16,7 +16,7 @@ section{
   display: flex;
   flex-direction: column;
   scroll-snap-type: y mandatory;
-  padding: 0.5rem;
+  /* padding: 0.5rem; */
   box-sizing: border-box;
   scrollbar-width: thin;
 }
