@@ -11,8 +11,10 @@ const getTelemetryNamesTranslated = (data: any): string[] => {
     "door_state": "Aperturas",
     "compressor_state": "Compresor",
     "internal_temperature": "Temperatura",
-    "evaporator_temperature": "Temperatura Evaporador",
-    "condenser_temperature": "Temperatura Condensador",
+    "evaporator_temperature": "Evaporador",
+    "temperature_1": "Evaporador",
+    "temperature_2": "Ambiente",
+    "condenser_temperature": "Condensador",
     "voltage_consumption": "Voltaje",
     "voltage_min": "Voltaje Mínimo",
     "voltage_max": "Voltaje Máximo",
@@ -29,9 +31,11 @@ const nameMap: { [key: string]: string } = {
   "voltage_consumption": "Voltaje",
   "voltage_min": "Voltaje Mínimo",
   "voltage_max": "Voltaje Máximo",
-  "condenser_temperature": "Temperatura Condensador",
+  "condenser_temperature": "Condensador",
   "energy_consumption": "Consumo de Energia",
-  "evaporator_temperature": "Temperatura Evaporador"
+  "evaporator_temperature": "Evaporador",
+  "temperature_1": "Evaporador",
+  "temperature_2": "Ambiente",
 };
 
 const colorMap: Record<string, string> = {
@@ -40,6 +44,8 @@ const colorMap: Record<string, string> = {
   "internal_temperature": "#028CFF",
   "condenser_temperature": "#0B7285",
   "evaporator_temperature": "#728CAF",
+  "temperature_1": "#728CAF",
+  "temperature_2": "#40C057",
   "voltage_consumption": "#E67700",
   "voltage_min": "#FCC419",
   "voltage_max": "#E67700",
@@ -57,11 +63,14 @@ const LayoutInforTelemetry = (value: string[]) => {
   if (value.includes('Temperatura')) {
     return ['Temperatura', '℃']
   }
-  if (value.includes('Temperatura Condensador')) {
-    return ['Temperatura Condensador', '℃']
+  if (value.includes('Condensador')) {
+    return ['Condensador', '℃']
   }
-  if (value.includes('Temperatura Evaporador')) {
-    return ['Temperatura Evaporador', '℃']
+  if (value.includes('Evaporador')) {
+    return ['Evaporador', '℃']
+  }
+  if (value.includes('Ambiente')) {
+    return ['Ambiente', '℃']
   }
   if (value.includes('Voltaje')) {
     return ['Voltaje', 'V']
