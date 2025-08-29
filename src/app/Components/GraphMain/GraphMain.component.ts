@@ -55,6 +55,7 @@ export class GraphMainComponent implements OnInit {
     this.checkBoxStatus['Desconexiones'] = this.data?.fails.some(item => item.type_fail.toLowerCase().includes('disconnection')) ?? false
     this.checkBoxStatus['Alertas'] = this.data?.fails.filter(item => item.type_fail.toLowerCase() != 'disconnection_alert').some(item => item.type_fail.toLowerCase().includes('alert')) ?? false
     this.checkBoxStatus['Informativos'] = (this.data?.serviceOrder?.length ?? 0) > 0
+    this.checkBoxStatus['SafeZone'] = this.data?.safeZone?.[0]?.temperature?.x !== this.data?.safeZone?.[0]?.temperature?.y
   }
 
 
