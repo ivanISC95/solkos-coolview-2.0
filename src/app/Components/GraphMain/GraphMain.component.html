@@ -3,10 +3,14 @@
     <div style="width: 40%;height: 100%;">
       <h1 style="color: #000;font-size: 0.75rem;font-style: normal;font-weight: 400;">Dato visualizado :</h1>
       <nz-select nzAllowClear nzShowSearch nzPlaceHolder="" nzMode="multiple" [nzCustomTemplate]="multipleTemplate"
-        style="width: 100%; height: 1.875rem !important;" [(ngModel)]="selectedTelemetry"
-        (ngModelChange)="logSelection()" [disabled]="graph_view_opt == 4 && selectOptionDefault != '' ? true : false">
-        <nz-option *ngFor="let telemetry of telemetryOptions" [nzLabel]="telemetry" [nzValue]="telemetry" nzCustomContent>
-          <img *ngIf="iconMap[telemetry]" [src]="iconMap[telemetry]" width="16" height="16" style="margin-right: 8px;" />
+        [(ngModel)]="selectedTelemetry" (ngModelChange)="logSelection()"
+        [disabled]="graph_view_opt == 4 && selectOptionDefault != '' ? true : false"
+        [nzDropdownStyle]="{ 'max-height': '130px', 'overflow-y': 'auto' , scrollbarWidth: 'thin'}"
+        style="width: 100%; height: 1rem !important;">
+        <nz-option *ngFor="let telemetry of telemetryOptions" [nzLabel]="telemetry" [nzValue]="telemetry"
+          nzCustomContent>
+          <img *ngIf="iconMap[telemetry]" [src]="iconMap[telemetry]" width="16" height="16"
+            style="margin-right: 8px;" />
           {{ telemetry }}
         </nz-option>
       </nz-select>
@@ -21,18 +25,21 @@
       <img src="../../../assets/Settings/settingsIcon.svg" alt="settings" loading="lazy" />
     </div>
   </section>
-  <section class="grap_select_main_content_graph">    
-    <div #chart style="height: 100% !important;width: 100% !important;"></div>        
-    <div #NoData style="height: 100% !important;width: 100% !important;display: none;align-items: center;justify-content: center;" >
+  <section class="grap_select_main_content_graph">
+    <div #chart style="height: 100% !important;width: 100% !important;"></div>
+    <div #NoData
+      style="height: 100% !important;width: 100% !important;display: none;align-items: center;justify-content: center;">
       <h1 style="color: #000;font-size: 0.75rem;font-style: normal;font-weight: 400;">Select a telemetry</h1>
     </div>
   </section>
 </section>
 @if (drawer_status == true) {
-<nz-drawer [nzClosable]="drawer_status" [nzVisible]="true" nzPlacement="right" nzTitle="Configuración del grafico" (nzOnClose)="close()" style="scrollbar-width: thin;" [nzWidth]="'100%'">
+<nz-drawer [nzClosable]="drawer_status" [nzVisible]="true" nzPlacement="right" nzTitle="Configuración del grafico"
+  (nzOnClose)="close()" style="scrollbar-width: thin;" [nzWidth]="'100%'">
   <ng-container *nzDrawerContent>
     <section style="width: 100%;height: 100%;display: flex; flex-direction: column;gap: 0.5rem;">
-      <section style="width: 100%;height: auto;display: flex;flex-direction: column;justify-content: space-between;gap: 0.5rem;">
+      <section
+        style="width: 100%;height: auto;display: flex;flex-direction: column;justify-content: space-between;gap: 0.5rem;">
         <nz-flex nzVertical style="width: 100%;">
           <h5 nz-typography>Dato visualizado</h5>
           <nz-select nzAllowClear nzShowSearch nzPlaceHolder="" nzMode="multiple" [nzCustomTemplate]="multipleTemplate"
@@ -46,7 +53,7 @@
               <!-- <nz-icon [nzType]="selected.nzValue" /> -->
               {{ selected.nzLabel }}
             </div>
-          </ng-template>          
+          </ng-template>
         </nz-flex>
         <nz-flex nzVertical style="width: 100%;">
           <h5 nz-typography>Rango de fechas</h5>
@@ -54,25 +61,36 @@
             style="height: 2.5rem;width: 100%;"></nz-range-picker>
         </nz-flex>
         <nz-flex nzVertical style="width: 100%;">
-          <button nz-button nzType="default" style="height: 2.5rem;"  [disabled]="" (click)="search()" >Buscar</button>
+          <button nz-button nzType="default" style="height: 2.5rem;" [disabled]="" (click)="search()">Buscar</button>
         </nz-flex>
       </section>
       <hr style="width: 100%;background-color: var(--Neutral-Outline-Variant, #CACACA);border: 1px solid transparent;">
       <section style="width: 100%;height: 6.25rem;">
         <nz-flex nzVertical style="width: 15rem;" nzGap="0.5rem">
-          <label nz-checkbox [(ngModel)]="drawer_options.checked_safe_disc" (ngModelChange)="onCheckedChange($event,'safe_and_disconection')">Elementos en la gráfica</label>
-          <label nz-checkbox [(ngModel)]="drawer_options.checked_safe_zone" (ngModelChange)="onCheckedChange($event,'safeZone')" [nzDisabled]="!checkBoxStatus['SafeZone']">Zona segura (inteligente)</label>
-          <label nz-checkbox [(ngModel)]="drawer_options.checked_disconection" (ngModelChange)="onCheckedChange($event,'disconection')">Desconexiones</label>
+          <label nz-checkbox [(ngModel)]="drawer_options.checked_safe_disc"
+            (ngModelChange)="onCheckedChange($event,'safe_and_disconection')">Elementos en la gráfica</label>
+          <label nz-checkbox [(ngModel)]="drawer_options.checked_safe_zone"
+            (ngModelChange)="onCheckedChange($event,'safeZone')" [nzDisabled]="!checkBoxStatus['SafeZone']">Zona segura
+            (inteligente)</label>
+          <label nz-checkbox [(ngModel)]="drawer_options.checked_disconection"
+            (ngModelChange)="onCheckedChange($event,'disconection')">Desconexiones</label>
         </nz-flex>
       </section>
       <hr style="width: 100%;background-color: var(--Neutral-Outline-Variant, #CACACA);border: 1px solid transparent;">
       <section style="width: 100%;height: 7.25rem">
         <nz-flex nzVertical style="width: 15rem;" nzGap="0.5rem">
-          <label nz-checkbox [(ngModel)]="drawer_options.checked_events_zone" (ngModelChange)="onCheckedChange($event, 'events_zone')">Zona de eventos</label>
-          <label nz-checkbox [(ngModel)]="drawer_options.checked_Alerts" (ngModelChange)="onCheckedChange($event,'ALERT')" [nzDisabled]="!checkBoxStatus['Alertas']">Alertas</label>
-          <label nz-checkbox [(ngModel)]="drawer_options.checked_Fails" (ngModelChange)="onCheckedChange($event,'FAIL')" [nzDisabled]="!checkBoxStatus['Fallas']">Fallas</label>
-          <label nz-checkbox [(ngModel)]="drawer_options.checked_Info" (ngModelChange)="onCheckedChange($event,'INFORMATIVES')" [nzDisabled]="!checkBoxStatus['Informativos']">Informativos</label>
-          <label nz-checkbox [(ngModel)]="drawer_options.checked_Desconections" (ngModelChange)="onCheckedChange($event,'DESCONECTIONS')" [nzDisabled]="!checkBoxStatus['Desconexiones']">Desconexiones</label>
+          <label nz-checkbox [(ngModel)]="drawer_options.checked_events_zone"
+            (ngModelChange)="onCheckedChange($event, 'events_zone')">Zona de eventos</label>
+          <label nz-checkbox [(ngModel)]="drawer_options.checked_Alerts"
+            (ngModelChange)="onCheckedChange($event,'ALERT')" [nzDisabled]="!checkBoxStatus['Alertas']">Alertas</label>
+          <label nz-checkbox [(ngModel)]="drawer_options.checked_Fails" (ngModelChange)="onCheckedChange($event,'FAIL')"
+            [nzDisabled]="!checkBoxStatus['Fallas']">Fallas</label>
+          <label nz-checkbox [(ngModel)]="drawer_options.checked_Info"
+            (ngModelChange)="onCheckedChange($event,'INFORMATIVES')"
+            [nzDisabled]="!checkBoxStatus['Informativos']">Informativos</label>
+          <label nz-checkbox [(ngModel)]="drawer_options.checked_Desconections"
+            (ngModelChange)="onCheckedChange($event,'DESCONECTIONS')"
+            [nzDisabled]="!checkBoxStatus['Desconexiones']">Desconexiones</label>
         </nz-flex>
       </section>
     </section>
