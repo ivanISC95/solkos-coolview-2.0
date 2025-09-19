@@ -20,7 +20,7 @@ import { graph_config, graph_layout } from '../../Functions/GraphVar';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GraphMainComponent implements OnInit {
-  @Input() graph_view_opt : number = 0 // Tipe of visibility graph
+  @Input() graph_view_opt: number = 0 // Tipe of visibility graph
   @Input() data: DatasResponse | null = null
   @Input() selectOptionDefault: string = '' // Default option to Multiselect ejem Temperature
   @Input() date_select_main: Date[] | null = null
@@ -43,11 +43,24 @@ export class GraphMainComponent implements OnInit {
     'Informativos': false,
   };
   graph_zones: any[] | null = null;
+  // Icons Select
+  iconMap: { [key: string]: string } = {
+    'Temperatura': '../../../assets/Select/Temperature.svg',
+    'Ambiente': '../../../assets/Select/Temperature.svg',
+    'Voltaje': '../../../assets/Select/Voltage.svg',
+    'Voltaje Mínimo': '../../../assets/Select/Voltage.svg',
+    'Voltaje Máximo': '../../../assets/Select/Voltage.svg',
+    'Consumo de Energia': '../../../assets/Select/Voltage_Consumo.svg',
+    'Aperturas': '../../../assets/Select/Aperturas.svg',
+    'Compresor': '../../../assets/Select/Compressor.svg',
+    'Evaporador': '../../../assets/Select/Evaporador.svg',
+    'Condensador': '../../../assets/Select/Condensador.svg',
+  };
 
-
-  ngOnInit() {    
+  ngOnInit() {
     this.telemetryOptions = getTelemetryNamesTranslated(this.data)
     this.telemetryOptions.includes(this.selectOptionDefault) ? this.selectedTelemetry = [this.selectOptionDefault] : this.selectedTelemetry = []
+    console.log(this.telemetryOptions)
     this.data_graph = transformTelemetry2(this.data!.telemetry, [this.selectOptionDefault], [this.selectOptionDefault]);
     this.datas_min_max = this.data_graph.flatMap((value) => value.y)
     this.basicChart([...this.data_graph], null, this.datas_min_max, this.data?.serviceOrder);
@@ -59,17 +72,17 @@ export class GraphMainComponent implements OnInit {
   }
 
 
-  basicChart(data_graph: any, safe_zone?: any, min_max?: number[], data_OS?: ServiceOrder[]) {    
+  basicChart(data_graph: any, safe_zone?: any, min_max?: number[], data_OS?: ServiceOrder[]) {
     const element = this.el().nativeElement
     const data = data_graph;
-    this.resizeChart();    
-    const filteredData = transformFailsToAnnotations2(this.data, this.date_select_main, min_max ?? [], data_OS,this.graph_view_opt).filter((item: any) => {
+    this.resizeChart();
+    const filteredData = transformFailsToAnnotations2(this.data, this.date_select_main, min_max ?? [], data_OS, this.graph_view_opt).filter((item: any) => {
       const sourceLower = item.source.toLowerCase();
       const isFail = sourceLower.includes('/fails/');
       const isAlert = sourceLower.includes('/alerts/');
       const isInfo = sourceLower === "/assets/informativos/servicios.svg"
       const isDesconnection = sourceLower === "/assets/connections/desconexion.svg";
-      const isReconnection = sourceLower === "/assets/connections/reconexion.svg";      
+      const isReconnection = sourceLower === "/assets/connections/reconexion.svg";
       // Fails
       if (!this.drawer_options.checked_Fails && isFail) {
         return false;
@@ -83,13 +96,13 @@ export class GraphMainComponent implements OnInit {
       if (!this.drawer_options.checked_Desconections && (isDesconnection || isReconnection)) {
         return false;
       }
-      
+
       if (!this.drawer_options.checked_Info && isInfo) {
         return false
       }
       return true;
-    });    
-    
+    });
+
     Plotly.newPlot(element, data, graph_layout(safe_zone, this.selectedTelemetry, filteredData, this.date_select_main ?? []), graph_config).then((graph: any) => {
       graph.on('plotly_relayout', (eventData: any) => {
         if (eventData['xaxis.range[0]']) {
@@ -108,7 +121,7 @@ export class GraphMainComponent implements OnInit {
           const [xMin, xMax] = eventData["xaxis.range"];
           this.date_select_main = [new Date(xMin), new Date(xMax)]
         }
-        const newAnnotations = transformFailsToAnnotations2(this.data, this.date_select_main, min_max ?? [], data_OS,this.graph_view_opt).filter((item: any) => {
+        const newAnnotations = transformFailsToAnnotations2(this.data, this.date_select_main, min_max ?? [], data_OS, this.graph_view_opt).filter((item: any) => {
           const sourceLower = item.source.toLowerCase();
           const isFail = sourceLower.includes('/fails/');
           const isAlert = sourceLower.includes('/alerts/');
@@ -196,7 +209,7 @@ export class GraphMainComponent implements OnInit {
   }
 
   onCheckedChange(value: boolean, buttonID?: string) {
-    
+
     if (buttonID) {
       const index = this.drawer_safezone_disconection.indexOf(buttonID);
       if (value) {
@@ -208,7 +221,7 @@ export class GraphMainComponent implements OnInit {
       // Manejamos los filtros para eventos
       const eventTypes = ['FAIL', 'ALERT', 'INFORMATIVES', 'DESCONECTIONS'];
 
-      if (eventTypes.includes(buttonID)) {        
+      if (eventTypes.includes(buttonID)) {
         const filterIndex = this.drawer_data_filter.indexOf(buttonID);
         if (!value && filterIndex === -1) {
           // Si se desactiva, agregamos a filtros
@@ -228,7 +241,7 @@ export class GraphMainComponent implements OnInit {
       if (buttonID === 'events_zone' && value) {
         this.drawer_data_filter = [];
       }
-    }    
+    }
     const filteredData = transformTelemetryZoneEvents(this.data!.fails, this.datas_min_max, this.drawer_options, this.data?.serviceOrder)
 
     const options = this.drawer_safezone_disconection;
@@ -246,7 +259,7 @@ export class GraphMainComponent implements OnInit {
             ? transformDesconectionsZone(this.data!.fails ?? [], this.datas_min_max)
             : null;
     this.graph_zones = zones ?? [];
-    this.basicChart(data, zones, this.datas_min_max,this.data?.serviceOrder);
+    this.basicChart(data, zones, this.datas_min_max, this.data?.serviceOrder);
   }
 
 

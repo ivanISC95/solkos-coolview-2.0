@@ -5,7 +5,10 @@
       <nz-select nzAllowClear nzShowSearch nzPlaceHolder="" nzMode="multiple" [nzCustomTemplate]="multipleTemplate"
         style="width: 100%; height: 1.875rem !important;" [(ngModel)]="selectedTelemetry"
         (ngModelChange)="logSelection()" [disabled]="graph_view_opt == 4 && selectOptionDefault != '' ? true : false">
-        <nz-option *ngFor="let telemetry of telemetryOptions" [nzLabel]="telemetry" [nzValue]="telemetry"></nz-option>
+        <nz-option *ngFor="let telemetry of telemetryOptions" [nzLabel]="telemetry" [nzValue]="telemetry" nzCustomContent>
+          <img *ngIf="iconMap[telemetry]" [src]="iconMap[telemetry]" width="16" height="16" style="margin-right: 8px;" />
+          {{ telemetry }}
+        </nz-option>
       </nz-select>
       <ng-template #multipleTemplate let-selected>
         <div class="ant-select-selection-item-content">
