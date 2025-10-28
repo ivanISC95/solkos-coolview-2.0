@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, ElementRef, viewChild, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, ElementRef, viewChild, OnInit, ChangeDetectorRef, OnChanges, SimpleChanges } from '@angular/core';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { CommonModule } from '@angular/common';
@@ -19,7 +19,7 @@ import { graph_config, graph_layout } from '../../Functions/GraphVar';
   styleUrl: './GraphMain.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class GraphMainComponent implements OnInit {
+export class GraphMainComponent implements OnInit, OnChanges {
   @Input() graph_view_opt: number = 0 // Tipe of visibility graph
   @Input() data: DatasResponse | null = null
   @Input() selectOptionDefault: string = '' // Default option to Multiselect ejem Temperature
@@ -56,6 +56,19 @@ export class GraphMainComponent implements OnInit {
     'Evaporador': '../../../assets/Select/Evaporador.svg',
     'Condensador': '../../../assets/Select/Condensador.svg',
   };
+  constructor(private cdr: ChangeDetectorRef) { }
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['data'] && this.data) {
+      // Se actualizó la data => redibuja el gráfico
+      this.telemetryOptions = getTelemetryNamesTranslated(this.data);
+      this.data_graph = transformTelemetry2(this.data.telemetry, [this.selectOptionDefault], [this.selectOptionDefault]);
+      this.datas_min_max = this.data_graph.flatMap((v) => v.y);
+      this.basicChart([...this.data_graph], null, this.datas_min_max, this.data?.serviceOrder);
+
+      // Forzar detección de cambios
+      this.cdr.detectChanges();
+    }
+  }
 
   ngOnInit() {
     this.telemetryOptions = getTelemetryNamesTranslated(this.data)
@@ -264,8 +277,16 @@ export class GraphMainComponent implements OnInit {
 
 
   async search() {
-    if (this.search_Main) {
-      await this.search_Main(this.date);
+    if (this.search_Main && this.date) {
+      // Convertir las fechas ISO a formato 'YYYY-MM-DD' sin modificar el tipo this.date (Date[])
+      const isoDates = this.date.map((d: Date) => {
+        const offset = d.getTimezoneOffset();
+        const localDate = new Date(d.getTime() - offset * 60 * 1000);
+        return localDate.toISOString().split('T')[0];
+      });      
+      await this.search_Main(isoDates);
+      this.close();
     }
   }
+
 }
