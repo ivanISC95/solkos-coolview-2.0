@@ -1,5 +1,3 @@
-import { Fail } from "../Interfaces/DatasResponse"
-
 const LayoutInforTelemetry = (value:string[]) =>{  
   if(value.length > 1){
     return ['','']

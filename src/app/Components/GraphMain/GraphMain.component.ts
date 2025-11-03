@@ -8,7 +8,7 @@ import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
 import { FormsModule } from '@angular/forms';
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
 import { DatasResponse, DrawerOptions, ServiceOrder } from '../../Interfaces/DatasResponse';
-import { getTelemetryNamesTranslated, hideFirstYTick, transformDesconectionsZone, transformFailsToAnnotations2, transformSafeZone, transformTelemetry2, transformTelemetryZoneEvents } from '../../Functions/GraphFunctions';
+import { getTelemetryNamesTranslated, graph_images, transformDesconectionsZone, transformFailsToAnnotations2, transformSafeZone, transformTelemetry2, transformTelemetryZoneEvents } from '../../Functions/GraphFunctions';
 import { graph_config, graph_layout } from '../../Functions/GraphVar';
 
 @Component({
@@ -48,7 +48,7 @@ export class GraphMainComponent implements OnInit, OnChanges {
     'Temperatura': '../../../assets/Select/Temperature.svg',
     'Ambiente': '../../../assets/Select/Temperature.svg',
     'Voltaje': '../../../assets/Select/Voltage.svg',
-    'Voltaje Mínimo': '../../../assets/Select/Voltage.svg',
+    'Voltaje Mínimo': '../../../assets/Select/Voltage_Low.svg',
     'Voltaje Máximo': '../../../assets/Select/Voltage.svg',
     'Consumo de Energia': '../../../assets/Select/Voltage_Consumo.svg',
     'Aperturas': '../../../assets/Select/Aperturas.svg',
@@ -88,34 +88,33 @@ export class GraphMainComponent implements OnInit, OnChanges {
   basicChart(data_graph: any, safe_zone?: any, min_max?: number[], data_OS?: ServiceOrder[]) {
     const element = this.el().nativeElement
     const data = data_graph;
-    this.resizeChart();
-    const filteredData = transformFailsToAnnotations2(this.data, this.date_select_main, min_max ?? [], data_OS, this.graph_view_opt).filter((item: any) => {
-      const sourceLower = item.source.toLowerCase();
-      const isFail = sourceLower.includes('/fails/');
-      const isAlert = sourceLower.includes('/alerts/');
-      const isInfo = sourceLower === "/assets/informativos/servicios.svg"
-      const isDesconnection = sourceLower === "/assets/connections/desconexion.svg";
-      const isReconnection = sourceLower === "/assets/connections/reconexion.svg";
-      // Fails
-      if (!this.drawer_options.checked_Fails && isFail) {
-        return false;
-      }
+    this.resizeChart();    
+    //   const sourceLower = item.source.toLowerCase();
+    //   const isFail = sourceLower.includes('/fails/');
+    //   const isAlert = sourceLower.includes('/alerts/');
+    //   const isInfo = sourceLower === "/assets/informativos/servicios.svg"
+    //   const isDesconnection = sourceLower === "/assets/connections/desconexion.svg";
+    //   const isReconnection = sourceLower === "/assets/connections/reconexion.svg";
+    //   // Fails
+    //   if (!this.drawer_options.checked_Fails && isFail) {
+    //     return false;
+    //   }
 
-      // Alerts
-      if (!this.drawer_options.checked_Alerts && isAlert) {
-        return false;
-      }
-      // Desconexiones
-      if (!this.drawer_options.checked_Desconections && (isDesconnection || isReconnection)) {
-        return false;
-      }
+    //   // Alerts
+    //   if (!this.drawer_options.checked_Alerts && isAlert) {
+    //     return false;
+    //   }
+    //   // Desconexiones
+    //   if (!this.drawer_options.checked_Desconections && (isDesconnection || isReconnection)) {
+    //     return false;
+    //   }
 
-      if (!this.drawer_options.checked_Info && isInfo) {
-        return false
-      }
-      return true;
-    });
-
+    //   if (!this.drawer_options.checked_Info && isInfo) {
+    //     return false
+    //   }
+    //   return true;
+    // });
+    const filteredData = graph_images(transformFailsToAnnotations2(this.data, this.date_select_main, min_max ?? [], data_OS, this.graph_view_opt),this.drawer_options)
     Plotly.newPlot(element, data, graph_layout(safe_zone, this.selectedTelemetry, filteredData, this.date_select_main ?? []), graph_config).then((graph: any) => {
       graph.on('plotly_relayout', (eventData: any) => {
         if (eventData['xaxis.range[0]']) {
@@ -133,45 +132,40 @@ export class GraphMainComponent implements OnInit, OnChanges {
         if (eventData["xaxis.range"]) {
           const [xMin, xMax] = eventData["xaxis.range"];
           this.date_select_main = [new Date(xMin), new Date(xMax)]
-        }
-        const newAnnotations = transformFailsToAnnotations2(this.data, this.date_select_main, min_max ?? [], data_OS, this.graph_view_opt).filter((item: any) => {
-          const sourceLower = item.source.toLowerCase();
-          const isFail = sourceLower.includes('/fails/');
-          const isAlert = sourceLower.includes('/alerts/');
-          const isInfo = sourceLower.includes('/informativos/');
-          const isDesconnection = sourceLower === "/assets/connections/desconexion.svg";
-          const isReconnection = sourceLower === "/assets/connections/reconexion.svg";
+        }        
+        //   const sourceLower = item.source.toLowerCase();
+        //   const isFail = sourceLower.includes('/fails/');
+        //   const isAlert = sourceLower.includes('/alerts/');
+        //   const isInfo = sourceLower.includes('/informativos/');
+        //   const isDesconnection = sourceLower === "/assets/connections/desconexion.svg";
+        //   const isReconnection = sourceLower === "/assets/connections/reconexion.svg";
 
-          // Fails
-          if (!this.drawer_options.checked_Fails && isFail) {
-            return false;
-          }
+        //   // Fails
+        //   if (!this.drawer_options.checked_Fails && isFail) {
+        //     return false;
+        //   }
 
-          // Alerts
-          if (!this.drawer_options.checked_Alerts && isAlert) {
-            return false;
-          }
+        //   // Alerts
+        //   if (!this.drawer_options.checked_Alerts && isAlert) {
+        //     return false;
+        //   }
 
-          // Desconexiones
-          if (!this.drawer_options.checked_Desconections && (isDesconnection || isReconnection)) {
-            return false;
-          }
+        //   // Desconexiones
+        //   if (!this.drawer_options.checked_Desconections && (isDesconnection || isReconnection)) {
+        //     return false;
+        //   }
 
-          if (!this.drawer_options.checked_Info && isInfo) {
-            return false
-          }
-          return true;
-        });
+        //   if (!this.drawer_options.checked_Info && isInfo) {
+        //     return false
+        //   }
+        //   return true;
+        // });
+        const newAnnotations = graph_images(transformFailsToAnnotations2(this.data, this.date_select_main, min_max ?? [], data_OS, this.graph_view_opt),this.drawer_options)
         if (newAnnotations.length) {
           Plotly.update(element, {}, { images: newAnnotations });
         }
       })
-      // Ejecutar inmediatamente al renderizar      
-      hideFirstYTick(element);
 
-      graph.on('plotly_relayout', () => {
-        hideFirstYTick(element);
-      });
       const modebars = document.querySelectorAll('.modebar') as NodeListOf<HTMLElement>;
       modebars.forEach(modebar => {
         modebar.style.top = '-7px';
@@ -277,8 +271,7 @@ export class GraphMainComponent implements OnInit, OnChanges {
 
 
   async search() {
-    if (this.search_Main && this.date) {
-      // Convertir las fechas ISO a formato 'YYYY-MM-DD' sin modificar el tipo this.date (Date[])
+    if (this.search_Main && this.date) {      
       const isoDates = this.date.map((d: Date) => {
         const offset = d.getTimezoneOffset();
         const localDate = new Date(d.getTime() - offset * 60 * 1000);

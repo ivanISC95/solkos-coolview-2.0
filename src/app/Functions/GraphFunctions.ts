@@ -349,16 +349,33 @@ const transformDesconectionsZone = (data: Fail[], datas_min_max: number[]) => {
     layer: 'above'
   }) : '');
 };
-// Ocultar primer elemento leyenda del eje Y
-const hideFirstYTick = (element: any) => {
-  // Busca todos los ticks del eje Y
-  const yTicks = element.querySelectorAll('.yaxislayer-above .ytick text');
-  if (yTicks.length > 0) {
-    const firstTick = yTicks[0] as SVGTextElement;
-    if (firstTick) {
-      firstTick.style.visibility = 'hidden';
-    }
-  }
-};
+// Esta funcion muestra y oculta las imagenes
+const graph_images = (data : any[] , drawer_opt:DrawerOptions) => {
+  return data.filter((item: any) => {
+      const sourceLower = item.source.toLowerCase();
+      const isFail = sourceLower.includes('/fails/');
+      const isAlert = sourceLower.includes('/alerts/');
+      const isInfo = sourceLower === "/assets/informativos/servicios.svg"
+      const isDesconnection = sourceLower === "/assets/connections/desconexion.svg";
+      const isReconnection = sourceLower === "/assets/connections/reconexion.svg";
+      // Fails
+      if (!drawer_opt.checked_Fails && isFail) {
+        return false;
+      }
 
-export { getTelemetryNamesTranslated, transformTelemetry2, transformSafeZone, transformTelemetryZoneEvents, transformFailsToAnnotations2, transformDesconectionsZone, hideFirstYTick }
+      // Alerts
+      if (!drawer_opt.checked_Alerts && isAlert) {
+        return false;
+      }
+      // Desconexiones
+      if (!drawer_opt.checked_Desconections && (isDesconnection || isReconnection)) {
+        return false;
+      }
+
+      if (!drawer_opt.checked_Info && isInfo) {
+        return false
+      }
+      return true;
+    });
+}
+export { getTelemetryNamesTranslated, transformTelemetry2, transformSafeZone, transformTelemetryZoneEvents, transformFailsToAnnotations2, transformDesconectionsZone,graph_images }
