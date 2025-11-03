@@ -1,5 +1,11 @@
-<section>
-    <app-graph-view (mensajeEvento)="recibirMensaje($event)"></app-graph-view>
+<section style="padding: 1rem;box-sizing: border-box;">
+    <section style="display: flex;flex-direction: row;height: auto;justify-content: space-between;align-items: center;">
+        <div style="display: flex;flex-direction: row;width: fit-content;gap: 0.25rem;align-items: center;">
+            <img src="../../../assets/Header/Coolview_Header.svg" alt="header" style="height: 2.25rem;" />
+            <img src="../../../assets/Header/Coolview_Header_Title.svg" alt="header" style="width:7rem;height: 3rem;" />
+        </div>
+        <app-graph-view (mensajeEvento)="recibirMensaje($event)"></app-graph-view>
+    </section>
     <section class="grap_select_main"
         [style.flex-direction]="view_grap_opt == 3 ? 'row' : view_grap_opt == 4 ? 'row': 'column'"
         [style.flex-wrap]="view_grap_opt == 4 ? 'wrap' : ''">
