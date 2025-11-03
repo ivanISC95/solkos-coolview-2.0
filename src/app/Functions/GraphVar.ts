@@ -48,7 +48,7 @@ const graph_layout = (safe_zone?:any,value?:string[],images?: any[],date_range?:
         showlegend: true,
         plot_bgcolor: '#FFF',
         paper_bgcolor: '#FFF',
-        hovermode: 'x',
+        hovermode: 'x unified',
         font: {
             family: 'DM Mono',
             size: 12,
@@ -67,6 +67,9 @@ const graph_layout = (safe_zone?:any,value?:string[],images?: any[],date_range?:
             traceorder: 'normal',
         },
         xaxis: {
+            spikedash: 'solid',
+            spikethickness: 0.5,
+            spikecolor: 'gray', 
             tickformat: '%d-%b',
             showgrid: true,
             gridcolor: 'light gray',
