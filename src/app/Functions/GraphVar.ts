@@ -65,7 +65,7 @@ const graph_layout = (safe_zone?:any,value?:string[],images?: any[],date_range?:
             traceorder: 'normal',
         },
         xaxis: {
-            spikedash: 'solid',
+            // spikedash: 'solid',
             spikethickness: 0.5,
             spikecolor: 'gray', 
             tickformat: '%d-%b',

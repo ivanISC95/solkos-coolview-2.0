@@ -6,6 +6,7 @@
         [(ngModel)]="selectedTelemetry" (ngModelChange)="logSelection()"
         [disabled]="graph_view_opt == 4 && selectOptionDefault != '' ? true : false"
         [nzDropdownStyle]="{ 'max-height': '130px', 'overflow-y': 'auto' , scrollbarWidth: 'thin'}"
+        [nzMaxTagCount]="3"
         style="width: 100%; height: 1rem !important;">
         <nz-option *ngFor="let telemetry of telemetryOptions" [nzLabel]="telemetry" [nzValue]="telemetry"
           nzCustomContent>
@@ -36,7 +37,7 @@
 @if (drawer_status == true) {
 <nz-drawer [nzClosable]="drawer_status" [nzVisible]="true" nzPlacement="right" nzTitle="Configuración del grafico"
   (nzOnClose)="close()" style="scrollbar-width: thin;" [nzWidth]="'100%'">
-  <ng-container *nzDrawerContent>
+  <ng-container *nzDrawerContent style="scrollbar-width: thin !important;">
     <section style="width: 100%;height: 100%;display: flex; flex-direction: column;gap: 0.5rem;">
       <section
         style="width: 100%;height: auto;display: flex;flex-direction: column;justify-content: space-between;gap: 0.5rem;">

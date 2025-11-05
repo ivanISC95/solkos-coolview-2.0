@@ -51,3 +51,6 @@
 ::ng-deep .ant-drawer-close {
   align-self: flex-start !important;
 }
+.ant-drawer-body ng-tns-c2982096970-1 {
+  scrollbar-width: thin !important;
+}
