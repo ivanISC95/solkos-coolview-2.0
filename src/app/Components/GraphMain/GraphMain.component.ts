@@ -179,7 +179,10 @@ export class GraphMainComponent implements OnInit, OnChanges {
   }
 
   close() {
-    this.drawer_status = false
+    this.drawer_status = false;
+    setTimeout(() => {
+    this.resizeChart();
+  }, 300);
   }
   onChange(result: Date[]): void {
     this.date = result
