@@ -44,7 +44,11 @@
         } -->
         @else if (data_error != null) {
         <div style="width: 100%;height: 99%;display: flex;align-items: center;justify-content: center;">            
-            <nz-alert nzType="error" nzMessage="Error" nzDescription="Error {{data_error.status}} al cargar los datos" ></nz-alert>
+            <!-- <nz-alert nzType="error" nzMessage="No hay suficientes datos para mostrar" nzDescription="Se realizo la consulta exitosamente, pero este enfriador no posee telemetría para mostrar en Coolview" ></nz-alert> -->
+            <section style="display: flex;padding: 0.5rem;background: var(--Gray-20, #F1F3F5);border: 1px solid var(--Border-default, #DEE2E6);width: fit-content;height: fit-content;border-radius: var(--Radius-radius-sm, 4px);">
+                <h1 style="color: var(--Text-title, #000);font-weight: 600;font-size: 1rem;">No hay suficientes datos para mostrar</h1>
+                <p style="color: var(--Text-Gray-default, #868E96);font-weight: 300;font-size: 0.9rem;">Se realizo la consulta exitosamente, pero este enfriador no posee telemetría para mostrar en Coolview</p>
+            </section>
         </div>
         }
         @else if (isLoading == true) {

@@ -6,13 +6,12 @@ import { getDateRange_dateFunctions, getDateRangeFromEndDate_dateFunctions } fro
 import { GraphViewComponent } from '../../Components/GraphView/GraphView.component';
 import { GraphMainComponent } from '../../Components/GraphMain/GraphMain.component';
 import { LottieComponent, AnimationOptions } from 'ngx-lottie';
-import { NzAlertModule } from 'ng-zorro-antd/alert';
 
 
 @Component({
   selector: 'app-console-main',
   standalone: true,
-  imports: [GraphViewComponent,GraphMainComponent,LottieComponent,NzAlertModule],
+  imports: [GraphViewComponent,GraphMainComponent,LottieComponent],
   templateUrl: './ConsoleMain.component.html',
   styleUrl: './ConsoleMain.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
