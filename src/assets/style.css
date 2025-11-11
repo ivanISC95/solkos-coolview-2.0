@@ -1,0 +1,146 @@
+@font-face {
+  font-family: 'icomoon';
+  src:  url('fonts/icomoon.eot?3o2als');
+  src:  url('fonts/icomoon.eot?3o2als#iefix') format('embedded-opentype'),
+    url('fonts/icomoon.ttf?3o2als') format('truetype'),
+    url('fonts/icomoon.woff?3o2als') format('woff'),
+    url('fonts/icomoon.svg?3o2als#icomoon') format('svg');
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'icomoon' !important;
+  speak: never;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-Servicios .path1:before {
+  content: "\e900";
+  color: rgb(231, 245, 255);
+}
+.icon-Servicios .path2:before {
+  content: "\e901";
+  margin-left: -1em;
+  color: rgb(35, 147, 244);
+}
+.icon-Desconexion .path1:before {
+  content: "\e902";
+  color: rgb(231, 245, 255);
+}
+.icon-Desconexion .path2:before {
+  content: "\e903";
+  margin-left: -1em;
+  color: rgb(35, 147, 244);
+}
+.icon-Desconexion .path3:before {
+  content: "\e904";
+  margin-left: -1em;
+  color: rgb(35, 147, 244);
+}
+.icon-Desconexion .path4:before {
+  content: "\e905";
+  margin-left: -1em;
+  color: rgb(35, 147, 244);
+}
+.icon-Reconexion .path1:before {
+  content: "\e906";
+  color: rgb(231, 245, 255);
+}
+.icon-Reconexion .path2:before {
+  content: "\e907";
+  margin-left: -1em;
+  color: rgb(35, 147, 244);
+}
+.icon-AltaTemperatura .path1:before {
+  content: "\e908";
+  color: rgb(255, 245, 245);
+}
+.icon-AltaTemperatura .path2:before {
+  content: "\e909";
+  margin-left: -1em;
+  color: rgb(250, 82, 82);
+}
+.icon-EvaporadorBloqueado .path1:before {
+  content: "\e90a";
+  color: rgb(255, 245, 245);
+}
+.icon-EvaporadorBloqueado .path2:before {
+  content: "\e90b";
+  margin-left: -1em;
+  color: rgb(250, 82, 82);
+}
+.icon-FallaCompresor .path1:before {
+  content: "\e90c";
+  color: rgb(255, 245, 245);
+}
+.icon-FallaCompresor .path2:before {
+  content: "\e90d";
+  margin-left: -1em;
+  color: rgb(250, 82, 82);
+}
+.icon-FallaElectrica .path1:before {
+  content: "\e90e";
+  color: rgb(255, 245, 245);
+}
+.icon-FallaElectrica .path2:before {
+  content: "\e90f";
+  margin-left: -1em;
+  color: rgb(250, 82, 82);
+}
+.icon-AlertaAltoVoltage .path1:before {
+  content: "\e910";
+  color: rgb(255, 249, 219);
+}
+.icon-AlertaAltoVoltage .path2:before {
+  content: "\e911";
+  margin-left: -1em;
+  color: rgb(230, 119, 0);
+}
+.icon-AlertaAltoVoltage .path3:before {
+  content: "\e912";
+  margin-left: -1em;
+  color: rgb(230, 119, 0);
+}
+.icon-AlertaBajoVoltage .path1:before {
+  content: "\e913";
+  color: rgb(255, 249, 219);
+}
+.icon-AlertaBajoVoltage .path2:before {
+  content: "\e914";
+  margin-left: -1em;
+  color: rgb(230, 119, 0);
+}
+.icon-AlertaBajoVoltage .path3:before {
+  content: "\e915";
+  margin-left: -1em;
+  color: rgb(230, 119, 0);
+}
+.icon-AlertaCompresor .path1:before {
+  content: "\e916";
+  color: rgb(255, 249, 219);
+}
+.icon-AlertaCompresor .path2:before {
+  content: "\e917";
+  margin-left: -1em;
+  color: rgb(230, 119, 0);
+}
+.icon-AlertaTemperatura .path1:before {
+  content: "\e918";
+  color: rgb(255, 249, 219);
+}
+.icon-AlertaTemperatura .path2:before {
+  content: "\e919";
+  margin-left: -1em;
+  color: rgb(230, 119, 0);
+}
