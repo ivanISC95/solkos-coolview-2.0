@@ -87,9 +87,9 @@ export class GraphMainComponent implements OnInit, OnChanges {
   basicChart(data_graph: any, safe_zone?: any, min_max?: number[], data_OS?: ServiceOrder[]) {
     const element = this.el().nativeElement
     const data = data_graph;
-    this.resizeChart();    
+    this.resizeChart();
 
-    const filteredData = graph_images(transformFailsToAnnotations2(this.data, this.date_select_main, min_max ?? [], data_OS, this.graph_view_opt),this.drawer_options)
+    const filteredData = graph_images(transformFailsToAnnotations2(this.data, this.date_select_main, min_max ?? [], data_OS, this.graph_view_opt), this.drawer_options)
     Plotly.newPlot(element, data, graph_layout(safe_zone, this.selectedTelemetry, filteredData, this.date_select_main ?? []), graph_config).then((graph: any) => {
       graph.on('plotly_relayout', (eventData: any) => {
         if (eventData['xaxis.range[0]']) {
@@ -107,10 +107,10 @@ export class GraphMainComponent implements OnInit, OnChanges {
         if (eventData["xaxis.range"]) {
           const [xMin, xMax] = eventData["xaxis.range"];
           this.date_select_main = [new Date(xMin), new Date(xMax)]
-        }        
+        }
 
 
-        const newAnnotations = graph_images(transformFailsToAnnotations2(this.data, this.date_select_main, min_max ?? [], data_OS, this.graph_view_opt),this.drawer_options)
+        const newAnnotations = graph_images(transformFailsToAnnotations2(this.data, this.date_select_main, min_max ?? [], data_OS, this.graph_view_opt), this.drawer_options)
         if (newAnnotations.length) {
           Plotly.update(element, {}, { images: newAnnotations });
         }
@@ -131,8 +131,8 @@ export class GraphMainComponent implements OnInit, OnChanges {
   close() {
     this.drawer_status = false;
     setTimeout(() => {
-    this.resizeChart();
-  }, 300);
+      this.resizeChart();
+    }, 300);
   }
   onChange(result: Date[]): void {
     this.date = result
@@ -169,40 +169,79 @@ export class GraphMainComponent implements OnInit, OnChanges {
   }
 
   onCheckedChange(value: boolean, buttonID?: string) {
+    console.log('Button ID:', buttonID, 'Value:', value);
 
     if (buttonID) {
       const index = this.drawer_safezone_disconection.indexOf(buttonID);
-      if (value) {
-        if (index === -1) this.drawer_safezone_disconection.push(buttonID);
-      } else {
-        if (index !== -1) this.drawer_safezone_disconection.splice(index, 1);
-      }
 
-      // Manejamos los filtros para eventos
-      const eventTypes = ['FAIL', 'ALERT', 'INFORMATIVES', 'DESCONECTIONS'];
-
-      if (eventTypes.includes(buttonID)) {
-        const filterIndex = this.drawer_data_filter.indexOf(buttonID);
-        if (!value && filterIndex === -1) {
-          // Si se desactiva, agregamos a filtros
-          this.drawer_data_filter.push(buttonID);
-        } else if (value && filterIndex !== -1) {
-          // Si se activa, quitamos del filtro
-          this.drawer_data_filter.splice(filterIndex, 1);
+      // Control de safe/disconection options (mantén tu lógica original)
+      if (buttonID === 'safe_and_disconection' || buttonID === 'safeZone' || buttonID === 'disconection') {
+        if (value) {
+          if (index === -1) this.drawer_safezone_disconection.push(buttonID);
+        } else {
+          if (index !== -1) this.drawer_safezone_disconection.splice(index, 1);
         }
       }
 
-      // Si se desactiva la Zona de eventos, quitamos todos los filtros
-      if (buttonID === 'events_zone' && !value) {
-        this.drawer_data_filter = ['FAIL', 'ALERT', 'INFORMATIVES', 'DESCONECTIONS'];
+      // Mapeo correcto entre eventTypes y las props de drawer_options
+      const eventTypes = ['FAIL', 'ALERT', 'INFORMATIVES', 'DESCONECTIONS'];
+      const eventToOptionKey: Record<string, keyof typeof this.drawer_options> = {
+        'FAIL': 'checked_Fails',
+        'ALERT': 'checked_Alerts',
+        'INFORMATIVES': 'checked_Info',
+        'DESCONECTIONS': 'checked_Desconections'
+      };
+
+      // Si el botón es "events_zone"
+      if (buttonID === 'events_zone') {
+        if (value) {
+          // Activar todos los tipos de eventos y mostrar todo
+          this.drawer_data_filter = [];
+          this.drawer_options.checked_events_zone = true;
+          eventTypes.forEach(t => {
+            const opt = eventToOptionKey[t];
+            if (opt) this.drawer_options[opt] = true;
+          });
+        } else {
+          // Desactivar todos los eventos y filtrar todo (ocultar)
+          this.drawer_data_filter = [...eventTypes];
+          this.drawer_options.checked_events_zone = false;
+          eventTypes.forEach(t => {
+            const opt = eventToOptionKey[t];
+            if (opt) this.drawer_options[opt] = false;
+          });
+        }
       }
 
-      // Si se activa la Zona de eventos, pero los filtros están todos activos, reiniciamos filtros (mostrar todo)
-      if (buttonID === 'events_zone' && value) {
-        this.drawer_data_filter = [];
+      // Si es un botón individual (FAIL, ALERT, INFORMATIVES, DESCONECTIONS)
+      else if (eventTypes.includes(buttonID)) {
+        const filterIndex = this.drawer_data_filter.indexOf(buttonID);
+        const optKey = eventToOptionKey[buttonID];
+
+        // Si se activa el checkbox del evento -> quitar del filtro y marcar la opción
+        if (value) {
+          if (filterIndex !== -1) this.drawer_data_filter.splice(filterIndex, 1);
+          if (optKey) this.drawer_options[optKey] = true;
+        }
+        // Si se desactiva -> agregar al filtro y desmarcar la opción
+        else {
+          if (filterIndex === -1) this.drawer_data_filter.push(buttonID);
+          if (optKey) this.drawer_options[optKey] = false;
+        }
+
+        // Si todos los tipos están activos (es decir, ninguno en drawer_data_filter) => marcar events_zone
+        const allActive = eventTypes.every(t => this.drawer_data_filter.indexOf(t) === -1);
+        this.drawer_options.checked_events_zone = allActive;
       }
     }
-    const filteredData = transformTelemetryZoneEvents(this.data!.fails, this.datas_min_max, this.drawer_options, this.data?.serviceOrder)
+
+    // Recalcular filteredData y redibujar gráfico
+    const filteredData = transformTelemetryZoneEvents(
+      this.data!.fails,
+      this.datas_min_max,
+      this.drawer_options,
+      this.data?.serviceOrder
+    );
 
     const options = this.drawer_safezone_disconection;
     const data = [...this.data_graph, ...filteredData];
@@ -218,18 +257,19 @@ export class GraphMainComponent implements OnInit, OnChanges {
           : options.includes('disconection')
             ? transformDesconectionsZone(this.data!.fails ?? [], this.datas_min_max)
             : null;
+
     this.graph_zones = zones ?? [];
     this.basicChart(data, zones, this.datas_min_max, this.data?.serviceOrder);
   }
 
 
   async search() {
-    if (this.search_Main && this.date) {      
+    if (this.search_Main && this.date) {
       const isoDates = this.date.map((d: Date) => {
         const offset = d.getTimezoneOffset();
         const localDate = new Date(d.getTime() - offset * 60 * 1000);
         return localDate.toISOString().split('T')[0];
-      });      
+      });
       await this.search_Main(isoDates);
       this.close();
     }
