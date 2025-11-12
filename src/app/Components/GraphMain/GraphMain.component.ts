@@ -73,7 +73,6 @@ export class GraphMainComponent implements OnInit, OnChanges {
   ngOnInit() {
     this.telemetryOptions = getTelemetryNamesTranslated(this.data)
     this.telemetryOptions.includes(this.selectOptionDefault) ? this.selectedTelemetry = [this.selectOptionDefault] : this.selectedTelemetry = []
-    console.log(this.telemetryOptions)
     this.data_graph = transformTelemetry2(this.data!.telemetry, [this.selectOptionDefault], [this.selectOptionDefault]);
     this.datas_min_max = this.data_graph.flatMap((value) => value.y)
     this.basicChart([...this.data_graph], null, this.datas_min_max, this.data?.serviceOrder);
@@ -91,7 +90,6 @@ export class GraphMainComponent implements OnInit, OnChanges {
     this.resizeChart();    
 
     const filteredData = graph_images(transformFailsToAnnotations2(this.data, this.date_select_main, min_max ?? [], data_OS, this.graph_view_opt),this.drawer_options)
-    console.log(filteredData)
     Plotly.newPlot(element, data, graph_layout(safe_zone, this.selectedTelemetry, filteredData, this.date_select_main ?? []), graph_config).then((graph: any) => {
       graph.on('plotly_relayout', (eventData: any) => {
         if (eventData['xaxis.range[0]']) {
@@ -111,7 +109,7 @@ export class GraphMainComponent implements OnInit, OnChanges {
           this.date_select_main = [new Date(xMin), new Date(xMax)]
         }        
 
-        
+
         const newAnnotations = graph_images(transformFailsToAnnotations2(this.data, this.date_select_main, min_max ?? [], data_OS, this.graph_view_opt),this.drawer_options)
         if (newAnnotations.length) {
           Plotly.update(element, {}, { images: newAnnotations });
