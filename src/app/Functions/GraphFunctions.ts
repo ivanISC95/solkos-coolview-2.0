@@ -109,8 +109,8 @@ const transformTelemetry2 = (data: Telemetry[] | null, selectedNames: string[], 
     .filter(({ name }) => selectedNames.includes(nameMap[name])) // Filtra solo los que están en selectedNames
     .map(({ name, type, data }) => ({
       name: `${nameMap[name]}.`,
-      type: name == 'door_state' ? 'scatter' : typeMap[type] || "bar",
-      mode: name == 'door_state' ? 'lines+markers' : type === "line" ? "lines" : "",
+      type: typeMap[type] || "bar",
+      mode: type === "line" ? "lines" : "",
       line: {
         color: colorMap[name] || "#000000",
         width: 1
