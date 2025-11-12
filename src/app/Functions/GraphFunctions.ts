@@ -263,7 +263,7 @@ function transformFailsToAnnotations2(
       xref: "x",
       yref: "paper",
       showarrow: false,
-      yshift: -27,
+      yshift: -20,
     };
 
     // Fondo (e907)
