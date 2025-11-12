@@ -89,32 +89,9 @@ export class GraphMainComponent implements OnInit, OnChanges {
     const element = this.el().nativeElement
     const data = data_graph;
     this.resizeChart();    
-    //   const sourceLower = item.source.toLowerCase();
-    //   const isFail = sourceLower.includes('/fails/');
-    //   const isAlert = sourceLower.includes('/alerts/');
-    //   const isInfo = sourceLower === "/assets/informativos/servicios.svg"
-    //   const isDesconnection = sourceLower === "/assets/connections/desconexion.svg";
-    //   const isReconnection = sourceLower === "/assets/connections/reconexion.svg";
-    //   // Fails
-    //   if (!this.drawer_options.checked_Fails && isFail) {
-    //     return false;
-    //   }
 
-    //   // Alerts
-    //   if (!this.drawer_options.checked_Alerts && isAlert) {
-    //     return false;
-    //   }
-    //   // Desconexiones
-    //   if (!this.drawer_options.checked_Desconections && (isDesconnection || isReconnection)) {
-    //     return false;
-    //   }
-
-    //   if (!this.drawer_options.checked_Info && isInfo) {
-    //     return false
-    //   }
-    //   return true;
-    // });
     const filteredData = graph_images(transformFailsToAnnotations2(this.data, this.date_select_main, min_max ?? [], data_OS, this.graph_view_opt),this.drawer_options)
+    console.log(filteredData)
     Plotly.newPlot(element, data, graph_layout(safe_zone, this.selectedTelemetry, filteredData, this.date_select_main ?? []), graph_config).then((graph: any) => {
       graph.on('plotly_relayout', (eventData: any) => {
         if (eventData['xaxis.range[0]']) {
@@ -133,33 +110,8 @@ export class GraphMainComponent implements OnInit, OnChanges {
           const [xMin, xMax] = eventData["xaxis.range"];
           this.date_select_main = [new Date(xMin), new Date(xMax)]
         }        
-        //   const sourceLower = item.source.toLowerCase();
-        //   const isFail = sourceLower.includes('/fails/');
-        //   const isAlert = sourceLower.includes('/alerts/');
-        //   const isInfo = sourceLower.includes('/informativos/');
-        //   const isDesconnection = sourceLower === "/assets/connections/desconexion.svg";
-        //   const isReconnection = sourceLower === "/assets/connections/reconexion.svg";
 
-        //   // Fails
-        //   if (!this.drawer_options.checked_Fails && isFail) {
-        //     return false;
-        //   }
-
-        //   // Alerts
-        //   if (!this.drawer_options.checked_Alerts && isAlert) {
-        //     return false;
-        //   }
-
-        //   // Desconexiones
-        //   if (!this.drawer_options.checked_Desconections && (isDesconnection || isReconnection)) {
-        //     return false;
-        //   }
-
-        //   if (!this.drawer_options.checked_Info && isInfo) {
-        //     return false
-        //   }
-        //   return true;
-        // });
+        
         const newAnnotations = graph_images(transformFailsToAnnotations2(this.data, this.date_select_main, min_max ?? [], data_OS, this.graph_view_opt),this.drawer_options)
         if (newAnnotations.length) {
           Plotly.update(element, {}, { images: newAnnotations });

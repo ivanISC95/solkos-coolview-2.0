@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'icomoon';
-  src:  url('fonts/icomoon.eot?3o2als');
-  src:  url('fonts/icomoon.eot?3o2als#iefix') format('embedded-opentype'),
-    url('fonts/icomoon.ttf?3o2als') format('truetype'),
-    url('fonts/icomoon.woff?3o2als') format('woff'),
-    url('fonts/icomoon.svg?3o2als#icomoon') format('svg');
+  src:  url('fonts/icomoon.eot?942oi6');
+  src:  url('fonts/icomoon.eot?942oi6#iefix') format('embedded-opentype'),
+    url('fonts/icomoon.ttf?942oi6') format('truetype'),
+    url('fonts/icomoon.woff?942oi6') format('woff'),
+    url('fonts/icomoon.svg?942oi6#icomoon') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -25,122 +25,51 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-.icon-Servicios .path1:before {
+.icon-Servicios:before {
   content: "\e900";
-  color: rgb(231, 245, 255);
+  color: #2393f4;
 }
-.icon-Servicios .path2:before {
+.icon-AltaTemperatura:before {
   content: "\e901";
-  margin-left: -1em;
-  color: rgb(35, 147, 244);
+  color: #fa5252;
 }
-.icon-Desconexion .path1:before {
+.icon-EvaporadorBloqueado:before {
   content: "\e902";
-  color: rgb(231, 245, 255);
+  color: #fa5252;
 }
-.icon-Desconexion .path2:before {
+.icon-FallaCompresor:before {
   content: "\e903";
-  margin-left: -1em;
-  color: rgb(35, 147, 244);
+  color: #fa5252;
 }
-.icon-Desconexion .path3:before {
+.icon-FallaElectrica:before {
   content: "\e904";
-  margin-left: -1em;
-  color: rgb(35, 147, 244);
+  color: #fa5252;
 }
-.icon-Desconexion .path4:before {
+.icon-Desconexion:before {
   content: "\e905";
-  margin-left: -1em;
-  color: rgb(35, 147, 244);
+  color: #2393f4;
 }
-.icon-Reconexion .path1:before {
+.icon-Reconexion:before {
   content: "\e906";
-  color: rgb(231, 245, 255);
+  color: #2393f4;
 }
-.icon-Reconexion .path2:before {
+.icon-background:before {
   content: "\e907";
-  margin-left: -1em;
-  color: rgb(35, 147, 244);
+  color: #e7f5ff;
 }
-.icon-AltaTemperatura .path1:before {
+.icon-AlertaAltoVoltage:before {
   content: "\e908";
-  color: rgb(255, 245, 245);
+  color: #e67700;
 }
-.icon-AltaTemperatura .path2:before {
+.icon-AlertaBajoVoltage:before {
   content: "\e909";
-  margin-left: -1em;
-  color: rgb(250, 82, 82);
+  color: #e67700;
 }
-.icon-EvaporadorBloqueado .path1:before {
+.icon-AlertaCompresor:before {
   content: "\e90a";
-  color: rgb(255, 245, 245);
+  color: #e67700;
 }
-.icon-EvaporadorBloqueado .path2:before {
+.icon-AlertaTemperatura:before {
   content: "\e90b";
-  margin-left: -1em;
-  color: rgb(250, 82, 82);
-}
-.icon-FallaCompresor .path1:before {
-  content: "\e90c";
-  color: rgb(255, 245, 245);
-}
-.icon-FallaCompresor .path2:before {
-  content: "\e90d";
-  margin-left: -1em;
-  color: rgb(250, 82, 82);
-}
-.icon-FallaElectrica .path1:before {
-  content: "\e90e";
-  color: rgb(255, 245, 245);
-}
-.icon-FallaElectrica .path2:before {
-  content: "\e90f";
-  margin-left: -1em;
-  color: rgb(250, 82, 82);
-}
-.icon-AlertaAltoVoltage .path1:before {
-  content: "\e910";
-  color: rgb(255, 249, 219);
-}
-.icon-AlertaAltoVoltage .path2:before {
-  content: "\e911";
-  margin-left: -1em;
-  color: rgb(230, 119, 0);
-}
-.icon-AlertaAltoVoltage .path3:before {
-  content: "\e912";
-  margin-left: -1em;
-  color: rgb(230, 119, 0);
-}
-.icon-AlertaBajoVoltage .path1:before {
-  content: "\e913";
-  color: rgb(255, 249, 219);
-}
-.icon-AlertaBajoVoltage .path2:before {
-  content: "\e914";
-  margin-left: -1em;
-  color: rgb(230, 119, 0);
-}
-.icon-AlertaBajoVoltage .path3:before {
-  content: "\e915";
-  margin-left: -1em;
-  color: rgb(230, 119, 0);
-}
-.icon-AlertaCompresor .path1:before {
-  content: "\e916";
-  color: rgb(255, 249, 219);
-}
-.icon-AlertaCompresor .path2:before {
-  content: "\e917";
-  margin-left: -1em;
-  color: rgb(230, 119, 0);
-}
-.icon-AlertaTemperatura .path1:before {
-  content: "\e918";
-  color: rgb(255, 249, 219);
-}
-.icon-AlertaTemperatura .path2:before {
-  content: "\e919";
-  margin-left: -1em;
-  color: rgb(230, 119, 0);
+  color: #e67700;
 }

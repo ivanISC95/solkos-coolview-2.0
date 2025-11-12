@@ -1,4 +1,5 @@
 import { DatasResponse, DrawerOptions, Fail, PlotlyShape, SafeZone, ServiceOrder, Telemetry } from "../Interfaces/DatasResponse";
+import { colors, colorsBack, iconMapping, iconMapping2 } from "./GraphVar";
 
 const getTelemetryNames = (data: DatasResponse | null) => {
   if (!data || !Array.isArray(data.telemetry) || data == null) {
@@ -187,12 +188,11 @@ const transformTelemetryZoneEvents = (data: Fail[] | null, rangosTelemetry: numb
       type: "scatter",
       mode: "markers",
       x: [fail.start ?? fail.timestamp],
-      y: [minValue < 0 ? minValue + -0.5 : minValue - 1],
+      y: [minValue],
       customdata: ["Estatus : undefined,Folio : undefined, Comentarios : undefined"],
       hovertemplate: typeMapping[fail.type_fail] || "Desconocido",
       showlegend: false,
       marker: {
-        size: 15,
         symbol: "square",
         color: "transparent"
       }
@@ -216,12 +216,11 @@ const transformTelemetryZoneEvents = (data: Fail[] | null, rangosTelemetry: numb
       type: "scatter",
       mode: "markers",
       x: [item.close_date ?? item.open_date],
-      y: [minValue < 0 ? minValue + -0.5 : minValue - 1],
+      y: [minValue],
       customdata: ["Estatus : undefined,Folio : undefined, Comentarios : undefined"],
       hovertemplate: "Servicio",
       showlegend: false,
       marker: {
-        size: 15,
         symbol: "square",
         color: "transparent"
       }
@@ -241,87 +240,96 @@ const transformTelemetryZoneEvents = (data: Fail[] | null, rangosTelemetry: numb
   return prueba.filter(a => a.name !== "Desconocido");
 };
 
-// IMG into Events zone
-// Image size X
-const pixelsToSizeX = (px: number, windowWidth: number, rangeX: [number, number]) => {
-  const [xMin, xMax] = rangeX;
-  const graphWidth = xMax - xMin;
-  return (px / windowWidth) * graphWidth;
-};
-// Image size Y
-const pixelsToSizeY = (px: number, rangeY: [number, number]) => {
-  const [yMin, yMax] = rangeY;
-  const graphHeight = yMax - yMin;
-  return (px / 600) * graphHeight; // 600 es un ejemplo de altura en px del gráfico
-};
 // function to create images in the graph
-function transformFailsToAnnotations2(data: DatasResponse | null, valueInputFechas: any, rangosTelemetry: number[], data_OS?: ServiceOrder[],graph_view_opt?:number) {
-  const windowWidth = window.innerWidth;
-  const xRange: [number, number] = valueInputFechas
-  const yRange: [number, number] = [0, Math.max(...rangosTelemetry) > 250 ? 500 : 250];
-  const minValue = Math.min(...rangosTelemetry)
+function transformFailsToAnnotations2(
+  data: DatasResponse | null,
+  valueInputFechas: any,
+  rangosTelemetry: number[],
+  data_OS?: ServiceOrder[],
+  graph_view_opt?: number
+) {
   if (!data || !data.fails) return [];
-  const iconMapping: Record<string, string> = {
-    // Connections
-    "DISCONNECTION_ALERT": "/assets/Connections/Desconexion.svg",
-    "RECONNECTION_ALERT": "/assets/Connections/Reconexion.svg",
-    // Alerts
-    "COMPRESSOR_RUN_TIME_EXCEDED_ALERT": "/assets/Alerts/AltaDemandaCompresor.svg",
-    "TEMPERATURE_ALERT": "/assets/Alerts/AltaTemperatura.svg",
-    "VOLTAGE_ALERT": "/assets/Alerts/AltoVoltaje.svg",
-    // Fails
-    "TEMPERATURE_FAIL": "/assets/Fails/AltaTemperatura.svg",
-    "FROZEN_ALERT": "/assets/Fails/EvaporadorBloqueado.svg",
-    "COMPRESSOR_FAIL": "/assets/Fails/FallaCompresor.svg",
-    "VOLTAGE_FAIL": "/assets/Fails/FallaElectrica.svg"
-  };
+  const annotations = data.fails.flatMap((fail) => {
+    const iconSrc = iconMapping[fail.type_fail];
+    const iconPrincipal = iconMapping2[fail.type_fail];
+    const color = colors[fail.type_fail];
+    const colorBack = colorsBack[fail.type_fail];
+    if (!iconSrc) return [];
 
-  const annotations = data.fails.flatMap(fail => {
     const baseAnnotation = {
-      source: iconMapping[fail.type_fail] || "",
-      x: fail.timestamp ?? fail.start, // Tomamos `timestamp` o `start`
-      y: minValue < 0 ? minValue + 2.6 : minValue + 2.7,
+      source: iconSrc,
+      x: fail.timestamp ?? fail.start,
+      y: 0, // Base del gráfico
       xref: "x",
-      yref: "y",
-      // sizex: pixelsToSizeX(18, windowWidth, xRange),
-      sizex: graph_view_opt === 4 ? pixelsToSizeX(60, windowWidth, xRange) : pixelsToSizeX(18, windowWidth, xRange),
-      sizey: pixelsToSizeY(18, yRange),
-      opacity: 1,
-      layer: ""
+      yref: "paper",
+      showarrow: false,
+      yshift: -27,
     };
 
-    // Si es una desconexión y tiene "end", agregamos la anotación de reconexión
-    if (fail.type_fail === "DISCONNECTION_ALERT" && fail.end) {
-      const reconnectionAnnotation = {
-        ...baseAnnotation,
-        source: iconMapping["RECONNECTION_ALERT"], // Imagen de reconexión
-        x: fail.end // Usamos `end` como la fecha de reconexión
-      };
+    // Fondo (e907)
+    const backgroundAnnotation = {
+      ...baseAnnotation,
+      text: "\u{e907}",
+      font: { size: 20, color: colorBack, family: "IcoMoon" },
+    };
 
-      return [baseAnnotation, reconnectionAnnotation]; // Retornamos ambos eventos
+    const iconAnnotation = {
+      ...baseAnnotation,
+      text: iconPrincipal,
+      font: { size: 20, color: color, family: "IcoMoon" },
+    };
+
+    // Si es desconexión con reconexión, también genera ambas para el "end"
+    if (fail.type_fail === "DISCONNECTION_ALERT" && fail.end) {
+      const reconnectionBackground = {
+        ...backgroundAnnotation,
+        x: fail.end,
+      };
+      const reconnectionIcon = {
+        ...iconAnnotation,
+        x: fail.end,
+        text: "\u{e906}",
+      };
+      return [backgroundAnnotation, iconAnnotation, reconnectionBackground, reconnectionIcon];
     }
 
-    return [baseAnnotation]; // Retornamos solo el evento normal
+    return [backgroundAnnotation, iconAnnotation];
   });
+
+  // Agregar íconos informativos (data_OS)
   if (data_OS) {
-    const datos_ordenes = data_OS.flatMap(item => {
-      return {
+    const orderAnnotations = data_OS.flatMap((item) => {
+      const baseOrder = {
         source: "/assets/Informativos/Servicios.svg",
         x: item.close_date ?? item.open_date,
-        y: minValue < 0 ? minValue + 2.6 : minValue + 2.7,
+        y: 0,
         xref: "x",
-        yref: "y",
-        // sizex: pixelsToSizeX(18, windowWidth, xRange),
-        sizex: graph_view_opt === 4 ? pixelsToSizeX(60, windowWidth, xRange) : pixelsToSizeX(18, windowWidth, xRange),
-        sizey: pixelsToSizeY(18, yRange),
-        opacity: 1,
-        layer: ""
-      }
-    })
-    annotations.push(...datos_ordenes)
+        yref: "paper",
+        showarrow: false,
+        yshift: -27,
+      };
+
+      const backgroundAnnotation = {
+        ...baseOrder,
+        text: "\u{e907}",
+        font: { size: 20, color: "#E7F5FF", family: "IcoMoon" },
+      };
+
+      const iconAnnotation = {
+        ...baseOrder,
+        text: "\u{e900}",
+        font: { size: 20, color: "#2393F4", family: "IcoMoon" },
+      };
+
+      return [backgroundAnnotation, iconAnnotation];
+    });
+
+    annotations.push(...orderAnnotations);
   }
-  return annotations.filter(a => a.source !== "");
+
+  return annotations;
 }
+
 const transformDesconectionsZone = (data: Fail[], datas_min_max: number[]) => {
 
   return data.map((item: Fail) => item.end ? ({
