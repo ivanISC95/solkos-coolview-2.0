@@ -69,7 +69,7 @@ export class ConsoleMainComponent {
       }
       return d;
     });             
-    this.apiService.fetchData(`https://coolview-api-v2-545989770214.us-central1.run.app/coolview-api/v2/telemetryOs/?id=${this.id}&start_date=${stringDates[0]}&end_date=${stringDates[1]}&is_mac=false`)
+    this.apiService.fetchData(`https://coolview-api-v2-545989770214.us-central1.run.app/coolview-api/v2/telemetryOs/?id=${this.id}&start_date=${stringDates[0]}&end_date=${stringDates[1]}&is_mac=true`)
       .subscribe({
         next: (data) => {
           this.data_Cooler = data

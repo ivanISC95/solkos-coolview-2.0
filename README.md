@@ -12,4 +12,4 @@
 > [!TIP]
 > QA
 > 1 .- Hacer el build npm run build
-> 2 .- firebase deploy --only hosting:solkos-coolview-2-qa
+> 2 .- firebase deploy --only hosting:solkos-coolview-root

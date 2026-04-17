@@ -3,7 +3,7 @@
     {
       "public": "dist/solkos-coolview-2.0/browser",
       "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
-      "site": "solkos-coolview-2",
+      "site": "solkos-coolview-root",
       "rewrites": [
         {
           "source": "**",
@@ -14,7 +14,7 @@
     {
       "public": "dist/solkos-coolview-2.0/browser",
       "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
-      "site": "solkos-coolview-2-qa",
+      "site": "solkos-coolview-root",
       "rewrites": [
         {
           "source": "**",

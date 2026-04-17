@@ -3,5 +3,6 @@
         "angular-*": {
             "externalTemplate": true
         }
-    }
+    },
+    "svg.preview.background": "editor"
 }

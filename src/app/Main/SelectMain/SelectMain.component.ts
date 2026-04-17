@@ -14,20 +14,21 @@ import { LottieComponent, AnimationOptions } from 'ngx-lottie';
 @Component({
   selector: 'app-select-main',
   standalone: true,
-  imports: [NzSelectModule, NzIconModule, GraphViewComponent, FormsModule, NzDatePickerModule, NzButtonModule, NzInputModule, GraphMainComponent,LottieComponent],
+  imports: [NzSelectModule, NzIconModule, GraphViewComponent, FormsModule, NzDatePickerModule, NzButtonModule, NzInputModule, GraphMainComponent, LottieComponent],
   templateUrl: './SelectMain.component.html',
   styleUrl: './SelectMain.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SelectMainComponent {
-  data_Cooler : DatasResponse | null = null
+  data_Cooler: DatasResponse | null = null
   date: null | Date[] = null;
   dateFormatted: string[] = [];
   value = '';
   view_grap_opt: null | number = 1;
   isLoading = false; // Estado de carga
+  errorMessage: string | null = null; 
 
-  constructor(private apiService: ApiService,private cdr: ChangeDetectorRef) {
+  constructor(private apiService: ApiService, private cdr: ChangeDetectorRef) {
     const today = new Date();
     const pastMonth = new Date();
     pastMonth.setMonth(today.getMonth() - 1); // Resta 1 mes
@@ -41,24 +42,32 @@ export class SelectMainComponent {
     path: '/assets/Loader/loader.json',
   };
 
-  async searchCooler(date_child?:any): Promise<void> {
+  async searchCooler(date_child?: any): Promise<void> {
     this.isLoading = true;
-    this.cdr.markForCheck();     
+    this.cdr.markForCheck();
     if (this.date || date_child) {
-      date_child ? this.dateFormatted = date_child.map((d:any) => d.toISOString().split('T')[0]) : this.dateFormatted = this.date!.map(d => d.toISOString().split('T')[0])
-    }       
-    this.apiService.fetchData(`https://coolview-api-v2-545989770214.us-central1.run.app/coolview-api/v2/telemetryOs/?id=${this.value}&start_date=${this.dateFormatted[0]}&end_date=${this.dateFormatted[1]}&is_mac=false`)
+      date_child ? this.dateFormatted = date_child.map((d: any) => d.toISOString().split('T')[0]) : this.dateFormatted = this.date!.map(d => d.toISOString().split('T')[0])
+    }
+    this.apiService.fetchData(`https://coolview-api-v2-545989770214.us-central1.run.app/coolview-api/v2/telemetryOs/?id=${this.value}&start_date=${this.dateFormatted[0]}&end_date=${this.dateFormatted[1]}&is_mac=true`)
       .subscribe({
         next: (data) => {
           this.data_Cooler = data
+          this.errorMessage = null; 
         },
         error: (error) => {
           this.isLoading = false;
-          console.error("Error en la petición:", error);
+          this.data_Cooler = null; // Sugerencia: Limpiar datos previos si hubo error
+          console.error("Error en la petición:", error);          
+          this.cdr.markForCheck(); 
+          if (error.status === 404) {
+            this.errorMessage = "Cooler no encontrado o no se encontraron datos para el Cooler en el rango de fechas seleccionados.";
+            return;
+          }
+          this.errorMessage = "Ocurrió un error al obtener los datos. Por favor, verifica con un administrador.";         
         },
         complete: () => {
           this.isLoading = false;
-          this.cdr.markForCheck(); 
+          this.cdr.markForCheck();
         }
       });
   }

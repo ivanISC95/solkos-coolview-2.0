@@ -1,35 +1,58 @@
 <section>
     <section class="select_select_main">
-        <input nz-input placeholder="Ingresa tu Serie/Mac" [(ngModel)]="value" type="" style="height: 2.5rem;width: 30%;" />
-        <nz-range-picker [(ngModel)]="date" (ngModelChange)="onChange($event)" style="height: 2.5rem;"></nz-range-picker>
-        <button nz-button nzType="default" style="height: 2.5rem;" (click)="searchCooler()" [disabled]="value == '' || date == null  ? true : false">Buscar</button>
+        <input nz-input placeholder="Ingresa tu Serie/Mac" [(ngModel)]="value" type=""
+            style="height: 2.5rem;width: 30%;" />
+        <nz-range-picker [(ngModel)]="date" (ngModelChange)="onChange($event)"
+            style="height: 2.5rem;"></nz-range-picker>
+        <button nz-button nzType="default" style="height: 2.5rem;" (click)="searchCooler()"
+            [disabled]="value == '' || date == null  ? true : false">Buscar</button>
     </section>
     <app-graph-view (mensajeEvento)="recibirMensaje($event)"></app-graph-view>
-    <section class="grap_select_main" [style.flex-direction]="view_grap_opt == 3 ? 'row' : view_grap_opt == 4 ? 'row': 'column'" [style.flex-wrap]="view_grap_opt == 4 ? 'wrap' : ''" >        
-        @if (view_grap_opt == 1 && data_Cooler != null && isLoading == false) {            
-            <app-graph-main [data]="data_Cooler" [selectOptionDefault] = "'Temperatura'" [date_select_main]="date" [search_Main]="searchCooler.bind(this)" ></app-graph-main>
+    <section class="grap_select_main"
+        [style.flex-direction]="view_grap_opt == 3 ? 'row' : view_grap_opt == 4 ? 'row': 'column'"
+        [style.flex-wrap]="view_grap_opt == 4 ? 'wrap' : ''">
+        @if (view_grap_opt == 1 && data_Cooler != null && isLoading == false) {
+        <app-graph-main [data]="data_Cooler" [selectOptionDefault]="'Temperatura'" [date_select_main]="date"
+            [search_Main]="searchCooler.bind(this)"></app-graph-main>
         }
         @else if(view_grap_opt == 2 && isLoading == false){
-            <app-graph-main [data]="data_Cooler" [selectOptionDefault] = "'Temperatura'" [date_select_main]="date"></app-graph-main>
-            <app-graph-main [data]="data_Cooler" [selectOptionDefault] = "'Voltaje'" [date_select_main]="date"></app-graph-main>
-        }        
-        @else if(view_grap_opt == 3 && isLoading == false){
-            <app-graph-main [data]="data_Cooler" [style.width]="view_grap_opt == 3 ? '50%' : '100%'" [selectOptionDefault] = "'Temperatura'" [date_select_main]="date"></app-graph-main>
-            <app-graph-main [data]="data_Cooler" [style.width]="view_grap_opt == 3 ? '50%' : '100%'" [selectOptionDefault] = "'Voltaje'" [date_select_main]="date"></app-graph-main>
-        }        
-        @else if(view_grap_opt == 4 && isLoading == false){
-            <app-graph-main [data]="data_Cooler" [style.width]="view_grap_opt == 4 ? '49.5%' : '100%' " [style.min-height]="view_grap_opt == 4 ? '45%' : '100%' " [selectOptionDefault] = "'Temperatura'" [date_select_main]="date"></app-graph-main>
-            <app-graph-main [data]="data_Cooler" [style.width]="view_grap_opt == 4 ? '49.5%' : '100%' " [style.min-height]="view_grap_opt == 4 ? '45%' : '100%' " [selectOptionDefault] = "'Voltaje'" [date_select_main]="date"></app-graph-main>
-            <app-graph-main [data]="data_Cooler" [style.width]="view_grap_opt == 4 ? '49.5%' : '100%' " [style.min-height]="view_grap_opt == 4 ? '45%' : '100%' " [selectOptionDefault] = "'Aperturas'" [date_select_main]="date"></app-graph-main>
-            <app-graph-main [data]="data_Cooler" [style.width]="view_grap_opt == 4 ? '49.5%' : '100%' " [style.min-height]="view_grap_opt == 4 ? '45%' : '100%' " [selectOptionDefault] = "'Compresor'" [date_select_main]="date"></app-graph-main>
-        }        
-        @else if(isLoading == false && data_Cooler == null) {
-            <div style="width: 100%;height: 100%;display: flex;align-items: center;justify-content: center;">Coolview</div>
+        <app-graph-main [data]="data_Cooler" [selectOptionDefault]="'Temperatura'"
+            [date_select_main]="date"></app-graph-main>
+        <app-graph-main [data]="data_Cooler" [selectOptionDefault]="'Voltaje'"
+            [date_select_main]="date"></app-graph-main>
         }
-        @else if (isLoading == true) { 
-            <div style="width: 100%;height: 99%;display: flex;align-items: center;justify-content: center;">
-                <ng-lottie [options]="options" style="width: 20%; height: 20%;" />
-            </div>
-        }        
+        @else if(view_grap_opt == 3 && isLoading == false){
+        <app-graph-main [data]="data_Cooler" [style.width]="view_grap_opt == 3 ? '50%' : '100%'"
+            [selectOptionDefault]="'Temperatura'" [date_select_main]="date"></app-graph-main>
+        <app-graph-main [data]="data_Cooler" [style.width]="view_grap_opt == 3 ? '50%' : '100%'"
+            [selectOptionDefault]="'Voltaje'" [date_select_main]="date"></app-graph-main>
+        }
+        @else if(view_grap_opt == 4 && isLoading == false){
+        <app-graph-main [data]="data_Cooler" [style.width]="view_grap_opt == 4 ? '49.5%' : '100%' "
+            [style.min-height]="view_grap_opt == 4 ? '45%' : '100%' " [selectOptionDefault]="'Temperatura'"
+            [date_select_main]="date"></app-graph-main>
+        <app-graph-main [data]="data_Cooler" [style.width]="view_grap_opt == 4 ? '49.5%' : '100%' "
+            [style.min-height]="view_grap_opt == 4 ? '45%' : '100%' " [selectOptionDefault]="'Voltaje'"
+            [date_select_main]="date"></app-graph-main>
+        <app-graph-main [data]="data_Cooler" [style.width]="view_grap_opt == 4 ? '49.5%' : '100%' "
+            [style.min-height]="view_grap_opt == 4 ? '45%' : '100%' " [selectOptionDefault]="'Aperturas'"
+            [date_select_main]="date"></app-graph-main>
+        <app-graph-main [data]="data_Cooler" [style.width]="view_grap_opt == 4 ? '49.5%' : '100%' "
+            [style.min-height]="view_grap_opt == 4 ? '45%' : '100%' " [selectOptionDefault]="'Compresor'"
+            [date_select_main]="date"></app-graph-main>
+        }
+        @else if(isLoading == false && data_Cooler == null && errorMessage == null) {
+        <div style="width: 100%;height: 100%;display: flex;align-items: center;justify-content: center;">Coolview</div>
+        }
+        @else if (isLoading == true) {
+        <div style="width: 100%;height: 99%;display: flex;align-items: center;justify-content: center;">
+            <ng-lottie [options]="options" style="width: 20%; height: 20%;" />
+        </div>
+        }
+        @else if (errorMessage != null) {
+        <div
+            style="width: 100%;height: 100%;display: flex;align-items: center;justify-content: center;color: red;font-size: 1.2rem;">
+            {{ errorMessage }}</div>
+        }
     </section>
 </section>
