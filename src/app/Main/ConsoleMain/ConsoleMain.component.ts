@@ -69,7 +69,7 @@ export class ConsoleMainComponent {
       }
       return d;
     });             
-    this.apiService.fetchData(`https://coolview-api-v2-545989770214.us-central1.run.app/coolview-api/v2/telemetryOs/?id=${this.id}&start_date=${stringDates[0]}&end_date=${stringDates[1]}&is_mac=true`)
+    this.apiService.fetchData(`https://solkos-tools-545989770214.us-central1.run.app/telemetry/telemetryByMAC?MAC=${this.id}&date_Init=${stringDates[0]}&date_end=${stringDates[1]}&current_UM=false`)
       .subscribe({
         next: (data) => {
           this.data_Cooler = data

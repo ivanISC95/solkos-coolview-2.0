@@ -26,7 +26,7 @@ export class SelectMainComponent {
   value = '';
   view_grap_opt: null | number = 1;
   isLoading = false; // Estado de carga
-  errorMessage: string | null = null; 
+  errorMessage: string | null = null;
 
   constructor(private apiService: ApiService, private cdr: ChangeDetectorRef) {
     const today = new Date();
@@ -48,22 +48,37 @@ export class SelectMainComponent {
     if (this.date || date_child) {
       date_child ? this.dateFormatted = date_child.map((d: any) => d.toISOString().split('T')[0]) : this.dateFormatted = this.date!.map(d => d.toISOString().split('T')[0])
     }
-    this.apiService.fetchData(`https://coolview-api-v2-545989770214.us-central1.run.app/coolview-api/v2/telemetryOs/?id=${this.value}&start_date=${this.dateFormatted[0]}&end_date=${this.dateFormatted[1]}&is_mac=true`)
+    // this.apiService.fetchData(`https://coolview-api-v2-545989770214.us-central1.run.app/coolview-api/v2/telemetryOs/?id=${this.value}&start_date=${this.dateFormatted[0]}&end_date=${this.dateFormatted[1]}&is_mac=true`)
+    this.apiService.fetchData(`https://solkos-tools-545989770214.us-central1.run.app/telemetry/telemetryByMAC?MAC=${this.value}&date_Init=${this.dateFormatted[0]}&date_end=${this.dateFormatted[1]}&current_UM=false`)
       .subscribe({
         next: (data) => {
           this.data_Cooler = data
-          this.errorMessage = null; 
+          this.errorMessage = null;
         },
         error: (error) => {
           this.isLoading = false;
           this.data_Cooler = null; // Sugerencia: Limpiar datos previos si hubo error
-          console.error("Error en la petición:", error);          
-          this.cdr.markForCheck(); 
-          if (error.status === 404) {
-            this.errorMessage = "Cooler no encontrado o no se encontraron datos para el Cooler en el rango de fechas seleccionados.";
+          console.error("Error en la petición:", error);
+          this.cdr.markForCheck();
+          // if (error.status === 404) {
+          //   console.log(error)
+          //   this.errorMessage = "Cooler no encontrado o no se encontraron datos para el Cooler en el rango de fechas seleccionados.";
+          //   return;
+          // }
+          if (error.status === 404) {                        
+            const detalle = error.error?.detail;
+
+            if (detalle?.sugerencia && detalle?.datos) {
+              const fechaInicio = detalle.datos.fechainicio;
+              const fechaFin = detalle.datos.fechafin;
+              this.errorMessage = `No se encontraron datos para el rango seleccionado. Sin embargo, hay telemetría disponible desde el ${fechaInicio} hasta el ${fechaFin}.`;
+            } else {
+              this.errorMessage = "Cooler no encontrado o no se encontraron datos en el sistema.";
+            }
+
             return;
           }
-          this.errorMessage = "Ocurrió un error al obtener los datos. Por favor, verifica con un administrador.";         
+          this.errorMessage = "Ocurrió un error al obtener los datos. Por favor, verifica con un administrador.";
         },
         complete: () => {
           this.isLoading = false;
