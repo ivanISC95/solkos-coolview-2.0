@@ -11,7 +11,7 @@ import { LottieComponent, AnimationOptions } from 'ngx-lottie';
 @Component({
   selector: 'app-console-main',
   standalone: true,
-  imports: [GraphViewComponent,GraphMainComponent,LottieComponent],
+  imports: [GraphViewComponent, GraphMainComponent, LottieComponent],
   templateUrl: './ConsoleMain.component.html',
   styleUrl: './ConsoleMain.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -27,9 +27,25 @@ export class ConsoleMainComponent {
 
   constructor(private route: ActivatedRoute, private cdr: ChangeDetectorRef, private apiService: ApiService) { }
 
+  // ngOnInit() {
+  //   this.id = this.route.snapshot.paramMap.get('id');
+  //   this.searchDate();           
+  // }
   ngOnInit() {
     this.id = this.route.snapshot.paramMap.get('id');
-    this.searchDate();           
+
+    // 1. Capturamos los query params de la URL
+    const dateInitParam = this.route.snapshot.queryParamMap.get('date_init');
+    const dateEndParam = this.route.snapshot.queryParamMap.get('date_end');
+
+    // 2. Evaluamos si el usuario envió ambas fechas por URL
+    if (dateInitParam && dateEndParam) {
+      // Si vienen en la URL, llamamos directamente a searchCooler con ese rango
+      this.searchCooler([dateInitParam, dateEndParam]);
+    } else {
+      // Si no vienen, ejecutamos el flujo normal
+      this.searchDate();
+    }
   }
   async searchDate() {
     this.isLoading = true;
@@ -37,15 +53,15 @@ export class ConsoleMainComponent {
     this.apiService.fetchDates(`https://coolview-api-v2-545989770214.us-central1.run.app/coolview-api/dates/?serie=${this.id}`)
       .subscribe({
         next: (data) => {
-          if(data?.flag === false){
+          if (data?.flag === false) {
             this.isLoading = false;
             this.data_error = "date low to limit date 2000-01-01. No data";
             this.cdr.markForCheck();
             return;
           }
           this.data_dates = data;
-          this.date = getDateRange_dateFunctions(this.data_dates); 
-          this.searchCooler(getDateRangeFromEndDate_dateFunctions(this.data_dates,1));
+          this.date = getDateRange_dateFunctions(this.data_dates);
+          this.searchCooler(getDateRangeFromEndDate_dateFunctions(this.data_dates, 1));
         },
         error: (error) => {
           this.isLoading = false;
@@ -59,16 +75,16 @@ export class ConsoleMainComponent {
         // }
       })
   }
-  async searchCooler(dates: string[] | Date[]): Promise<void> {  
-    this.cdr.detectChanges();  
+  async searchCooler(dates: string[] | Date[]): Promise<void> {
+    this.cdr.detectChanges();
     this.isLoading = true;
     const stringDates = dates.map(d => {
-      if (d instanceof Date) {        
+      if (d instanceof Date) {
         this.date = dates;
         return d.toISOString().split('T')[0];
       }
       return d;
-    });             
+    });
     this.apiService.fetchData(`https://solkos-tools-545989770214.us-central1.run.app/telemetry/telemetryByMAC?MAC=${this.id}&date_Init=${stringDates[0]}&date_end=${stringDates[1]}&current_UM=false`)
       .subscribe({
         next: (data) => {
@@ -77,12 +93,12 @@ export class ConsoleMainComponent {
         error: (error) => {
           this.isLoading = false;
           this.data_error = error;
-          this.cdr.markForCheck(); 
+          this.cdr.markForCheck();
           console.error("Error en la petición:", error);
         },
         complete: () => {
           this.isLoading = false;
-          this.cdr.markForCheck(); 
+          this.cdr.markForCheck();
         }
       });
   }
@@ -90,6 +106,6 @@ export class ConsoleMainComponent {
     this.view_grap_opt = mensaje;
   }
   options: AnimationOptions = {
-      path: '/assets/Loader/loader.json',
-    };
+    path: '/assets/Loader/loader.json',
+  };
 }
