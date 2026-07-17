@@ -40,14 +40,14 @@ const nameMap: { [key: string]: string } = {
 };
 
 const colorMap: Record<string, string> = {
-  "door_state": "#909296",
-  "compressor_state": "#9C36B5",
-  "internal_temperature": "#028CFF",
+  "door_state": "#a4de6c",
+  "compressor_state": "#FFC658",
+  "internal_temperature": "#8884d8",
   "condenser_temperature": "#0B7285",
   "evaporator_temperature": "#728CAF",
   "temperature_1": "#728CAF",
   "temperature_2": "#40C057",
-  "voltage_consumption": "#E67700",
+  "voltage_consumption": "#82CA9D",
   "voltage_min": "#FCC419",
   "voltage_max": "#E67700",
   "energy_consumption": "#40C057",
