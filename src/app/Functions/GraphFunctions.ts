@@ -113,7 +113,8 @@ const transformTelemetry2 = (data: Telemetry[] | null, selectedNames: string[], 
       mode: type === "line" ? "lines" : "",
       line: {
         color: colorMap[name] || "#000000",
-        width: 1.4
+        width: 1.4,
+        shape: 'spline'
       },
       marker: {
         color: colorMap[name] || "#000000"
