@@ -1,4 +1,5 @@
 <section class="view_select_main">
+    <div class="view_select_main_opt" [ngClass]="{'view_select_main_opt_selected': select_opt === 1}"><img src="assets/Share/Share.svg" alt="graph_view_option_1" (click)="copyURLTelemetry()"></div>
     <div class="view_select_main_opt" [ngClass]="{'view_select_main_opt_selected': select_opt === 1}"><img src="assets/GraphView/opt1.svg" alt="graph_view_option_1" (click)="shareViewOption(1)"></div>
     <div class="view_select_main_opt" [ngClass]="{'view_select_main_opt_selected': select_opt === 2}"><img src="assets/GraphView/opt2.svg" alt="graph_view_option_2" (click)="shareViewOption(2)"></div>
     <div class="view_select_main_opt" [ngClass]="{'view_select_main_opt_selected': select_opt === 3}"><img src="assets/GraphView/opt3.svg" alt="graph_view_option_3" (click)="shareViewOption(3)"></div>

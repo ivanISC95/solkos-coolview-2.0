@@ -168,8 +168,7 @@ export class GraphMainComponent implements OnInit, OnChanges {
     this.basicChart([...this.data_graph, ...transformTelemetryZoneEvents(this.data!.fails, this.datas_min_max, this.drawer_options, this.data?.serviceOrder)], this.graph_zones, this.datas_min_max)
   }
 
-  onCheckedChange(value: boolean, buttonID?: string) {
-    console.log('Button ID:', buttonID, 'Value:', value);
+  onCheckedChange(value: boolean, buttonID?: string) {    
 
     if (buttonID) {
       const index = this.drawer_safezone_disconection.indexOf(buttonID);

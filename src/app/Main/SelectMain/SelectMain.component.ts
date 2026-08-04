@@ -27,6 +27,7 @@ export class SelectMainComponent {
   view_grap_opt: null | number = 1;
   isLoading = false; // Estado de carga
   errorMessage: string | null = null;
+  URL_TELEMETRY_COPY : string = 'NA'
 
   constructor(private apiService: ApiService, private cdr: ChangeDetectorRef) {
     const today = new Date();
@@ -57,14 +58,9 @@ export class SelectMainComponent {
         },
         error: (error) => {
           this.isLoading = false;
-          this.data_Cooler = null; // Sugerencia: Limpiar datos previos si hubo error
+          this.data_Cooler = null; 
           console.error("Error en la petición:", error);
-          this.cdr.markForCheck();
-          // if (error.status === 404) {
-          //   console.log(error)
-          //   this.errorMessage = "Cooler no encontrado o no se encontraron datos para el Cooler en el rango de fechas seleccionados.";
-          //   return;
-          // }
+          this.cdr.markForCheck();          
           if (error.status === 404) {                        
             const detalle = error.error?.detail;
 
@@ -82,6 +78,7 @@ export class SelectMainComponent {
         },
         complete: () => {
           this.isLoading = false;
+          this.URL_TELEMETRY_COPY = `https://solkos-tools-545989770214.us-central1.run.app/telemetry/telemetryByMAC?MAC=${this.value}&date_Init=${this.dateFormatted[0]}&date_end=${this.dateFormatted[1]}&current_UM=false`;
           this.cdr.markForCheck();
         }
       });

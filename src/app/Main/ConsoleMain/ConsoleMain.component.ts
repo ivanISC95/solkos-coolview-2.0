@@ -24,6 +24,7 @@ export class ConsoleMainComponent {
   data_error: any;
   data_Cooler: DatasResponse | null = null;
   view_grap_opt: null | number = 1;
+  URL_TELEMETRY_COPY : string = 'NA'
 
   constructor(private route: ActivatedRoute, private cdr: ChangeDetectorRef, private apiService: ApiService) { }
 
@@ -60,7 +61,7 @@ export class ConsoleMainComponent {
             return;
           }
           this.data_dates = data;
-          this.date = getDateRange_dateFunctions(this.data_dates);
+          this.date = getDateRange_dateFunctions(this.data_dates);          
           this.searchCooler(getDateRangeFromEndDate_dateFunctions(this.data_dates, 1));
         },
         error: (error) => {
@@ -98,6 +99,7 @@ export class ConsoleMainComponent {
         },
         complete: () => {
           this.isLoading = false;
+          this.URL_TELEMETRY_COPY = `https://solkos-tools-545989770214.us-central1.run.app/telemetry/telemetryByMAC?MAC=${this.id}&date_Init=${stringDates[0]}&date_end=${stringDates[1]}&current_UM=false`
           this.cdr.markForCheck();
         }
       });

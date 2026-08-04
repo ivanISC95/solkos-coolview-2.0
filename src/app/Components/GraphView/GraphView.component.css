@@ -23,6 +23,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  cursor: pointer;
 }
 .view_select_main_opt:hover {
   transform: scale(1.1);
