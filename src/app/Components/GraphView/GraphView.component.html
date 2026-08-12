@@ -1,5 +1,5 @@
-<section class="view_select_main">
-    <button class="view_select_main_opt" [ngClass]="{'view_select_main_opt_selected': select_opt === 1}" style="border: 1px solid transparent;"><img src="assets/Share/Share.svg" alt="graph_view_option_1" (click)="copyURLTelemetry()" ></button>    
+<section class="view_select_main" [style.display]="data_Cooler ? 'flex' : 'none'">
+    <button class="view_select_main_opt" [ngClass]="{'view_select_main_opt_selected': select_opt === 1}" style="border: 1px solid transparent;"><img src="assets/Share/Share.svg" alt="graph_view_option_1" (click)="copyURLTelemetry()" title="Abrir y copiar URL"></button>    
     <div class="view_select_main_opt" [ngClass]="{'view_select_main_opt_selected': select_opt === 1}"><img
             src="assets/GraphView/opt1.svg" alt="graph_view_option_1" (click)="shareViewOption(1)"></div>
     <div class="view_select_main_opt" [ngClass]="{'view_select_main_opt_selected': select_opt === 2}"><img

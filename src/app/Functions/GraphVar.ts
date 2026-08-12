@@ -32,6 +32,7 @@ const LayoutInforTelemetry = (value: string[]) => {
   return ['', '']
 }
 const graph_config = {
+  showTips: false,
   responsive: true,
   displayModeBar: true,
   modeBarButtonsToRemove: ['pan2d', 'select2d', 'lasso2d', 'autoScale2d'], displaylogo: false
@@ -68,7 +69,7 @@ const graph_layout = (safe_zone?: any, value?: string[], images?: any[], date_ra
       // spikedash: 'solid',
       spikethickness: 0.5,
       spikecolor: 'gray',
-      tickformat: '%d-%b',
+      tickformat: '%d-%b-%y',
       showgrid: true,
       gridcolor: 'light gray',
       gridwidth: 2,

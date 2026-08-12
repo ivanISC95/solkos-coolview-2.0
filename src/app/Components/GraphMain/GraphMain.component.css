@@ -54,3 +54,14 @@
 .ant-drawer-body ng-tns-c2982096970-1 {
   scrollbar-width: thin !important;
 }
+/* Usamos ::ng-deep para traspasar el encapsulamiento de estilos de Angular hacia los componentes internos de Ng-Zorro */
+::ng-deep {
+  .custom-select-container {
+    .ant-select-selector {
+      border: 1px solid #DEE2E6 !important;
+      border-radius: 0.5rem !important;
+      min-height: auto !important;
+      height: auto !important;
+    }
+  }
+}

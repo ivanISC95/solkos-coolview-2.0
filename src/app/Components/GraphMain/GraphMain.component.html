@@ -2,18 +2,20 @@
   <section class="grap_select_main_content_options">
     <div style="width: 40%;height: 100%;">
       <h1 style="color: #000;font-size: 0.75rem;font-style: normal;font-weight: 400;">Dato visualizado :</h1>
-      <nz-select nzAllowClear nzShowSearch nzPlaceHolder="" nzMode="multiple" [nzCustomTemplate]="multipleTemplate"
-        [(ngModel)]="selectedTelemetry" (ngModelChange)="logSelection()"        
-        [nzDropdownStyle]="{ 'max-height': '130px', 'overflow-y': 'auto' , scrollbarWidth: 'thin'}"
-        [nzMaxTagCount]="3"
-        style="width: 100%; height: 1rem !important;">
-        <nz-option *ngFor="let telemetry of telemetryOptions" [nzLabel]="telemetry" [nzValue]="telemetry"
-          nzCustomContent>
-          <img *ngIf="iconMap[telemetry]" [src]="iconMap[telemetry]" width="16" height="16"
-            style="margin-right: 8px;" />
-          {{ telemetry }}
-        </nz-option>
-      </nz-select>
+      <div class="custom-select-container">
+        <nz-select nzAllowClear nzShowSearch nzPlaceHolder="" nzMode="multiple" [nzCustomTemplate]="multipleTemplate"
+          [(ngModel)]="selectedTelemetry" (ngModelChange)="logSelection()"
+          [nzDropdownStyle]="{ 'max-height': '130px', 'overflow-y': 'auto' , scrollbarWidth: 'thin'}"
+          [nzMaxTagCount]="3" style="width: 100%;">
+
+          <nz-option *ngFor="let telemetry of telemetryOptions" [nzLabel]="telemetry" [nzValue]="telemetry"
+            nzCustomContent>
+            <img *ngIf="iconMap[telemetry]" [src]="iconMap[telemetry]" width="16" height="16"
+              style="margin-right: 8px;" />
+            {{ telemetry }}
+          </nz-option>
+        </nz-select>
+      </div>
       <ng-template #multipleTemplate let-selected>
         <div class="ant-select-selection-item-content">
           {{ selected.nzLabel }}
@@ -29,7 +31,7 @@
     <div #chart style="height: 100% !important;width: 100% !important;"></div>
     <div #NoData
       style="height: 100% !important;width: 100% !important;display: none;align-items: center;justify-content: center;">
-      <h1 style="color: #000;font-size: 0.75rem;font-style: normal;font-weight: 400;">Select a telemetry</h1>
+      <h1 style="color: rgb(173, 181, 189);font-size: 0.75rem;font-style: normal;font-weight: 400;">Selecciona una telemetría para visualizar datos</h1>
     </div>
   </section>
 </section>

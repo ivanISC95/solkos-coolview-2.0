@@ -33,7 +33,7 @@ export class SelectMainComponent {
     const today = new Date();
     const pastMonth = new Date();
     pastMonth.setMonth(today.getMonth() - 1); // Resta 1 mes
-    this.date = [pastMonth, today];
+    this.date = [pastMonth, today];    
   }
 
   onChange(result: Date[]): void {

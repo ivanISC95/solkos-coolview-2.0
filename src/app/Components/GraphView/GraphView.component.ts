@@ -10,13 +10,12 @@ import { NzNotificationService } from 'ng-zorro-antd/notification';
   styleUrl: './GraphView.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class GraphViewComponent {
-  // Inyectamos ChangeDetectorRef para componentes con OnPush
+export class GraphViewComponent {  
   private cdr = inject(ChangeDetectorRef);
   private notification = inject(NzNotificationService);
-
   @Output() mensajeEvento = new EventEmitter<number>();
   @Input() URL_TELEMETRY_COPY: string = '';
+  @Input() data_Cooler: true | false = false;
   select_opt: number = 1;
   URL_COOLVIEW_PROD = 'https://solkos-coolview-root.firebaseapp.com/'
   NEW_URL_COOLVIEW = ''
@@ -46,7 +45,7 @@ export class GraphViewComponent {
           this.notification.success(
             '¡Enlace copiado!',
             'La URL de telemetría se ha copiado al portapapeles exitosamente.',
-            { nzPlacement: 'top' }
+            { nzPlacement: 'top', nzDuration: 10000 }
           );
           setTimeout(() => {
             this.isTooltipVisible = false;

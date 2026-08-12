@@ -1,13 +1,20 @@
 <section>
     <section class="select_select_main">
-        <input nz-input placeholder="Ingresa tu Serie/Mac" [(ngModel)]="value" type=""
-            style="height: 2.5rem;width: 30%;" />
+        <nz-input-group [nzPrefix]="prefixTemplate"
+            style="height: 2.5rem; width: 30%; border: 1px solid #DEE2E6; border-radius: 0.5rem; display: flex; align-items: center; padding-left: 0.5rem;">
+            <input nz-input placeholder="Ingresa tu Mac" [(ngModel)]="value"
+                style="border: none; box-shadow: none; background: transparent;" />
+        </nz-input-group>
+        <ng-template #prefixTemplate>
+            <img src="../../../assets/SearchInput/search.svg" alt="Buscar"
+                style="width: 1rem; height: 1rem; display: block; margin-right: 0.5rem;" />
+        </ng-template>
         <nz-range-picker [(ngModel)]="date" (ngModelChange)="onChange($event)"
-            style="height: 2.5rem;"></nz-range-picker>
-        <button nz-button nzType="default" style="height: 2.5rem;" (click)="searchCooler()"
+            style="height: 2.5rem;border: 1px solid #DEE2E6;border-radius: 0.5rem;"></nz-range-picker>
+        <button nz-button nzType="default" style="height: 2.5rem;border: 1px solid #DEE2E6;border-radius: 0.5rem;" (click)="searchCooler()"
             [disabled]="value == '' || date == null  ? true : false">Buscar</button>
     </section>
-    <app-graph-view (mensajeEvento)="recibirMensaje($event)" [URL_TELEMETRY_COPY]="URL_TELEMETRY_COPY"></app-graph-view>
+    <app-graph-view (mensajeEvento)="recibirMensaje($event)" [URL_TELEMETRY_COPY]="URL_TELEMETRY_COPY" [data_Cooler]="this.data_Cooler != null ? true : false"></app-graph-view>
     <section class="grap_select_main"
         [style.flex-direction]="view_grap_opt == 3 ? 'row' : view_grap_opt == 4 ? 'row': 'column'"
         [style.flex-wrap]="view_grap_opt == 4 ? 'wrap' : ''">
@@ -42,7 +49,7 @@
             [date_select_main]="date"></app-graph-main>
         }
         @else if(isLoading == false && data_Cooler == null && errorMessage == null) {
-        <div style="width: 100%;height: 100%;display: flex;align-items: center;justify-content: center;">Coolview</div>
+        <div style="width: 100%;height: 100%;display: flex;align-items: center;justify-content: center;color: rgb(173, 181, 189);">Busca por dirección MAC —incluso MAC's huérfanas— para analizar su telemetría y evaluar su estado.</div>
         }
         @else if (isLoading == true) {
         <div style="width: 100%;height: 99%;display: flex;align-items: center;justify-content: center;">
